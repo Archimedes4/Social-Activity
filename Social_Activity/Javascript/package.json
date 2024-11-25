@@ -1,0 +1,14 @@
+{
+  "name": "archgithubstatus",
+  "version": "1.0.0",
+  "description": "Node.js handlers for github",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "github-profile-status": "^1.0.0"
+  }
+}
