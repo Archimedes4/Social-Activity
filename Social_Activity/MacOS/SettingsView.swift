@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct SettingsView: View {
 	@State var geometry: GeometryProxy
 	@State var appPasswordProtected: Bool = false
 	@State var staySignedIn: Bool = true
-		
+
 	init (for metrics: GeometryProxy) {
 		self.geometry = metrics
 	}
+	
 	var body: some View {
 		ZStack {
 			VStack (spacing: 0) {
@@ -50,15 +52,27 @@ struct SettingsView: View {
 						.padding(.vertical)
 					Spacer()
 				}
-				HStack {
-					Image(systemName: "rectangle.portrait.and.arrow.right")
-						.resizable()
-						.frame(width: 25, height: 25)
-						.aspectRatio(contentMode: .fit)
-					Text("Sign Out")
-						.font(Font.custom("Nunito-Regular", size: 20))
-					Spacer()
+				Button(action: {
+					let firebaseAuth = Auth.auth()
+					do {
+						try firebaseAuth.signOut()
+					} catch let signOutError as NSError {
+						print("Error signing out: %@", signOutError)
+					}
+				}) {
+					HStack {
+						Image(systemName: "rectangle.portrait.and.arrow.right")
+							.resizable()
+							.frame(width: 25, height: 25)
+							.aspectRatio(contentMode: .fit)
+							.foregroundStyle(.black)
+						Text("Sign Out")
+							.font(Font.custom("Nunito-Regular", size: 20))
+							.foregroundStyle(.black)
+						Spacer()
+					}
 				}
+				.buttonStyle(StatusButtonStyle())
 			}
 			.padding(10)
 			.frame(width: geometry.size.width * 0.4)
@@ -69,6 +83,9 @@ struct SettingsView: View {
 					.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 					.cornerRadius(10)
 					.frame(width: geometry.size.width * 0.4)
+			}
+			.onAppear() {
+				
 			}
 		}.padding()
 	}

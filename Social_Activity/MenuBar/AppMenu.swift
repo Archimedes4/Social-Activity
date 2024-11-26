@@ -40,7 +40,7 @@ struct AppMenu: View {
 							}
 						}
 					}
-			} else if (validToken) {
+			} else if (validToken && false) {
 				VStack {
 					Text("Welcome, \(username)")
 						.padding(.top)
@@ -57,17 +57,7 @@ struct AppMenu: View {
 					}, label: { Text("Clear Status") })
 				}.padding(.horizontal)
 			} else {
-				TextField("GitHub Api Secret", text: $newSecret)
-					.onSubmit {
-						
-					}
-				Button(action: {
-						DispatchQueue.global(qos: .default).async {
-								
-								KeychainService().save(newSecret, for: "Main")
-								isLoading = true
-						}
-				}, label: { Text("GitHub Api") })
+				
 			}
 		}
 	}

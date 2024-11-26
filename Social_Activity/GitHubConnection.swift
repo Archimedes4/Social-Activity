@@ -12,71 +12,69 @@ enum ApiError: Error {
     case regular
 }
 
-func callApi(json: [String : Any]) async throws -> [String: Any]{
-    do {
-        guard let url = URL(string: "https://api.github.com/graphql") else {
-            throw ApiError.regular
-        }
-        guard let GitHubToken = KeychainService().retriveSecret(account: "Main") else { throw ApiError.auth}
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: json) else { throw ApiError.regular}
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("bearer "+GitHubToken, forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = jsonData
-        let (responseData, _) = try await URLSession.shared.data(
-            for: request
-        )
-        
-        if let json = try JSONSerialization.jsonObject(with: responseData, options: [.allowFragments])  as? [String: Any] {
-            if (json["message"] as? String == "Bad credentials") {
-                //Failed due to auth
-                throw ApiError.auth
-            } else {
-                //Looks good
-                return json
-            }
-        } else {
-            throw ApiError.regular
-        }
-    } catch {
-        //something went wrong
-        throw ApiError.regular
-    }
-    throw ApiError.regular
+func callApi(json: [String : Any], token: String) async throws -> [String: Any]{
+	do {
+			guard let url = URL(string: "https://api.github.com/graphql") else {
+					throw ApiError.regular
+			}
+			guard let jsonData = try? JSONSerialization.data(withJSONObject: json) else { throw ApiError.regular}
+			var request = URLRequest(url: url)
+			request.httpMethod = "POST"
+			request.setValue("bearer "+token, forHTTPHeaderField: "Authorization")
+			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+			request.httpBody = jsonData
+			let (responseData, _) = try await URLSession.shared.data(
+					for: request
+			)
+			
+			if let json = try JSONSerialization.jsonObject(with: responseData, options: [.allowFragments])  as? [String: Any] {
+					if (json["message"] as? String == "Bad credentials") {
+							//Failed due to auth
+							throw ApiError.auth
+					} else {
+							//Looks good
+							return json
+					}
+			} else {
+					throw ApiError.regular
+			}
+	} catch {
+		//something went wrong
+		throw ApiError.regular
+	}
 }
 
-func clearStatus() async {
-    let clearQuery = "\n mutation {\nchangeUserStatus(input: {}) {\nstatus {\nmessage\n}\n}\n}"
-    let json = ["query": clearQuery] as [String : Any]
-    do {
-        try await callApi(json: json)
-    }  catch {
-        
-    }
+func clearStatus(token: String) async {
+	let clearQuery = "\n mutation {\nchangeUserStatus(input: {}) {\nstatus {\nmessage\n}\n}\n}"
+	let json = ["query": clearQuery] as [String : Any]
+	do {
+		try await callApi(json: json, token: token)
+	} catch {
+			
+	}
 }
 
-func setStatus(emoji: String, message: String) async {
-    let dataQuery = "mutation ($status: ChangeUserStatusInput!) {\nchangeUserStatus(input: $status) {\nstatus {\nemoji\nexpiresAt\nlimitedAvailability: indicatesLimitedAvailability\nmessage\n}\n}\n}"
-    let json = ["query": dataQuery, "variables": ["status":["emoji":emoji,"message":message]]] as [String : Any]
-    do {
-        try await callApi(json: json)
-    }  catch {
-        
-    }
+func setStatus(emoji: String, message: String, token: String) async {
+	let dataQuery = "mutation ($status: ChangeUserStatusInput!) {\nchangeUserStatus(input: $status) {\nstatus {\nemoji\nexpiresAt\nlimitedAvailability: indicatesLimitedAvailability\nmessage\n}\n}\n}"
+	let json = ["query": dataQuery, "variables": ["status":["emoji":emoji,"message":message]]] as [String : Any]
+	do {
+		try await callApi(json: json, token: token)
+	} catch {
+			
+	}
 }
 
-func validateToken() async throws -> String {
-    let json = ["query": "{\nviewer {\nlogin\n}\n}"]
-    do {
-        let result = try await callApi(json: json)
-        let data = result["data"] as! [String: Any]
-        let viewer = data["viewer"] as! [String: Any]
-        let login = viewer["login"] as! String
-        return login
-    }  catch {
-        throw ApiError.regular
-    }
+func validateToken(token: String) async throws -> String {
+	let json = ["query": "{\nviewer {\nlogin\n}\n}"]
+	do {
+		let result = try await callApi(json: json, token: token)
+		let data = result["data"] as! [String: Any]
+		let viewer = data["viewer"] as! [String: Any]
+		let login = viewer["login"] as! String
+		return login
+	} catch {
+		throw ApiError.regular
+	}
 }
 
 

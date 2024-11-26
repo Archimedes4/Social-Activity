@@ -15,194 +15,16 @@ struct StatusInformation: Identifiable {
 	let emoji: String
 }
 
-enum StatusItemState {
-	case creating, editing, viewing
-}
-
 protocol StatusItemInformation {}
 extension StatusInformation : StatusItemInformation{}
 extension Binding<String> : StatusItemInformation {}
 
 
-struct StatusItem: View {
-	var information: StatusInformation?
-	@State var name: String
-	@State var emoji: String
-	@Binding var createEmoji: String
-	@State var url: String = ""
-	@ObservedObject var gitHubEmojis: GitHubEmoji
-	@State private var path = NavigationPath()
-	@State var state: StatusItemState
-	@State var initalName: String = ""
-	var onSelectEmoji: () -> Void
-	
-	func addEntry() async {
-		let db = Firestore.firestore()
-		do {
-			guard let userID = Auth.auth().currentUser?.uid else { return }
-			let ref = try await db.collection("users").document(userID).collection("statuses").addDocument(data: [
-				"name": name,
-				"emoji": emoji
-			])
-			print("Document added with ID: \(ref.documentID)")
-			state = StatusItemState.editing
-		} catch {
-			print("Error adding document: \(error)")
+struct StatusButtonStyle: ButtonStyle {
+		func makeBody(configuration: Configuration) -> some View {
+				configuration.label
+						.foregroundColor(.white)
 		}
-	}
-	
-	init(information: StatusInformation?, gitHubEmojis: GitHubEmoji, onSelectEmoji: @escaping () -> Void, createEmoji: Binding<String>?) {
-		self.gitHubEmojis = gitHubEmojis
-		self.onSelectEmoji = onSelectEmoji
-		guard let info = information else {
-			if (createEmoji != nil) {
-				self._createEmoji = createEmoji!
-			} else {
-				self._createEmoji = Binding.constant("")
-			}
-			self.emoji = "smiley"
-			self.name = ""
-			self.state = StatusItemState.creating
-			self.information = nil
-			return
-		}
-		if (createEmoji != nil) {
-			self._createEmoji = createEmoji!
-		} else {
-			self._createEmoji = Binding.constant(info.emoji)
-		}
-		self.information = info
-		self.name = info.name
-		self.emoji = info.emoji
-		self.state = StatusItemState.viewing
-	}
-	
-	var body: some View {
-		ZStack {
-			RoundedRectangle(cornerRadius: 10)
-				.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [(state == StatusItemState.creating) ? 10:.greatestFiniteMagnitude]))
-				.background(.white)
-				.cornerRadius(10)
-			VStack (spacing: 0){
-				HStack {
-					if (url != "") {
-						Button(action: {
-							onSelectEmoji()
-						}) {
-							AsyncImage(url: URL(string: url)) { image in
-								image.resizable()
-							} placeholder: {
-								Color.red
-							}
-							.frame(width: 25, height: 25)
-							.padding(.leading)
-						}
-						.buttonStyle(PlainButtonStyle())
-						.disabled(state == StatusItemState.viewing)
-					}
-					if (state == StatusItemState.viewing) {
-						VStack() {
-							Spacer()
-							Text(name)
-								.font(Font.custom("Nunito-Regular", size: 20))
-								.padding(.leading, 8)
-							Spacer()
-						}.frame(height: 65)
-					} else {
-						VStack {
-							VStack {
-								TextEditor(text: $name)
-									.lineLimit(1)
-									.padding(3)
-									.overlay(
-										RoundedRectangle(cornerRadius: 12)
-											.stroke(.black, lineWidth: 2)
-									)
-									.font(Font.custom("Nunito-Regular", size: 20))
-									.padding(.vertical)
-							}.frame(height: 65)
-						}
-					}
-					Spacer()
-					if (state == StatusItemState.creating) {
-						Button(action: {
-							Task {
-								await addEntry()
-							}
-						}) {
-							Image(systemName: "plus.app")
-								.resizable()
-								.frame(width: 25, height: 25)
-								.padding(.trailing)
-						}.buttonStyle(.plain)
-					} else if (state == StatusItemState.viewing) {
-						Button(action: {
-							initalName = name
-							withAnimation(.easeIn(duration: 0.3)){
-								state = StatusItemState.editing
-							}
-						}) {
-							Image(systemName: "pencil")
-								.resizable()
-								.frame(width: 25, height: 25)
-								.padding(.trailing)
-						}.buttonStyle(.plain)
-					} else {
-						// Editing
-						if (initalName != name) {
-							Button(action: {
-								withAnimation(.easeIn(duration: 0.3)){
-									state = StatusItemState.viewing
-								}
-							}) {
-								Image(systemName: "checkmark.square")
-									.resizable()
-									.frame(width: 25, height: 25)
-							}.buttonStyle(.plain)
-						}
-						Button(action: {
-							state = StatusItemState.viewing
-						}) {
-							Image(systemName: "trash.square")
-								.resizable()
-								.frame(width: 25, height: 25)
-						}.buttonStyle(.plain)
-						Button(action: {
-							withAnimation(.easeIn(duration: 0.3)){
-								state = StatusItemState.viewing
-							}
-						}) {
-							Image(systemName: "x.square")
-								.resizable()
-								.frame(width: 25, height: 25)
-								.padding(.trailing)
-						}.buttonStyle(.plain)
-					}
-				}.frame(height: 65)
-				if (state != StatusItemState.viewing) {
-					HStack{
-						Text("\(90 - name.count) characters remaining")
-						.offset(y: -9)
-						.padding(.leading, 65)
-						Spacer()
-					}
-				}
-			}
-			.onAppear() {
-				Task {
-					url = try await GitHubEmoji().getUrl(emoji: emoji)
-				}
-			}
-			.onChange(of: emoji) {
-				Task {
-					url = try await GitHubEmoji().getUrl(emoji: emoji)
-				}
-			}
-			.onChange(of: createEmoji) {
-				emoji = createEmoji
-			}
-		}
-	}
 }
 
 struct HomeView: View {
@@ -267,12 +89,20 @@ struct HomeView: View {
 									StatusItem(information: item, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
 										selectedIndex = index
 										selectedEmoji = item.emoji
-									}, createEmoji: nil)
+									}, createEmoji: nil, onDelete: {
+										print("On Delete")
+										var newArr = statusItems
+										newArr.remove(at: index)
+										statusItems = newArr
+									})
 								}
 								StatusItem(information: nil, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
 									selectedIndex = statusItems.count
 									selectedEmoji = createSelectedEmoji
-								}, createEmoji: $createSelectedEmoji)
+								}, createEmoji: $createSelectedEmoji, onDelete: {
+									
+								})
+								.padding(.bottom)
 							}
 						}.padding(.horizontal, 10)
 					}
