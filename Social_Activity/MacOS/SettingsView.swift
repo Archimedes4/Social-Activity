@@ -35,10 +35,11 @@ struct SettingsView: View {
 						.aspectRatio(contentMode: .fit)
 					Text("App is password protected?")
 						.font(Font.custom("Nunito-Regular", size: 20))
+					Spacer()
 					Toggle("", isOn: $appPasswordProtected)
 						.toggleStyle(.switch)
 						.padding(.vertical)
-					Spacer()
+						.labelsHidden()
 				}.frame(height: 30)
 				HStack {
 					Image(systemName: "lock.open.rotation")
@@ -47,10 +48,11 @@ struct SettingsView: View {
 						.aspectRatio(contentMode: .fit)
 					Text("Stay signed into GitHub?")
 						.font(Font.custom("Nunito-Regular", size: 20))
+					Spacer()
 					Toggle("", isOn: $staySignedIn)
 						.toggleStyle(.switch)
 						.padding(.vertical)
-					Spacer()
+						.labelsHidden()
 				}
 				Button(action: {
 					let firebaseAuth = Auth.auth()
@@ -75,14 +77,14 @@ struct SettingsView: View {
 				.buttonStyle(StatusButtonStyle())
 			}
 			.padding(10)
-			.frame(width: geometry.size.width * 0.4)
+			.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 			.background(.white)
 			.cornerRadius(12)
 			.overlay(alignment: .center) {
 				RoundedRectangle(cornerRadius: 10)
 					.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 					.cornerRadius(10)
-					.frame(width: geometry.size.width * 0.4)
+					.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 			}
 			.onAppear() {
 				

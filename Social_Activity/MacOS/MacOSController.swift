@@ -12,21 +12,28 @@ enum authState {
 	case noAuth, signedIn
 }
 
-struct MacOSController: View {
+struct Controller: View {
 	@StateObject var gitHubEmojis = GitHubEmoji()
 	@State var handle: AuthStateDidChangeListenerHandle? = nil
 	@State var currentAuthState: authState = authState.noAuth
+	@State var token: String = ""
+	
 	var body: some View {
 		VStack {
 			if (currentAuthState == authState.signedIn) {
-				HomeView(gitHubEmojis: gitHubEmojis)
+				HomeView(token: $token, gitHubEmojis: gitHubEmojis)
 			} else {
 				LoginView()
 			}
 		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.onAppear() {
 			handle = Auth.auth().addStateDidChangeListener { auth, user in
 				if (user !== nil) {
+					guard let tokenRes = KeychainService().retriveSecret(id: "gitauth") else {
+						return
+					}
+					token = tokenRes
 					currentAuthState = authState.signedIn
 				} else {
 					currentAuthState = authState.noAuth
@@ -40,5 +47,5 @@ struct MacOSController: View {
 }
 
 #Preview {
-    MacOSController()
+	Controller()
 }

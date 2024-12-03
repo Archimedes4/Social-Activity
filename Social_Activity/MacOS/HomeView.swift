@@ -9,11 +9,15 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
 
-struct StatusInformation: Identifiable {
-	let id: String
-	let name: String
-	let emoji: String
+class HomeData: ObservableObject {
+	@Published var statusItems: [StatusInformation?] = [nil]
+	@Published var statusItemsState: LoadingState = LoadingState.loading
+	@Published var createSelectedEmoji: String = "smiley" // The emoji for create
+	@Published var selectedEmoji: String = "smiley" // The emoji for picker
+	@Published var selectedIndex: Int = -1 // If -1 not selecting a emoji
+	@Published var profile: UserData? = nil
 }
+
 
 protocol StatusItemInformation {}
 extension StatusInformation : StatusItemInformation{}
@@ -21,114 +25,178 @@ extension Binding<String> : StatusItemInformation {}
 
 
 struct StatusButtonStyle: ButtonStyle {
-		func makeBody(configuration: Configuration) -> some View {
-				configuration.label
-						.foregroundColor(.white)
-		}
+	func makeBody(configuration: Configuration) -> some View {
+		configuration.label
+			.foregroundColor(.white)
+	}
 }
 
 struct HomeView: View {
-	@State var statusItems: [StatusInformation] = []
-	@State var createSelectedEmoji: String = "smiley" // The emoji for create
-	@State var selectedEmoji: String = "smiley" // The emoji for picker
-	@State var selectedIndex: Int = -1 // If -1 not selecting a emoji
+	@Binding var token: String
 	@ObservedObject var gitHubEmojis: GitHubEmoji
-	
-	func getStatusInformation() async {
-		guard let userID = Auth.auth().currentUser?.uid else { return }
-		let db = Firestore.firestore()
-		let docRef = db.collection("users").document(userID).collection("statuses")
+	@StateObject var homeData: HomeData = HomeData()
+	@State var isShowingSettings: Bool = false
 
-		do {
-			let documentsResult = try await docRef.getDocuments()
-			var loadingItems: [StatusInformation] = []
-			for document in documentsResult.documents {
-				let data = document.data()
-				if (data.keys.contains("name") && data.keys.contains("emoji")) {
-					loadingItems.append(StatusInformation(id: document.documentID, name: data["name"] as! String, emoji: data["emoji"] as! String))
-				}
-			}
-			statusItems = loadingItems
-		} catch {
-			print("Error getting document: \(error)")
-		}
-
-	}
-	
 	var body: some View {
 		GeometryReader { geometry in
-			NavigationStack {
-				VStack {
-					HStack {
-						Image("Logo")
-							.resizable()
-							.frame(width: geometry.size.height * 0.08, height: geometry.size.height * 0.08)
-							.cornerRadius(15)
-							.padding(.leading)
-						Text("Social Activity")
-							.font(Font.custom("Nunito-Regular", size: 32))
-							.foregroundStyle(.white)
-						Spacer()
+			VStack {
+				HStack {
+					Image("Logo")
+						.resizable()
+						.frame(width: max(50, geometry.size.height * 0.08), height: max(50, geometry.size.height * 0.08))
+						.cornerRadius(12)
+						.padding(.leading)
+					Text("Social Activity")
+						.font(Font.custom("Nunito-Regular", size: 32))
+						.foregroundStyle(.white)
+					Spacer()
+					if (geometry.size.width < 600 || geometry.size.height < 700) {
+						Button(action: {
+							withAnimation(.spring(duration: 0.3)) {
+								isShowingSettings = !isShowingSettings
+							}
+						}) {
+							if (homeData.profile != nil) {
+								AsyncImage(url: URL(string: homeData.profile!.advatar)) { image in
+									image.resizable()
+								} placeholder: {
+									ProgressView()
+								}
+								.frame(width: 50, height: 50)
+								.clipShape(.rect(cornerRadius: 25))
+								.overlay(RoundedRectangle(cornerRadius: 25)
+													 .stroke(Color.black, lineWidth: 1))
+								.padding()
+							} else {
+								ProgressView()
+									.padding(.trailing)
+							}
+						}.buttonStyle(.plain)
 					}
-					.frame(height: geometry.size.height * 0.1)
-					HStack {
+				}
+				.frame(height: (geometry.size.height * 0.1))
+				HStack {
+					if (geometry.size.width >= 600 || isShowingSettings) {
 						VStack {
-							if (selectedIndex != -1) {
-								EmojiPicker(for: geometry, emoji: $selectedEmoji, onDismiss: {selected in
-									selectedIndex = -1
+							if (homeData.selectedIndex != -1) {
+								EmojiPicker(for: geometry, onDismiss: {selected in
+									homeData.selectedIndex = -1
 								}, gitHubEmojis: gitHubEmojis)
 							} else {
 								ProfileView(for: geometry)
 							}
-							SettingsView(for: geometry)
+							if (geometry.size.height >= 700) {
+								SettingsView(for: geometry)
+									.transition(.slide)
+							}
 							Spacer()
 						}
-						ScrollView {
-							LazyVStack {
-								ForEach(Array(statusItems.enumerated()), id: \.element.id) { index, item in
-									StatusItem(information: item, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
-										selectedIndex = index
-										selectedEmoji = item.emoji
-									}, createEmoji: nil, onDelete: {
-										print("On Delete")
-										var newArr = statusItems
-										newArr.remove(at: index)
-										statusItems = newArr
-									})
-								}
-								StatusItem(information: nil, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
-									selectedIndex = statusItems.count
-									selectedEmoji = createSelectedEmoji
-								}, createEmoji: $createSelectedEmoji, onDelete: {
-									
-								})
-								.padding(.bottom)
-							}
-						}.padding(.horizontal, 10)
 					}
-				}.frame(width: geometry.size.width, height: geometry.size.height)
-				.background(
-					LinearGradient(stops: [
-						Gradient.Stop(color: Color("BlueOne"), location: 0.14),
-						Gradient.Stop(color: Color("BlueTwo"), location: 0.53),
-						Gradient.Stop(color: Color("GreenOne"), location: 0.87),
-					], startPoint: .topTrailing, endPoint: .bottomLeading)
-				)
-				.onAppear() {
-					Task {
-						await getStatusInformation()
+					if (geometry.size.width >= 600 || !isShowingSettings) {
+						HomeList(token: $token, gitHubEmojis: gitHubEmojis, for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 20))
 					}
 				}
-				.onChange(of: selectedEmoji) { oldVal, newVal in
-					print("Here", newVal)
-					if selectedIndex < statusItems.count && selectedIndex >= 0 {
-						statusItems[selectedIndex] = StatusInformation(id: statusItems[selectedIndex].id, name: statusItems[selectedIndex].name, emoji: selectedEmoji)
-					} else if selectedIndex == statusItems.count {
-						print("Count")
-						createSelectedEmoji = newVal
+			}.frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom)
+			.background(
+				LinearGradient(stops: [
+					Gradient.Stop(color: Color("BlueOne"), location: 0.14),
+					Gradient.Stop(color: Color("BlueTwo"), location: 0.53),
+					Gradient.Stop(color: Color("GreenOne"), location: 0.87),
+				], startPoint: .topTrailing, endPoint: .bottomLeading)
+			)
+			.onAppear() {
+				Task {
+					guard var result: [StatusInformation?] = await getStatusInformation() else {
+						return
 					}
+					result.append(nil)
+					homeData.statusItems = result
+					homeData.statusItemsState = LoadingState.success
+				}
+				Task {
+					guard let result = await getUserData(token: token) else {
+						return
+					}
+					print(result)
+					homeData.profile = result
 				}
 			}
+			.onChange(of: homeData.selectedEmoji) { oldVal, newVal in
+				print("Here", newVal)
+				if homeData.selectedIndex < homeData.statusItems.count && homeData.selectedIndex >= 0 {
+					homeData.statusItems[homeData.selectedIndex] = StatusInformation(id: homeData.statusItems[homeData.selectedIndex]!.id, name: homeData.statusItems[homeData.selectedIndex]!.name, emoji: homeData.selectedEmoji)
+				} else if homeData.selectedIndex == homeData.statusItems.count {
+					print("Count")
+					homeData.createSelectedEmoji = newVal
+				}
+			}
+			.environmentObject(homeData)
 		}
+	}
+}
+
+
+struct HomeList: View {
+	@Binding var token: String
+	@ObservedObject var gitHubEmojis: GitHubEmoji
+	@EnvironmentObject var homeData: HomeData
+	@State var minHeight: CGFloat
+	
+	init (token: Binding<String>, gitHubEmojis: GitHubEmoji, for minHeight: CGFloat) {
+		self._token = token
+		self.gitHubEmojis = gitHubEmojis
+		self.minHeight = minHeight
+	}
+	
+	var body: some View {
+		ScrollView {
+			LazyVStack( spacing: 0) {
+				if (homeData.statusItemsState == LoadingState.loading) {
+					VStack {
+						Spacer()
+						ProgressView()
+							.scaleEffect(max(minHeight/600, 1))
+						Spacer()
+					}
+					.frame(height: minHeight - 75)
+				} else if (homeData.statusItemsState == LoadingState.failed) {
+					VStack {
+						Spacer()
+						Image(systemName: "exclamationmark.icloud.fill")
+							.resizable()
+							.aspectRatio(contentMode: .fit)
+							.frame(width: 30, height: 30)
+						Spacer()
+					}
+					.frame(height: minHeight - 100)
+				}
+				ForEach(Array(homeData.statusItems.enumerated()), id: (\.element?.id)) { index, item in
+					if (item != nil) {
+						StatusItem(information: item, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
+							homeData.selectedIndex = index
+							homeData.selectedEmoji = item!.emoji
+						}, onDelete: {
+							var newArr = homeData.statusItems
+							newArr.remove(at: index)
+							homeData.statusItems = newArr
+							homeData.selectedIndex = -1
+						}, onCreate: {id, name, emoji in}, token: $token)
+					} else {
+						StatusItem(information: nil, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
+							homeData.selectedIndex = homeData.statusItems.count
+							homeData.selectedEmoji = homeData.createSelectedEmoji
+						}, onDelete: {}, onCreate: { id, name, emoji in
+							var newArr = homeData.statusItems
+							newArr[newArr.count - 1] = StatusInformation(id: id, name: name, emoji: emoji)
+							newArr.append(nil)
+							homeData.statusItems = newArr
+							homeData.selectedIndex = -1
+						}, token: $token)
+						.padding(.bottom)
+					}
+				}
+				
+			}.frame(minHeight: (homeData.statusItemsState != LoadingState.success) ? minHeight:0)
+		}.padding(.horizontal, 10)
 	}
 }

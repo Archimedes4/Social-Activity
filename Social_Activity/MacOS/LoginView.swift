@@ -9,15 +9,11 @@ import SwiftUI
 import AuthenticationServices
 import FirebaseAuth
 
-let GITHUB_CLIENT_ID = "Ov23liCq5p4ZHp6wfTen"//TODO fix this
-let gitHubAuthLink = "https://github.com/login/oauth/authorize?client_id=\(GITHUB_CLIENT_ID)"
-
 struct LoginButton: View {
 	// Get an instance of WebAuthenticationSession using SwiftUI's
 	// @Environment property wrapper.
 	@Environment(\.webAuthenticationSession) private var webAuthenticationSession
-	@State var state: buttonState = buttonState.normal
-
+	
 	var body: some View {
 		Button(action: {
 			Task {
@@ -32,6 +28,7 @@ struct LoginButton: View {
 						return
 					}
 					let token = try await getAuthToken(code: code)
+					KeychainService().save(token, for: "gitauth")
 					let credential = OAuthProvider.credential(providerID: AuthProviderID.gitHub, accessToken: token)
 					Auth.auth().signIn(with: credential) { authResult, error in
 						if error != nil {
@@ -65,19 +62,8 @@ struct LoginButton: View {
 			.background(Color.black)
 			.cornerRadius(12)
 		}
-		.buttonStyle(CustomButtonStyle(onPressed: {
-			state = buttonState.pressed
-						}, onReleased: {
-							state = buttonState.hovered
-						}))
-		.onHover(perform: { e in
-			if (e == true) {
-				state = buttonState.hovered
-			} else {
-				state = buttonState.normal
-			}
-		})
 		.focusEffectDisabled()
+		.buttonStyle(.plain)
 	}
 }
 
@@ -85,9 +71,25 @@ struct LoginButton: View {
 struct LoginView: View {
     var body: some View {
 			VStack {
-				Text("Social Activity")
+				Spacer()
+				HStack {
+					Image("Logo")
+						.resizable()
+						.frame(width: 50, height: 50)
+						.cornerRadius(12)
+					Text("Social Activity")
+						.font(Font.custom("Nunito-Regular", size: 32))
+						.foregroundStyle(.white)
+				}.padding(.bottom)
 				LoginButton()
-			}.frame(maxWidth: .infinity, maxHeight: .infinity).background(
+				Text("By Andrew Mainella")
+					.font(Font.custom("Nunito-Regular", size: 16))
+					.foregroundStyle(.white)
+					.padding(.top)
+				Spacer()
+			}
+			.ignoresSafeArea(.all)
+			.frame(maxWidth: .infinity, maxHeight: .infinity).background(
 				LinearGradient(stops: [
 					Gradient.Stop(color: Color("BlueOne"), location: 0.14),
 					Gradient.Stop(color: Color("BlueTwo"), location: 0.53),

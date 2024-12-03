@@ -11,7 +11,6 @@ import Security
 class KeychainService {
     func save(_ secret: String, for id: String) {
         let query = [kSecClass: kSecClassKey,
-										kSecValueRef: id,
 										kSecAttrApplicationTag: "com.Archimedes4.SocialActivity."+id,
 										kSecUseDataProtectionKeychain: true,
 										kSecValueData: Data(secret.utf8)] as CFDictionary

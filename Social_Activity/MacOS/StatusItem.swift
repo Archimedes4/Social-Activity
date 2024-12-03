@@ -16,7 +16,7 @@ enum StatusItemState {
 struct StatusItem: View {
 	@State var name: String
 	@State var emoji: String
-	@Binding var createEmoji: String
+	@Binding var token: String
 	@State var url: String = ""
 	@ObservedObject var gitHubEmojis: GitHubEmoji
 	@State private var path = NavigationPath()
@@ -25,27 +25,21 @@ struct StatusItem: View {
 	var information: StatusInformation?
 	var onSelectEmoji: () -> Void
 	var onDelete: () -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String) -> Void
+	@EnvironmentObject var homeData: HomeData
 	
-	init(information: StatusInformation?, gitHubEmojis: GitHubEmoji, onSelectEmoji: @escaping () -> Void, createEmoji: Binding<String>?, onDelete: @escaping () -> Void) {
+	init(information: StatusInformation?, gitHubEmojis: GitHubEmoji, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String) -> Void, token: Binding<String>) {
 		self.gitHubEmojis = gitHubEmojis
 		self.onSelectEmoji = onSelectEmoji
 		self.onDelete = onDelete
+		self.onCreate = onCreate
+		self._token = token
 		guard let info = information else {
-			if (createEmoji != nil) {
-				self._createEmoji = createEmoji!
-			} else {
-				self._createEmoji = Binding.constant("")
-			}
 			self.emoji = "smiley"
 			self.name = ""
 			self.state = StatusItemState.create
 			self.information = nil
 			return
-		}
-		if (createEmoji != nil) {
-			self._createEmoji = createEmoji!
-		} else {
-			self._createEmoji = Binding.constant(info.emoji)
 		}
 		self.information = info
 		self.name = info.name
@@ -56,13 +50,23 @@ struct StatusItem: View {
 	var body: some View {
 		ZStack {
 			RoundedRectangle(cornerRadius: 10)
-				.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [(state == StatusItemState.create) ? 10:.greatestFiniteMagnitude]))
+				.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [(state == StatusItemState.create || state == StatusItemState.creating) ? 10:.greatestFiniteMagnitude]))
 				.background(.white)
 				.cornerRadius(10)
-			if (state != StatusItemState.create && state != StatusItemState.viewing && state != StatusItemState.editing) {
+			if (state == StatusItemState.viewing) {
+				Button(action: {
+					Task {
+						await setStatus(emoji: ":" + emoji + ":", message: name, token: token)
+					}
+				}) {
+					MainStatusItem(information: information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
+				}.buttonStyle(.plain)
+			} else if (state != StatusItemState.create && state != StatusItemState.viewing && state != StatusItemState.editing) {
 				LoadingItem(state: $state)
+			} else if (state != StatusItemState.failed) {
+				MainStatusItem(information: information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
 			} else {
-				MainStatusItem(information: information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
+				
 			}
 		}
 		.onAppear() {
@@ -75,9 +79,10 @@ struct StatusItem: View {
 				url = try await GitHubEmoji().getUrl(emoji: emoji)
 			}
 		}
-		.onChange(of: createEmoji) {
-			emoji = createEmoji
+		.onChange(of: homeData.createSelectedEmoji) {
+			emoji = homeData.createSelectedEmoji
 		}
+		.padding(.vertical, 2)
 	}
 }
 
@@ -108,6 +113,7 @@ struct MainStatusItem: View {
 	var information: StatusInformation?
 	var onDelete: () -> Void
 	var onSelectEmoji: () -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String) -> Void
 	@Binding var emoji: String
 	@Binding var name: String
 	@Binding var state: StatusItemState
@@ -146,18 +152,24 @@ struct MainStatusItem: View {
 				state = StatusItemState.failed
 				return
 			}
-			try await db.collection("users").document(userID).collection("statuses").addDocument(data: [
+			let res = try await db.collection("users").document(userID).collection("statuses").addDocument(data: [
 				"name": name,
 				"emoji": emoji
 			])
-			state = StatusItemState.editing
+			withAnimation(.easeIn(duration: 0.3)){
+				state = StatusItemState.create
+				onCreate(res.documentID, name, emoji)
+				name = ""
+			}
 		} catch {
 			state = StatusItemState.failed
 		}
 	}
 
 	func deleteItem() async {
-		state = StatusItemState.deleting
+		withAnimation(.easeIn(duration: 0.3)){
+			state = StatusItemState.deleting
+		}
 		let db = Firestore.firestore()
 		do {
 			guard let userID = Auth.auth().currentUser?.uid else {
@@ -169,7 +181,9 @@ struct MainStatusItem: View {
 				return
 			}
 			try await db.collection("users").document(userID).collection("statuses").document(infoID).delete()
-			onDelete()
+			withAnimation(.easeIn(duration: 0.3)){
+				onDelete()
+			}
 		} catch {
 			state = StatusItemState.failed
 		}
@@ -185,7 +199,7 @@ struct MainStatusItem: View {
 						AsyncImage(url: URL(string: url)) { image in
 							image.resizable()
 						} placeholder: {
-							Color.red
+							ProgressView()
 						}
 						.frame(width: 25, height: 25)
 						.padding(.leading)
@@ -284,6 +298,18 @@ struct MainStatusItem: View {
 					Spacer()
 				}
 			}
+		}
+	}
+}
+
+struct FailedItem: View {
+	var body: some View {
+		HStack {
+			Image(systemName: "exclamationmark.circle")
+				.resizable()
+				.frame(width: 25, height: 25)
+			Text("Failed")
+				.font(Font.custom("Nunito-Regular", size: 20))
 		}
 	}
 }

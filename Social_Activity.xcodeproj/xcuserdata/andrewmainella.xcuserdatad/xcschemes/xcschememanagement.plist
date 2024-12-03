@@ -4,15 +4,50 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Social_Activity.xcscheme_^#shared#^_</key>
+		<key>Promises (Playground).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>Social_Activity.iOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
+		</dict>
+		<key>Social_Activity.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>WidgetsExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>C6CB4DAD2B48603E0040C9F9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C6F9AE612CFBE254001E8608</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C6F9AE702CFBE255001E8608</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C6F9AE7A2CFBE255001E8608</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C6F9AEB32CFC370E001E8608</key>
 		<dict>
 			<key>primary</key>
 			<true/>

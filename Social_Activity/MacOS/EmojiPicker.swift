@@ -57,7 +57,6 @@ struct EmojiView: View {
 }
 
 struct EmojiPicker: View {
-	@Binding var emoji: String
 	@State var emojis: [String: String] = [:]
 	@State var filtered: [String: String] = [:]
 	@State var search = ""
@@ -67,11 +66,11 @@ struct EmojiPicker: View {
 	@State var geometry: GeometryProxy
 	
 	let columns = [GridItem(.adaptive(minimum: 80))]
+	@StateObject var homeData = HomeData()
 
 	
-	init (for metrics: GeometryProxy, emoji: Binding<String>, onDismiss: @escaping (_ selected: String) -> Void, gitHubEmojis: GitHubEmoji) {
+	init (for metrics: GeometryProxy, onDismiss: @escaping (_ selected: String) -> Void, gitHubEmojis: GitHubEmoji) {
 		self.geometry = metrics
-		self._emoji = emoji
 		self.onDismiss = onDismiss
 		self.gitHubEmojis = gitHubEmojis
 	}
@@ -92,11 +91,11 @@ struct EmojiPicker: View {
 			.frame(height: 50)
 			HStack {
 				VStack {
-					EmojiView(emoji: $emoji, gitHubEmojis: gitHubEmojis)
-					Text(emoji)
+					EmojiView(emoji: $homeData.selectedEmoji, gitHubEmojis: gitHubEmojis)
+					Text(homeData.selectedEmoji)
 						.font(Font.custom("Nunito-Regular", size: 20))
 					Button(action: {
-						onDismiss(emoji)
+						onDismiss(homeData.selectedEmoji)
 					}) {
 						HStack {
 							Image(systemName: "checkmark.circle")
@@ -112,7 +111,8 @@ struct EmojiPicker: View {
 						}
 					}.buttonStyle(.plain)
 					Button(action: {
-						onDismiss(emoji)
+						
+						onDismiss(homeData.selectedEmoji)
 					}) {
 						HStack {
 							Image(systemName: "arrow.uturn.backward")
@@ -133,7 +133,7 @@ struct EmojiPicker: View {
 							LazyVGrid(columns: columns) {
 								ForEach(filtered.sorted(by: <), id: \.key) {item in
 									EmojiItem(key: item.key, url: item.value, onSelected: { result in
-										emoji = result
+										homeData.selectedEmoji = result
 									})
 								}
 							}
