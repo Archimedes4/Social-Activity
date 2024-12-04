@@ -18,10 +18,12 @@ struct EmojiItem: View {
 				AsyncImage(url: URL(string: url)) { image in
 					image.resizable()
 				} placeholder: {
-					Color.red
+					ProgressView()
 				}
 				.frame(width: 25, height: 25)
 				Text(key.replacingOccurrences(of: "_", with: " "))
+					.minimumScaleFactor(0.2)
+					.lineLimit(2)
 			}
 		}.buttonStyle(.plain)
 	}
@@ -60,6 +62,7 @@ struct EmojiPicker: View {
 	@State var emojis: [String: String] = [:]
 	@State var filtered: [String: String] = [:]
 	@State var search = ""
+	@State var initalEmoji: String = "smiley"
 	var onDismiss: (_ selected: String) -> Void
 	@ObservedObject var gitHubEmojis: GitHubEmoji
 	
@@ -90,44 +93,45 @@ struct EmojiPicker: View {
 			.padding([.top, .horizontal])
 			.frame(height: 50)
 			HStack {
-				VStack {
-					EmojiView(emoji: $homeData.selectedEmoji, gitHubEmojis: gitHubEmojis)
-					Text(homeData.selectedEmoji)
-						.font(Font.custom("Nunito-Regular", size: 20))
-					Button(action: {
-						onDismiss(homeData.selectedEmoji)
-					}) {
-						HStack {
-							Image(systemName: "checkmark.circle")
-							Text("Select")
-						}
-						.padding()
-						.frame(maxWidth: .infinity)
-						.overlay(alignment: .center) {
-							RoundedRectangle(cornerRadius: 10)
-								.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
-								.cornerRadius(10)
-								.frame(maxWidth: .infinity)
-						}
-					}.buttonStyle(.plain)
-					Button(action: {
-						
-						onDismiss(homeData.selectedEmoji)
-					}) {
-						HStack {
-							Image(systemName: "arrow.uturn.backward")
-							Text("Go Back")
-						}
-						.padding()
-						.overlay(alignment: .center) {
-							RoundedRectangle(cornerRadius: 10)
-								.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
-								.cornerRadius(10)
-						}
-					}.buttonStyle(.plain)
-				}.padding(.leading)
+				if (geometry.size.width >= 600) {
+					VStack {
+						EmojiView(emoji: $homeData.selectedEmoji, gitHubEmojis: gitHubEmojis)
+						Text(homeData.selectedEmoji)
+							.font(Font.custom("Nunito-Regular", size: 20))
+						Button(action: {
+							onDismiss(homeData.selectedEmoji)
+						}) {
+							HStack {
+								Image(systemName: "checkmark.circle")
+								Text("Select")
+							}
+							.padding()
+							.frame(maxWidth: .infinity)
+							.overlay(alignment: .center) {
+								RoundedRectangle(cornerRadius: 10)
+									.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+									.cornerRadius(10)
+									.frame(maxWidth: .infinity)
+							}
+						}.buttonStyle(.plain)
+						Button(action: {
+							onDismiss(initalEmoji)
+						}) {
+							HStack {
+								Image(systemName: "arrow.uturn.backward")
+								Text("Go Back")
+							}
+							.padding()
+							.overlay(alignment: .center) {
+								RoundedRectangle(cornerRadius: 10)
+									.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+									.cornerRadius(10)
+							}
+						}.buttonStyle(.plain)
+					}.padding(.leading)
 					.frame(maxWidth: geometry.size.width * 0.1)
-				VStack {
+				}
+				VStack (spacing: 0) {
 					ScrollView {
 						VStack {
 							LazyVGrid(columns: columns) {
@@ -139,18 +143,55 @@ struct EmojiPicker: View {
 							}
 						}.frame(maxWidth: .infinity)
 					}
+					Button(action: {
+						onDismiss(initalEmoji)
+					}) {
+						HStack {
+							EmojiView(emoji: $initalEmoji, gitHubEmojis: gitHubEmojis)
+							Text("Go Back")
+						}
+						.padding()
+						.frame(maxWidth: .infinity)
+						.overlay(alignment: .center) {
+							RoundedRectangle(cornerRadius: 10)
+								.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+								.cornerRadius(10)
+								.frame(maxWidth: .infinity)
+						}
+					}.buttonStyle(.plain)
+					.padding()
+					if (homeData.selectedEmoji != initalEmoji) {
+						Button(action: {
+							onDismiss(homeData.selectedEmoji)
+						}) {
+							HStack {
+								EmojiView(emoji: $homeData.selectedEmoji, gitHubEmojis: gitHubEmojis)
+								Text("Select")
+							}
+							.padding()
+							.frame(maxWidth: .infinity)
+							.overlay(alignment: .center) {
+								RoundedRectangle(cornerRadius: 10)
+									.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+									.cornerRadius(10)
+									.frame(maxWidth: .infinity)
+							}
+						}.buttonStyle(.plain)
+						.padding([.horizontal, .bottom])
+					}
 				}.frame(maxWidth: .infinity)
-			}.frame(width: geometry.size.width * 0.4)
-		}.frame(width: geometry.size.width * 0.4)
+			}.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
+		}.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 		.background(.white)
 		.cornerRadius(10)
 		.overlay(alignment: .center) {
 			RoundedRectangle(cornerRadius: 10)
 				.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 				.cornerRadius(10)
-				.frame(width: geometry.size.width * 0.4)
+				.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 		}
 		.onAppear() {
+			initalEmoji = homeData.selectedEmoji
 			Task {
 				do {
 					emojis = try await gitHubEmojis.getEmojis()

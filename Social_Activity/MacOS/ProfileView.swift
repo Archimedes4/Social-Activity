@@ -27,7 +27,7 @@ struct ProfileView: View {
 					.frame(width: 296, height: 296)
 					.clipShape(.rect(cornerRadius: 296))
 					.overlay(RoundedRectangle(cornerRadius: 148)
-										 .stroke(Color.black, lineWidth: 1))
+					.stroke(Color.black, lineWidth: 1))
 					.padding()
 					HStack {
 						Text(homeData.profile!.fullName)
