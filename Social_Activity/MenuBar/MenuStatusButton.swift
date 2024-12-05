@@ -26,7 +26,7 @@ struct StatusButton: View {
 						AsyncImage(url: URL(string: url)) { image in
 							image.resizable()
 						} placeholder: {
-							Color.red
+							ProgressView()
 						}
 						.frame(width: 14, height: 14)
 					}

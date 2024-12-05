@@ -74,7 +74,8 @@ struct HomeView: View {
 								}.buttonStyle(.plain)
 							}
 						}
-						.frame(height: (geometry.size.height * 0.1))
+						.frame(width: geometry.size.width, height: (geometry.size.height * 0.1))
+						.fixedSize()
 						HStack {
 							if (geometry.size.width >= 600 || isShowingSettings) {
 								VStack {

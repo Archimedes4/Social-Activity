@@ -68,7 +68,7 @@ struct AppMenu: View {
 							AsyncImage(url: URL(string: advatar)) { image in
 								image.resizable()
 							} placeholder: {
-								Color.red
+								ProgressView()
 							}
 							.frame(width: 25, height: 25)
 							.cornerRadius(15)

@@ -90,7 +90,7 @@
 			);
 			target = C6F9AEB32CFC370E001E8608 /* WidgetsExtension */;
 		};
-		C6F9AEDD2CFC3945001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		C6F9B1272D016ACE001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				EmojiPicker.swift,
@@ -101,25 +101,18 @@
 				SettingsView.swift,
 				StatusItem.swift,
 			);
-			target = C6F9AE612CFBE254001E8608 /* Social_Activity.iOS */;
-		};
-		C6F9AF3F2CFD0DE1001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Select_Status_1x1.swift,
-			);
-			target = C6CB4DAD2B48603E0040C9F9 /* Social_Activity */;
+			target = C6F9AEB32CFC370E001E8608 /* WidgetsExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C61CF8C22CEFC0F4001A93C5 /* MacOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C6F9AEDD2CFC3945001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = MacOS; sourceTree = "<group>"; };
 		C66633EA2CF3A621008143CB /* Fonts */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Fonts; sourceTree = "<group>"; };
-		C66633F92CF59825008143CB /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
+		C66633F92CF59825008143CB /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C6F9B1272D016ACE001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
 		C6F9AE632CFBE254001E8608 /* Social_Activity.iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOS; sourceTree = "<group>"; };
 		C6F9AE742CFBE255001E8608 /* Social_Activity.iOSTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOSTests; sourceTree = "<group>"; };
 		C6F9AE7E2CFBE255001E8608 /* Social_Activity.iOSUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOSUITests; sourceTree = "<group>"; };
-		C6F9AEB92CFC370E001E8608 /* Widgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C6F9AF3F2CFD0DE1001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, C6F9AEC92CFC370F001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widgets; sourceTree = "<group>"; };
+		C6F9AEB92CFC370E001E8608 /* Widgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C6F9AEC92CFC370F001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widgets; sourceTree = "<group>"; };
+		C6F9B12A2D016AD8001E8608 /* MenuBar */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MenuBar; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,11 +199,11 @@
 			children = (
 				C6DEE5C52B4A2518004B1552 /* Info.plist */,
 				C66633EA2CF3A621008143CB /* Fonts */,
-				C61CF8C22CEFC0F4001A93C5 /* MacOS */,
 				C6CB4DBA2B4860400040C9F9 /* Social_Activity.entitlements */,
 				C6CB4DB72B4860400040C9F9 /* Preview Content */,
 				C6F9AF402CFD1DFA001E8608 /* ArchGithHubStatusApp.swift */,
 				C6F9AF5B2CFD1DFA001E8608 /* Assets.xcassets */,
+				C6F9B12A2D016AD8001E8608 /* MenuBar */,
 			);
 			path = Social_Activity;
 			sourceTree = "<group>";
@@ -249,9 +242,9 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C61CF8C22CEFC0F4001A93C5 /* MacOS */,
 				C66633EA2CF3A621008143CB /* Fonts */,
 				C66633F92CF59825008143CB /* Shared */,
+				C6F9B12A2D016AD8001E8608 /* MenuBar */,
 			);
 			name = Social_Activity;
 			productName = ArchGithHubStatus;

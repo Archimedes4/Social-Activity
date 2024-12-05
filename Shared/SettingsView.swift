@@ -74,7 +74,7 @@ struct SettingsView: View {
 						Spacer()
 					}
 				}
-				.buttonStyle(StatusButtonStyle())
+				.buttonStyle(.plain)
 			}
 			.padding(10)
 			.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))

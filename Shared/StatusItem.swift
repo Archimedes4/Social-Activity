@@ -80,7 +80,9 @@ struct StatusItem: View {
 			}
 		}
 		.onChange(of: homeData.createSelectedEmoji) {
-			emoji = homeData.createSelectedEmoji
+			if (state == StatusItemState.create) {
+				emoji = homeData.createSelectedEmoji
+			}
 		}
 		.padding(.vertical, 2)
 	}

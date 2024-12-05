@@ -22,7 +22,7 @@ struct ProfileView: View {
 					AsyncImage(url: URL(string: homeData.profile!.advatar)) { image in
 						image.resizable()
 					} placeholder: {
-						Color.red
+						ProgressView()
 					}
 					.frame(width: 296, height: 296)
 					.clipShape(.rect(cornerRadius: 296))
