@@ -12,9 +12,11 @@ struct SettingsView: View {
 	@State var geometry: GeometryProxy
 	@State var appPasswordProtected: Bool = false
 	@State var staySignedIn: Bool = true
+	@Binding var token: String
 
-	init (for metrics: GeometryProxy) {
+	init (for metrics: GeometryProxy, token: Binding<String>) {
 		self.geometry = metrics
+		self._token = token
 	}
 	
 	var body: some View {
@@ -44,8 +46,8 @@ struct SettingsView: View {
 				HStack {
 					Image(systemName: "lock.open.rotation")
 						.resizable()
-						.frame(width: 25, height: 25)
 						.aspectRatio(contentMode: .fit)
+						.frame(width: 25, height: 25)
 					Text("Stay signed into GitHub?")
 						.font(Font.custom("Nunito-Regular", size: 20))
 					Spacer()
@@ -87,7 +89,32 @@ struct SettingsView: View {
 					.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 			}
 			.onAppear() {
-				
+				// Get the value if the token is being saved.
+				let protectedVal = KeychainService().retriveSecret(id: "protected")
+				if (protectedVal == "protected") {
+					appPasswordProtected = true
+				} else {
+					appPasswordProtected = false
+				}
+				let tokenVal = KeychainService().retriveSecret(id: "gitauth")
+				if (tokenVal == "no-persistence") {
+					staySignedIn = false
+				} else {
+					staySignedIn = true
+				}
+			}
+			.onChange(of: appPasswordProtected, initial: false) {
+				if (appPasswordProtected) {
+					KeychainService().save("protected", for: "protected")
+				} else {
+					KeychainService().save("not-protected", for: "protected")
+				}
+			}.onChange(of: staySignedIn, initial: false) {
+				if (staySignedIn) {
+					KeychainService().save(token, for: "gitauth")
+				} else {
+					KeychainService().save("no-persistence", for: "gitauth")
+				}
 			}
 		}.padding()
 	}

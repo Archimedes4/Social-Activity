@@ -11,8 +11,8 @@ let GITHUB_CLIENT_ID = "Ov23liCq5p4ZHp6wfTen"//TODO fix this
 let gitHubAuthLink = "https://github.com/login/oauth/authorize?client_id=\(GITHUB_CLIENT_ID)&scope=user"
 
 enum ApiError: Error {
-    case auth
-    case regular
+	case auth
+	case regular
 }
 
 func callApi(json: [String : Any], token: String) async throws -> [String: Any]{
@@ -156,7 +156,7 @@ class GitHubEmoji: ObservableObject {
 
 func getAuthToken(code: String) async throws -> String {
 	guard let url = URL(string: "https://github.com/login/oauth/access_token?client_id=\(GITHUB_CLIENT_ID)&client_secret=\("73854e99a7c42f4cb004ba10f5900acd0263e92e")&code=\(code)") else {
-			throw ApiError.regular
+		throw ApiError.regular
 	}
 	var request = URLRequest(url: url)
 	request.setValue("application/json", forHTTPHeaderField: "Accept")

@@ -44,6 +44,10 @@ struct ProfileView: View {
 							.padding([.bottom, .leading])
 						Spacer()
 					}
+				} else {
+					VStack {
+						ProgressView()
+					}.frame(maxWidth: .infinity, maxHeight: .infinity)
 				}
 			}
 			.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))

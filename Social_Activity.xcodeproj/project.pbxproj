@@ -93,10 +93,11 @@
 		C6F9B1272D016ACE001E8608 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Controller.swift,
 				EmojiPicker.swift,
 				HomeView.swift,
 				LoginView.swift,
-				MacOSController.swift,
+				PasswordView.swift,
 				ProfileView.swift,
 				SettingsView.swift,
 				StatusItem.swift,

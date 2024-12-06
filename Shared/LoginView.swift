@@ -10,6 +10,7 @@ import AuthenticationServices
 import FirebaseAuth
 
 struct LoginButton: View {
+	var onToken: (_ token: String) -> Void
 	// Get an instance of WebAuthenticationSession using SwiftUI's
 	// @Environment property wrapper.
 	@Environment(\.webAuthenticationSession) private var webAuthenticationSession
@@ -28,14 +29,13 @@ struct LoginButton: View {
 						return
 					}
 					let token = try await getAuthToken(code: code)
-					KeychainService().save(token, for: "gitauth")
 					let credential = OAuthProvider.credential(providerID: AuthProviderID.gitHub, accessToken: token)
 					Auth.auth().signIn(with: credential) { authResult, error in
 						if error != nil {
 							// Handle error.
 							print("error", error)
 						}
-						print("Here")
+						onToken(token)
 						// User is signed in.
 						// IdP data available in authResult.additionalUserInfo.profile.
 
@@ -69,6 +69,7 @@ struct LoginButton: View {
 
 
 struct LoginView: View {
+	var onToken: (_ token: String) -> Void
     var body: some View {
 			VStack {
 				Spacer()
@@ -81,7 +82,9 @@ struct LoginView: View {
 						.font(Font.custom("Nunito-Regular", size: 32))
 						.foregroundStyle(.white)
 				}.padding(.bottom)
-				LoginButton()
+				LoginButton(onToken: { token in
+					onToken(token)
+				})
 				Text("By Andrew Mainella")
 					.font(Font.custom("Nunito-Regular", size: 16))
 					.foregroundStyle(.white)
@@ -97,8 +100,4 @@ struct LoginView: View {
 				], startPoint: .topTrailing, endPoint: .bottomLeading)
 			)
     }
-}
-
-#Preview {
-    LoginView()
 }

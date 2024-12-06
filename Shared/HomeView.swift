@@ -83,12 +83,12 @@ struct HomeView: View {
 										EmojiPicker(for: geometry, onDismiss: {selected in
 											homeData.selectedIndex = -1
 										}, gitHubEmojis: gitHubEmojis)
-									} else {
+									} else if (geometry.size.height >= 700 || !isShowingSettings) {
 										ProfileView(for: geometry)
 									}
-									if (geometry.size.height >= 700) {
-										SettingsView(for: geometry)
-											.transition(.slide)
+									if (geometry.size.height >= 700 || isShowingSettings) {
+										SettingsView(for: geometry, token: $token)
+											.transition(.opacity)
 									}
 									Spacer()
 								}
