@@ -26,8 +26,10 @@ struct SettingsView: View {
 					Image(systemName: "gearshape.fill")
 						.resizable()
 						.frame(width: 30, height: 30)
+						.foregroundStyle(.black)
 					Text("Settings")
 						.font(Font.custom("Nunito-Regular", size: 32))
+						.foregroundStyle(.black)
 					Spacer()
 				}
 				HStack {
@@ -35,8 +37,11 @@ struct SettingsView: View {
 						.resizable()
 						.frame(width: 25, height: 25)
 						.aspectRatio(contentMode: .fit)
+						.foregroundStyle(.black)
 					Text("App is password protected?")
 						.font(Font.custom("Nunito-Regular", size: 20))
+						.foregroundStyle(.black)
+						.minimumScaleFactor(0.5)
 					Spacer()
 					Toggle("", isOn: $appPasswordProtected)
 						.toggleStyle(.switch)
@@ -48,8 +53,11 @@ struct SettingsView: View {
 						.resizable()
 						.aspectRatio(contentMode: .fit)
 						.frame(width: 25, height: 25)
+						.foregroundStyle(.black)
 					Text("Stay signed into GitHub?")
 						.font(Font.custom("Nunito-Regular", size: 20))
+						.foregroundStyle(.black)
+						.minimumScaleFactor(0.5)
 					Spacer()
 					Toggle("", isOn: $staySignedIn)
 						.toggleStyle(.switch)
@@ -73,6 +81,7 @@ struct SettingsView: View {
 						Text("Sign Out")
 							.font(Font.custom("Nunito-Regular", size: 20))
 							.foregroundStyle(.black)
+							.minimumScaleFactor(0.5)
 						Spacer()
 					}
 				}
@@ -84,7 +93,7 @@ struct SettingsView: View {
 			.cornerRadius(12)
 			.overlay(alignment: .center) {
 				RoundedRectangle(cornerRadius: 10)
-					.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+					.strokeBorder(.black, style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 					.cornerRadius(10)
 					.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 			}

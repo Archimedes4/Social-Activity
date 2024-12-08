@@ -50,7 +50,8 @@ struct StatusItem: View {
 	var body: some View {
 		ZStack {
 			RoundedRectangle(cornerRadius: 10)
-				.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [(state == StatusItemState.create || state == StatusItemState.creating) ? 10:.greatestFiniteMagnitude]))
+				.strokeBorder(Color.black, style: StrokeStyle(lineWidth: 3, dash: [(state == StatusItemState.create || state == StatusItemState.creating) ? 10:.greatestFiniteMagnitude]))
+
 				.background(.white)
 				.cornerRadius(10)
 			if (state == StatusItemState.viewing) {
@@ -217,6 +218,7 @@ struct MainStatusItem: View {
 						Text(name)
 							.font(Font.custom("Nunito-Regular", size: 20))
 							.padding(.leading, 8)
+							.foregroundStyle(.black)
 						Spacer()
 					}.frame(height: 65)
 				} else {
@@ -229,6 +231,9 @@ struct MainStatusItem: View {
 									RoundedRectangle(cornerRadius: 12)
 										.stroke(.black, lineWidth: 2)
 								)
+								.foregroundStyle(.black)
+								.background(.white)
+								.scrollContentBackground(.hidden)
 								.font(Font.custom("Nunito-Regular", size: 20))
 								.padding(.vertical)
 						}.frame(height: 65)
@@ -245,6 +250,7 @@ struct MainStatusItem: View {
 							.resizable()
 							.frame(width: 25, height: 25)
 							.padding(.trailing)
+							.foregroundStyle(.black)
 					}.buttonStyle(.plain)
 				} else if (state == StatusItemState.viewing) {
 					Button(action: {
@@ -257,6 +263,7 @@ struct MainStatusItem: View {
 							.resizable()
 							.frame(width: 25, height: 25)
 							.padding(.trailing)
+							.foregroundStyle(.black)
 					}.buttonStyle(.plain)
 				} else {
 					// Editing
@@ -269,6 +276,7 @@ struct MainStatusItem: View {
 							Image(systemName: "checkmark.square")
 								.resizable()
 								.frame(width: 25, height: 25)
+								.foregroundStyle(.black)
 						}.buttonStyle(.plain)
 					}
 					Button(action: {
@@ -279,6 +287,7 @@ struct MainStatusItem: View {
 						Image(systemName: "trash.square")
 							.resizable()
 							.frame(width: 25, height: 25)
+							.foregroundStyle(.black)
 					}.buttonStyle(.plain)
 					Button(action: {
 						withAnimation(.easeIn(duration: 0.3)){
@@ -289,14 +298,16 @@ struct MainStatusItem: View {
 							.resizable()
 							.frame(width: 25, height: 25)
 							.padding(.trailing)
+							.foregroundStyle(.black)
 					}.buttonStyle(.plain)
 				}
 			}.frame(height: 65)
 			if (state != StatusItemState.viewing) {
 				HStack{
 					Text("\(90 - name.count) characters remaining")
-					.offset(y: -9)
-					.padding(.leading, 65)
+						.offset(y: -9)
+						.padding(.leading, 65)
+						.foregroundStyle(.black)
 					Spacer()
 				}
 			}

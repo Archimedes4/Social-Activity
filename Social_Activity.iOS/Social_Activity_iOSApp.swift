@@ -12,7 +12,8 @@ import FirebaseAuth
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 	func application(_ application: UIApplication,
-									 didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+									didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+		FirebaseApp.configure()
 		return true
 	}
 }
@@ -20,13 +21,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct ArchGithHubStatusApp: App {
 	@UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-	init() {
-		FirebaseApp.configure()
-	}
 	
 	var body: some Scene {
 		WindowGroup {
 			Controller()
+				.onAppear() {
+					do {
+						try Auth.auth().useUserAccessGroup("SYV2CK2N9N.com.Archimedes4.SocialActivity")
+					} catch var error {
+						print("FAILED" + String(describing: error))
+					}
+				}
 		}
 	}
 }

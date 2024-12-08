@@ -26,6 +26,8 @@ struct Controller: View {
 				LoginView(onToken: { result in
 					token = result
 					guard let tokenRes = KeychainService().retriveSecret(id: "gitauth") else {
+						currentAuthState = authState.signedIn
+						KeychainService().save(token, for: "gitauth")
 						return
 					}
 					print(tokenRes)
@@ -65,8 +67,10 @@ struct Controller: View {
 				isPassProtect = false
 			}
 			handle = Auth.auth().addStateDidChangeListener { auth, user in
+				print("HERE", user)
 				if (user !== nil) {
 					guard let tokenRes = KeychainService().retriveSecret(id: "gitauth") else {
+						print("No save")
 						return
 					}
 					print(tokenRes)

@@ -9,17 +9,17 @@ import WidgetKit
 import SwiftUI
 
 struct Status_Clear_1x1_Provider: TimelineProvider {
-		func placeholder(in context: Context) -> Select_Clear_1x1_Entry {
-			Select_Clear_1x1_Entry(date: Date.now, status: LoadingState.loading)
+		func placeholder(in context: Context) -> Select_Clear_Entry {
+			Select_Clear_Entry(date: Date.now, status: LoadingState.loading)
 		}
 
-		func getSnapshot(in context: Context, completion: @escaping (Select_Clear_1x1_Entry) -> ()) {
-			let entry = Select_Clear_1x1_Entry(date: Date.now, status: LoadingState.loading)
+		func getSnapshot(in context: Context, completion: @escaping (Select_Clear_Entry) -> ()) {
+			let entry = Select_Clear_Entry(date: Date.now, status: LoadingState.loading)
 			completion(entry)
 		}
 
 		func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-				var entries: [Select_Clear_1x1_Entry] = []
+				var entries: [Select_Clear_Entry] = []
 
 				let timeline = Timeline(entries: entries, policy: .atEnd)
 				completion(timeline)
@@ -30,12 +30,12 @@ struct Status_Clear_1x1_Provider: TimelineProvider {
 //    }
 }
 
-struct Select_Clear_1x1_Entry: TimelineEntry {
+struct Select_Clear_Entry: TimelineEntry {
 	var date: Date
 	var status: LoadingState
 	var profile: UserData?
-	var profileData: Data?
 	var statusData: Data?
+	var profileData: Data?
 }
 
 struct Status_Clear_1x1_WidgetsEntryView : View {
@@ -138,9 +138,9 @@ struct Status_Clear_1x1_Widgets: Widget {
 #Preview(as: .systemSmall) {
 	Status_Clear_1x1_Widgets()
 } timeline: {
-	Select_Clear_1x1_Entry(date: Date.now, status: LoadingState.success, profileData: try! Data(contentsOf: URL(string: "https://avatars.githubusercontent.com/u/82121191?v=4")!), statusData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f392.png?v8")!))
-	Select_Clear_1x1_Entry(date: Date.now, status: LoadingState.success, profileData: try! Data(contentsOf: URL(string: "https://avatars.githubusercontent.com/u/82121191?v=4")!))
-	Select_Clear_1x1_Entry(date: Date.now, status: LoadingState.loading)
-	Select_Clear_1x1_Entry(date: Date.now, status: LoadingState.failed)
+	Select_Clear_Entry(date: Date.now, status: LoadingState.success, statusData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f392.png?v8")!), profileData: try! Data(contentsOf: URL(string: "https://avatars.githubusercontent.com/u/82121191?v=4")!))
+	Select_Clear_Entry(date: Date.now, status: LoadingState.success, profileData: try! Data(contentsOf: URL(string: "https://avatars.githubusercontent.com/u/82121191?v=4")!))
+	Select_Clear_Entry(date: Date.now, status: LoadingState.loading)
+	Select_Clear_Entry(date: Date.now, status: LoadingState.failed)
 }
 

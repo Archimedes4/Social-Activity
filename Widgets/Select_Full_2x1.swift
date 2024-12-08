@@ -8,30 +8,6 @@
 import WidgetKit
 import SwiftUI
 
-struct Select_Full_2x1_Provider: TimelineProvider {
-		func placeholder(in context: Context) -> Select_Full_2x1_Entry {
-			Select_Full_2x1_Entry(date: Date.now, status: LoadingState.loading, items: [])
-		}
-
-		func getSnapshot(in context: Context, completion: @escaping (Select_Full_2x1_Entry) -> ()) {
-				let entry = Select_Full_2x1_Entry(date: Date.now, status: LoadingState.loading, items: [])
-				completion(entry)
-		}
-
-		func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-				var entries: [Select_Full_2x1_Entry] = []
-
-			entries.append(Select_Full_2x1_Entry(date: Date.now, status: LoadingState.loading, items: []))
-
-				let timeline = Timeline(entries: entries, policy: .atEnd)
-				completion(timeline)
-		}
-
-//    func relevances() async -> WidgetRelevances<Void> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
-}
-
 struct Select_Full_2x1_Button: View {
 	var item: StatusInformationImage
 	@State var geometry: GeometryProxy
@@ -44,7 +20,7 @@ struct Select_Full_2x1_Button: View {
 		Button(action: {
 			
 		}) {
-			Image(uiImage: UIImage(data: item.emojiImage)!)
+			Image(uiImage: UIImage(data: item.emojiData)!)
 				.resizable()
 				.frame(width: 20, height: 20)
 				.padding()
@@ -61,15 +37,8 @@ struct Select_Full_2x1_Button: View {
 	}
 }
 
-struct Select_Full_2x1_Entry: TimelineEntry {
-	var date: Date
-	var status: LoadingState
-	var profile: UserData?
-	var items: [StatusInformationImage]
-}
-
 struct Select_Full_2x1_WidgetsEntryView : View {
-	var entry: Select_Full_2x1_Provider.Entry
+	var entry: Select_Full_Provider.Entry
 
 	var body: some View {
 		VStack {
@@ -159,7 +128,7 @@ struct Select_Full_2x1_Widgets: Widget {
 	let kind: String = "Widgets"
 
 	var body: some WidgetConfiguration {
-		StaticConfiguration(kind: kind, provider: Select_Full_2x1_Provider()) { entry in
+		StaticConfiguration(kind: kind, provider: Select_Full_Provider()) { entry in
 			if #available(iOS 17.0, *) {
 				Select_Full_2x1_WidgetsEntryView(entry: entry)
 					.containerBackground(for: .widget) {
@@ -185,19 +154,19 @@ struct Select_Full_2x1_Widgets: Widget {
 #Preview(as: .systemMedium) {
 	Select_Full_2x1_Widgets()
 } timeline: {
-	Select_Full_2x1_Entry(date: Date.now, status: LoadingState.loading, items: [])
-	Select_Full_2x1_Entry(date: Date.now, status: LoadingState.success, items: [
-		StatusInformationImage(id: "1", name: "Coding", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f468-1f4bb.png?v8")!)),
-		StatusInformationImage(id: "2", name: "In Class", emoji: "school_satchel", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f392.png?v8")!)),
-		StatusInformationImage(id: "3", name: "Walking", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f6b6.png?v8")!)),
-		StatusInformationImage(id: "4", name: "Sleeping", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f634.png?v8")!)),
-		StatusInformationImage(id: "5", name: "Atom", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/atom.png?v8")!)),
-		StatusInformationImage(id: "6", name: "Walking", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f334.png?v8")!)),
-		StatusInformationImage(id: "7", name: "Walking", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f914.png?v8")!)),
-		StatusInformationImage(id: "8", name: "Walking", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f6b6.png?v8")!)),
-		StatusInformationImage(id: "9", name: "Walking", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f6b6.png?v8")!)),
-		StatusInformationImage(id: "10", name: "Sleeping", emoji: "man_technologist", emojiImage: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f634.png?v8")!))
+	Select_Full_Entry(date: Date.now, status: LoadingState.loading, items: [])
+	Select_Full_Entry(date: Date.now, status: LoadingState.success, items: [
+		StatusInformationImage(id: "1", name: "Coding", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f468-1f4bb.png?v8")!)),
+		StatusInformationImage(id: "2", name: "In Class", emoji: "school_satchel", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f392.png?v8")!)),
+		StatusInformationImage(id: "3", name: "Walking", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f6b6.png?v8")!)),
+		StatusInformationImage(id: "4", name: "Sleeping", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f634.png?v8")!)),
+		StatusInformationImage(id: "5", name: "Atom", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/atom.png?v8")!)),
+		StatusInformationImage(id: "6", name: "Walking", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f334.png?v8")!)),
+		StatusInformationImage(id: "7", name: "Walking", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f914.png?v8")!)),
+		StatusInformationImage(id: "8", name: "Walking", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f6b6.png?v8")!)),
+		StatusInformationImage(id: "9", name: "Walking", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f6b6.png?v8")!)),
+		StatusInformationImage(id: "10", name: "Sleeping", emoji: "man_technologist", emojiData: try! Data(contentsOf: URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f634.png?v8")!))
 	])
-	Select_Full_2x1_Entry(date: Date.now, status: LoadingState.failed, items: [])
+	Select_Full_Entry(date: Date.now, status: LoadingState.failed, items: [])
 }
 

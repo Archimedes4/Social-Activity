@@ -34,6 +34,7 @@ struct ProfileView: View {
 							.font(.system(size: 24))
 							.fontWeight(.semibold)
 							.padding(.leading)
+							.foregroundStyle(.black)
 						Spacer()
 					}
 					HStack {
@@ -55,7 +56,7 @@ struct ProfileView: View {
 			.cornerRadius(12)
 			.overlay(alignment: .center) {
 				RoundedRectangle(cornerRadius: 10)
-					.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+					.strokeBorder(.black, style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 					.cornerRadius(10)
 					.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 			}

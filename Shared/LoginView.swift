@@ -22,7 +22,7 @@ struct LoginButton: View {
 					// Perform the authentication and await the result.
 					let urlWithToken = try await webAuthenticationSession.authenticate(
 						using: URL(string: gitHubAuthLink)!,
-							callbackURLScheme: "Archimedes4.ArchGithHubStatus"
+							callbackURLScheme: "com.Archimedes4.SocialActivity.iOS"
 					)
 					let queryItems = URLComponents(string: urlWithToken.absoluteString)?.queryItems
 					guard let code = queryItems?.first(where: { $0.name == "code" })?.value else {
@@ -35,6 +35,7 @@ struct LoginButton: View {
 							// Handle error.
 							print("error", error)
 						}
+						print("All good", token)
 						onToken(token)
 						// User is signed in.
 						// IdP data available in authResult.additionalUserInfo.profile.
