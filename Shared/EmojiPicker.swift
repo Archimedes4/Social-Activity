@@ -24,6 +24,7 @@ struct EmojiItem: View {
 				Text(key.replacingOccurrences(of: "_", with: " "))
 					.minimumScaleFactor(0.2)
 					.lineLimit(2)
+					.foregroundStyle(.black)
 			}
 		}.buttonStyle(.plain)
 	}
@@ -83,6 +84,11 @@ struct EmojiPicker: View {
 					.padding(5)
 					.font(Font.custom("Nunito-Regular", size: 20))
 					.lineLimit(1)
+					.scrollContentBackground(.hidden)
+					.onSubmit {
+						UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+					}
+					.foregroundStyle(.black)
 			}
 			.overlay(
 				RoundedRectangle(cornerRadius: 12)
@@ -119,13 +125,15 @@ struct EmojiPicker: View {
 						}) {
 							HStack {
 								Image(systemName: "arrow.uturn.backward")
+									.foregroundStyle(.black)
 								Text("Go Back")
+									.foregroundStyle(.black)
 							}
 							.padding()
 							.frame(maxWidth: geometry.size.width * 0.1)
 							.overlay(alignment: .center) {
 								RoundedRectangle(cornerRadius: 10)
-									.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+									.strokeBorder(.black, style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 									.cornerRadius(10)
 							}
 							
@@ -152,12 +160,13 @@ struct EmojiPicker: View {
 							HStack {
 								EmojiView(emoji: $initalEmoji, gitHubEmojis: gitHubEmojis)
 								Text("Go Back")
+									.foregroundStyle(.black)
 							}
 							.padding()
 							.frame(maxWidth: .infinity)
 							.overlay(alignment: .center) {
 								RoundedRectangle(cornerRadius: 10)
-									.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+									.strokeBorder(.black, style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 									.cornerRadius(10)
 									.frame(maxWidth: .infinity)
 							}
@@ -170,12 +179,13 @@ struct EmojiPicker: View {
 								HStack {
 									EmojiView(emoji: $homeData.selectedEmoji, gitHubEmojis: gitHubEmojis)
 									Text("Select")
+										.foregroundStyle(.black)
 								}
 								.padding()
 								.frame(maxWidth: .infinity)
 								.overlay(alignment: .center) {
 									RoundedRectangle(cornerRadius: 10)
-										.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
+										.strokeBorder(.black, style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 										.cornerRadius(10)
 										.frame(maxWidth: .infinity)
 								}
@@ -185,7 +195,8 @@ struct EmojiPicker: View {
 					}
 				}.frame(maxWidth: .infinity)
 			}.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
-		}.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
+		}
+		.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
 		.background(.white)
 		.cornerRadius(10)
 		.overlay(alignment: .center) {

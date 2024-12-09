@@ -96,7 +96,8 @@ func getUserData(token: String) async -> UserData? {
 		guard let status = viewer["status"] as? [String: String] else {
 			return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: nil)
 		}
-		guard let status_emoji = status["emoji"] else {return nil}
+		guard var status_emoji = status["emoji"] else {return nil}
+		status_emoji = status_emoji.filter { ":".contains($0) == false }
 		guard let status_id = status["id"] else {return nil}
 		guard let status_message = status["message"] else {return nil}
 

@@ -151,17 +151,19 @@ struct MainStatusItem: View {
 		state = StatusItemState.creating
 		let db = Firestore.firestore()
 		do {
+			let itemId = UUID().uuidString
 			guard let userID = Auth.auth().currentUser?.uid else {
 				state = StatusItemState.failed
 				return
 			}
-			let res = try await db.collection("users").document(userID).collection("statuses").addDocument(data: [
+			let res: Void = try await db.collection("users").document(userID).collection("statuses").document(itemId).setData([
 				"name": name,
-				"emoji": emoji
+				"emoji": emoji,
+				"id":itemId
 			])
 			withAnimation(.easeIn(duration: 0.3)){
 				state = StatusItemState.create
-				onCreate(res.documentID, name, emoji)
+				onCreate(itemId, name, emoji)
 				name = ""
 			}
 		} catch {

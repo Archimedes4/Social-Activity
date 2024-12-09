@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct Select_Status_1x1_WidgetsEntryView : View {
-	var entry: Select_Status_Entry
+	var entry: Select_Status_Provider.Entry
 
 	var body: some View {
 		VStack {

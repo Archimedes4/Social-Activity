@@ -29,6 +29,75 @@ struct StatusButtonStyle: ButtonStyle {
 	}
 }
 
+struct StatusComponent: View {
+	@EnvironmentObject var homeData: HomeData
+	@ObservedObject var gitHubEmojis: GitHubEmoji
+	@Binding var token: String
+	
+	var emojiBinding: Binding<String> {
+		 Binding<String>(
+				 get: {
+					 return self.homeData.profile?.status?.emoji ?? ""
+		 },
+				 set: { newString in
+					 
+		 })
+	 }
+	
+	var body: some View {
+		HStack {
+			if (homeData.profile != nil) {
+				AsyncImage(url: URL(string: homeData.profile!.advatar)) { image in
+					image.resizable()
+				} placeholder: {
+					ProgressView()
+				}
+				.frame(width: 50, height: 50)
+				.clipShape(.rect(cornerRadius: 25))
+				.overlay(RoundedRectangle(cornerRadius: 25)
+									 .stroke(Color.black, lineWidth: 1))
+				.padding(.leading)
+			} else {
+				ProgressView()
+					.padding(.leading)
+			}
+			if (homeData.profile?.status != nil) {
+				EmojiView(emoji: emojiBinding, gitHubEmojis: gitHubEmojis)
+					.padding(.leading)
+				Text((homeData.profile?.status!.name) ?? "")
+					.font(Font.custom("Nunito-Regular", size: 20))
+					.foregroundStyle(.black)
+			} else {
+				Text("No Status Set!")
+					.font(Font.custom("Nunito-Regular", size: 20))
+					.foregroundStyle(.black)
+			}
+			Spacer()
+			if (homeData.profile?.status != nil) {
+				Button(action: {
+					Task {
+						await clearStatus(token: token)
+					}
+				}) {
+					Image(systemName: "xmark")
+						.resizable()
+						.frame(width: 25, height: 25)
+						.padding(.trailing, 20)
+						.foregroundStyle(.black)
+				}
+			}
+		}.frame(maxWidth: .infinity, minHeight:75, maxHeight: 75)
+		.overlay(alignment: .center) {
+			RoundedRectangle(cornerRadius: 10)
+				.strokeBorder(.black, style: StrokeStyle(lineWidth: 2, dash: [.greatestFiniteMagnitude]))
+				.cornerRadius(10)
+		}
+		.background(.white)
+		.clipShape(.rect(cornerRadius: 10))
+		.padding(.horizontal, 10)
+	}
+}
+
 struct HomeView: View {
 	@Binding var token: String
 	@ObservedObject var gitHubEmojis: GitHubEmoji
@@ -56,21 +125,11 @@ struct HomeView: View {
 										isShowingSettings = !isShowingSettings
 									}
 								}) {
-									if (homeData.profile != nil) {
-										AsyncImage(url: URL(string: homeData.profile!.advatar)) { image in
-											image.resizable()
-										} placeholder: {
-											ProgressView()
-										}
-										.frame(width: 50, height: 50)
-										.clipShape(.rect(cornerRadius: 25))
-										.overlay(RoundedRectangle(cornerRadius: 25)
-															 .stroke(Color.black, lineWidth: 1))
+									Image(systemName: "gearshape")
+										.resizable()
+										.frame(width: 30, height: 30)
 										.padding()
-									} else {
-										ProgressView()
-											.padding(.trailing)
-									}
+										.foregroundStyle(.black)
 								}.buttonStyle(.plain)
 							}
 						}
@@ -94,7 +153,10 @@ struct HomeView: View {
 								}
 							}
 							if (geometry.size.width >= 600 || !isShowingSettings) {
-								HomeList(token: $token, gitHubEmojis: gitHubEmojis, for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 20))
+								VStack {
+									StatusComponent(gitHubEmojis: gitHubEmojis, token: $token)
+									HomeList(token: $token, gitHubEmojis: gitHubEmojis, for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70))
+								}
 							}
 						}
 					}
@@ -103,14 +165,16 @@ struct HomeView: View {
 							EmojiPicker(for: geometry, onDismiss: { hello in
 								homeData.selectedIndex = -1
 							}, gitHubEmojis: gitHubEmojis)
-							.frame(width: geometry.size.width, height: geometry.size.height - geometry.safeAreaInsets.bottom)
-							.offset(y: -(geometry.safeAreaInsets.bottom - 5))
+							.position(x: geometry.size.width, y: geometry.size.height)
+							.frame(width: geometry.size.width, height: geometry.size.height)
 						}
-						.frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.top)
+						.position(x: 0, y: 0)
+						.frame(width: geometry.size.width, height: geometry.size.height)
 						.background(.gray.opacity(0.8))
 					}
 				}
-			}.frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom)
+			}
+			.frame(width: geometry.size.width, height: geometry.size.height)
 			.background(
 				LinearGradient(stops: [
 					Gradient.Stop(color: Color("BlueOne"), location: 0.14),
@@ -143,7 +207,7 @@ struct HomeView: View {
 				}
 			}
 			.environmentObject(homeData)
-		}
+		}.ignoresSafeArea(.keyboard, edges: .all)
 	}
 }
 

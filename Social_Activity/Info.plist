@@ -4,9 +4,13 @@
 <dict>
 	<key>ATSApplicationFontsPath</key>
 	<string>.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict/>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Fonts/Nunito-Regular.ttf</string>
+		<string>/Users/andrewmainella/Documents/ArchGithHubStatus/Shared/Nunito-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

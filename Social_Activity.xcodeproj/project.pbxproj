@@ -11,7 +11,6 @@
 		C61CF8DB2CF026F9001A93C5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C61CF8DA2CF026F9001A93C5 /* FirebaseFirestore */; };
 		C67919752D055A63003140BD /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6F9AEB52CFC370E001E8608 /* WidgetKit.framework */; };
 		C67919762D055A63003140BD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6F9AEB72CFC370E001E8608 /* SwiftUI.framework */; };
-		C67919812D055A64003140BD /* WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C67919742D055A63003140BD /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C67919992D055B2E003140BD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C67919982D055B2E003140BD /* FirebaseAuth */; };
 		C679199B2D055B2E003140BD /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C679199A2D055B2E003140BD /* FirebaseCore */; };
 		C679199D2D055B2E003140BD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C679199C2D055B2E003140BD /* FirebaseFirestore */; };
@@ -29,7 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C679197F2D055A64003140BD /* PBXContainerItemProxy */ = {
+		C67919AD2D066A4A003140BD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C6CB4DA62B48603E0040C9F9 /* Project object */;
 			proxyType = 1;
@@ -59,7 +58,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C67919812D055A64003140BD /* WidgetsExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -98,13 +96,19 @@
 			);
 			target = C67919732D055A63003140BD /* WidgetsExtension */;
 		};
+		C67919AB2D0649AA003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C6F9AE612CFBE254001E8608 /* Social_Activity.iOS */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C66633EA2CF3A621008143CB /* Fonts */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Fonts; sourceTree = "<group>"; };
 		C66633F92CF59825008143CB /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C679199F2D055B45003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
 		C67919772D055A63003140BD /* Widgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C67919822D055A64003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widgets; sourceTree = "<group>"; };
-		C6F9AE632CFBE254001E8608 /* Social_Activity.iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOS; sourceTree = "<group>"; };
+		C6F9AE632CFBE254001E8608 /* Social_Activity_iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C67919AB2D0649AA003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Social_Activity_iOS; sourceTree = "<group>"; };
 		C6F9AE742CFBE255001E8608 /* Social_Activity.iOSTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOSTests; sourceTree = "<group>"; };
 		C6F9AE7E2CFBE255001E8608 /* Social_Activity.iOSUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOSUITests; sourceTree = "<group>"; };
 		C6F9B12A2D016AD8001E8608 /* MenuBar */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MenuBar; sourceTree = "<group>"; };
@@ -167,7 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				C6CB4DB02B48603E0040C9F9 /* Social_Activity */,
-				C6F9AE632CFBE254001E8608 /* Social_Activity.iOS */,
+				C6F9AE632CFBE254001E8608 /* Social_Activity_iOS */,
 				C6F9AE742CFBE255001E8608 /* Social_Activity.iOSTests */,
 				C6F9AE7E2CFBE255001E8608 /* Social_Activity.iOSUITests */,
 				C67919772D055A63003140BD /* Widgets */,
@@ -194,7 +198,6 @@
 			children = (
 				C6DEE5C52B4A2518004B1552 /* Info.plist */,
 				C6F9B1C02D02B77D001E8608 /* GoogleService-Info.plist */,
-				C66633EA2CF3A621008143CB /* Fonts */,
 				C6CB4DBA2B4860400040C9F9 /* Social_Activity.entitlements */,
 				C6CB4DB72B4860400040C9F9 /* Preview Content */,
 				C6F9AF402CFD1DFA001E8608 /* ArchGithHubStatusApp.swift */,
@@ -263,7 +266,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C66633EA2CF3A621008143CB /* Fonts */,
 				C66633F92CF59825008143CB /* Shared */,
 				C6F9B12A2D016AD8001E8608 /* MenuBar */,
 			);
@@ -284,11 +286,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				C67919802D055A64003140BD /* PBXTargetDependency */,
+				C67919AE2D066A4A003140BD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C66633F92CF59825008143CB /* Shared */,
-				C6F9AE632CFBE254001E8608 /* Social_Activity.iOS */,
+				C6F9AE632CFBE254001E8608 /* Social_Activity_iOS */,
 			);
 			name = Social_Activity.iOS;
 			packageProductDependencies = (
@@ -481,10 +483,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C67919802D055A64003140BD /* PBXTargetDependency */ = {
+		C67919AE2D066A4A003140BD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C67919732D055A63003140BD /* WidgetsExtension */;
-			targetProxy = C679197F2D055A64003140BD /* PBXContainerItemProxy */;
+			targetProxy = C67919AD2D066A4A003140BD /* PBXContainerItemProxy */;
 		};
 		C6F9AE732CFBE255001E8608 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -504,6 +506,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Widgets/WidgetsExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
@@ -511,7 +514,7 @@
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Widgets;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -533,6 +536,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Widgets/WidgetsExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
@@ -540,7 +544,7 @@
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Widgets;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -761,14 +765,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity.iOS/Social_Activity.iOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Social_Activity.iOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity.iOS/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity_iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				GENERATE_PKGINFO_FILE = YES;
+				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
+				INFOPLIST_FILE = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Social Activity";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -795,14 +804,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity.iOS/Social_Activity.iOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Social_Activity.iOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity.iOS/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity_iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				GENERATE_PKGINFO_FILE = YES;
+				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
+				INFOPLIST_FILE = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Social Activity";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

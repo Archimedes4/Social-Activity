@@ -8,6 +8,7 @@
 import WidgetKit
 import SwiftUI
 import FirebaseAuth
+import FirebaseCore
 
 struct Select_Full_Provider: TimelineProvider {
 		func placeholder(in context: Context) -> Select_Full_Entry {
@@ -20,9 +21,26 @@ struct Select_Full_Provider: TimelineProvider {
 		}
 
 		func getTimeline(in context: Context, completion: @escaping (Timeline<Select_Full_Entry>) -> ()) {
-			var entries: [Select_Full_Entry] = []
-			print(Auth.auth().currentUser)
+			// Setup Firebase
+			FirebaseApp.configure()
+			try? Auth.auth().useUserAccessGroup("SYV2CK2N9N.com.Archimedes4.SocialActivity")
 			
+			// Get the current User
+			guard let user = Auth.auth().currentUser else {
+				let timeline = Timeline(entries: [Select_Full_Entry(date: .now, status: LoadingState.failed, items: [])], policy: .atEnd)
+				completion(timeline)
+				return
+			}
+			
+			var entries: [Select_Full_Entry] = []
+			var items: [StatusInformationImage] = []
+			
+			// Get the items
+			let ids: [String] = ["2vtNPV1Kep5KSZdv4ABT", "W105DRaIVo3AEndCfmBT", "Yy2lteVxUfxLXSMCz9Bv"]
+			
+			
+			
+			entries.append(Select_Full_Entry(date: .now, status: LoadingState.success, items: []))
 			let timeline = Timeline(entries: entries, policy: .atEnd)
 			completion(timeline)
 		}
@@ -75,7 +93,7 @@ struct Select_Full_Widgets: Widget {
 					.background()
 			}
 		}
-		.configurationDisplayName("Select Status")
+		.configurationDisplayName("Select Full")
 		.description("Select from a list of status options. These options fill the entire screen.")
 		.supportedFamilies([.systemSmall, .systemMedium])
 	}

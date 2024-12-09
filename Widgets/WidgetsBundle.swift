@@ -20,5 +20,6 @@ struct WidgetsBundle: WidgetBundle {
 	var body: some Widget {
 		Select_Full_Widgets()
 		Select_Status_Widgets()
+		Status_Clear_1x1_Widgets()
 	}
 }

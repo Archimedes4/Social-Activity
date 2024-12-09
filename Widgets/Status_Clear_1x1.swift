@@ -129,7 +129,7 @@ struct Status_Clear_1x1_Widgets: Widget {
 					.background()
 			}
 		}
-		.configurationDisplayName("My Widget")
+		.configurationDisplayName("Status Clear")
 		.description("This is an example widget.")
 		.supportedFamilies([.systemSmall])
 	}

@@ -7,6 +7,8 @@
 
 import WidgetKit
 import SwiftUI
+import FirebaseAuth
+import FirebaseCore
 
 struct Select_Status_Provider: TimelineProvider {
 		func placeholder(in context: Context) -> Select_Status_Entry {

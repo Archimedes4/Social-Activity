@@ -16,7 +16,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C6F9AEB32CFC370E001E8608"
+               BlueprintIdentifier = "C67919732D055A63003140BD"
                BuildableName = "WidgetsExtension.appex"
                BlueprintName = "WidgetsExtension"
                ReferencedContainer = "container:Social_Activity.xcodeproj">
