@@ -28,12 +28,6 @@ struct ArchGithHubStatusApp: App {
 	var body: some Scene {
 		WindowGroup {
 			Controller()
-				.onAppear {
-												for family in UIFont.familyNames.sorted() {
-														let names = UIFont.fontNames(forFamilyName: family)
-														print("Family: \(family) Font names: \(names)")
-												}
-										}
 		}
 	}
 }

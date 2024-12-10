@@ -9,6 +9,7 @@ import WidgetKit
 import SwiftUI
 import FirebaseAuth
 import FirebaseCore
+import FirebaseFirestore
 
 struct Select_Full_Provider: TimelineProvider {
 		func placeholder(in context: Context) -> Select_Full_Entry {
@@ -33,16 +34,54 @@ struct Select_Full_Provider: TimelineProvider {
 			}
 			
 			var entries: [Select_Full_Entry] = []
-			var items: [StatusInformationImage] = []
 			
 			// Get the items
 			let ids: [String] = ["2vtNPV1Kep5KSZdv4ABT", "W105DRaIVo3AEndCfmBT", "Yy2lteVxUfxLXSMCz9Bv"]
 			
 			
+			let db = Firestore.firestore()
+			let statusesRef = db.collection("users").document(user.uid).collection("statuses")
+
+			statusesRef.whereField("id", in: ids)
 			
-			entries.append(Select_Full_Entry(date: .now, status: LoadingState.success, items: []))
-			let timeline = Timeline(entries: entries, policy: .atEnd)
-			completion(timeline)
+			func failed() -> Void {
+				let timeline = Timeline(entries: [Select_Full_Entry(date: .now, status: LoadingState.failed, items: [])], policy: .atEnd)
+				completion(timeline)
+				return
+			}
+			
+			do {
+				Task {
+					let documentsResult = try await statusesRef.getDocuments()
+					var items: [StatusInformationImage] = []
+					for document in documentsResult.documents {
+						let data = document.data()
+						guard let name = data["name"] as? String else {
+							failed()
+							return
+						}
+						guard let emoji = data["emoji"] as? String else {
+							failed()
+							return
+						}
+						// TODO fix url
+						guard let emojiUrl = URL(string: "https://github.githubassets.com/images/icons/emoji/unicode/1f468-1f4bb.png?v8") else {
+							failed()
+							return
+						}
+										
+						let emojiData = try Data(contentsOf: emojiUrl)
+						
+						items.append(StatusInformationImage(id: document.documentID, name: name, emoji: emoji, emojiData: emojiData))
+					}
+					entries.append(Select_Full_Entry(date: .now, status: LoadingState.success, items: items))
+					let timeline = Timeline(entries: entries, policy: .atEnd)
+					completion(timeline)
+				}
+			} catch {
+				failed()
+				return
+			}
 		}
 
 //    func relevances() async -> WidgetRelevances<Void> {

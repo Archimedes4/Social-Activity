@@ -16,6 +16,13 @@ class HomeData: ObservableObject {
 	@Published var selectedEmoji: String = "smiley" // The emoji for picker
 	@Published var selectedIndex: Int = -1 // If -1 not selecting a emoji
 	@Published var profile: UserData? = nil
+	
+	private var webSocketTask: URLSessionWebSocketTask?
+
+	
+	
+//https://docs.github.com/en/graphql/reference/objects#userstatusconnection
+	
 }
 
 protocol StatusItemInformation {}
