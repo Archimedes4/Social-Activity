@@ -16,9 +16,7 @@ enum StatusItemState {
 struct StatusItem: View {
 	@State var name: String
 	@State var emoji: String
-	@Binding var token: String
 	@State var url: String = ""
-	@ObservedObject var gitHubEmojis: GitHubEmoji
 	@State private var path = NavigationPath()
 	@State var state: StatusItemState
 	@State var initalName: String = ""
@@ -28,12 +26,10 @@ struct StatusItem: View {
 	var onCreate: (_ id: String, _ name: String, _ emoji: String) -> Void
 	@EnvironmentObject var homeData: HomeData
 	
-	init(information: StatusInformation?, gitHubEmojis: GitHubEmoji, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String) -> Void, token: Binding<String>) {
-		self.gitHubEmojis = gitHubEmojis
+	init(information: StatusInformation?, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String) -> Void) {
 		self.onSelectEmoji = onSelectEmoji
 		self.onDelete = onDelete
 		self.onCreate = onCreate
-		self._token = token
 		guard let info = information else {
 			self.emoji = "smiley"
 			self.name = ""
@@ -57,7 +53,8 @@ struct StatusItem: View {
 			if (state == StatusItemState.viewing) {
 				Button(action: {
 					Task {
-						await setStatus(emoji: ":" + emoji + ":", message: name, token: token)
+						await setStatus(emoji: ":" + emoji + ":", message: name, token: homeData.token)
+						homeData.checkStatus()
 					}
 				}) {
 					MainStatusItem(information: information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
@@ -72,12 +69,12 @@ struct StatusItem: View {
 		}
 		.onAppear() {
 			Task {
-				url = try await GitHubEmoji().getUrl(emoji: emoji)
+				url = try await homeData.getUrl(emoji: emoji)
 			}
 		}
 		.onChange(of: emoji) {
 			Task {
-				url = try await GitHubEmoji().getUrl(emoji: emoji)
+				url = try await homeData.getUrl(emoji: emoji)
 			}
 		}
 		.onChange(of: homeData.createSelectedEmoji) {

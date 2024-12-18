@@ -12,11 +12,10 @@ struct SettingsView: View {
 	@State var geometry: GeometryProxy
 	@State var appPasswordProtected: Bool = false
 	@State var staySignedIn: Bool = true
-	@Binding var token: String
+	@EnvironmentObject var homeData: HomeData
 
-	init (for metrics: GeometryProxy, token: Binding<String>) {
+	init (for metrics: GeometryProxy) {
 		self.geometry = metrics
-		self._token = token
 	}
 	
 	var body: some View {
@@ -120,7 +119,7 @@ struct SettingsView: View {
 				}
 			}.onChange(of: staySignedIn, initial: false) {
 				if (staySignedIn) {
-					KeychainService().save(token, for: "gitauth")
+					KeychainService().save(homeData.token, for: "gitauth")
 				} else {
 					KeychainService().save("no-persistence", for: "gitauth")
 				}

@@ -32,8 +32,8 @@ struct EmojiItem: View {
 
 struct EmojiView: View {
 	@Binding var emoji: String
-	@ObservedObject var gitHubEmojis: GitHubEmoji
 	@State var url: String = ""
+	@EnvironmentObject var homeData: HomeData
 	
 	var body: some View {
 		VStack {
@@ -47,13 +47,13 @@ struct EmojiView: View {
 			}
 		}.onAppear() {
 			Task {
-				url = try await gitHubEmojis.getUrl(emoji: emoji)
+				url = try await homeData.getUrl(emoji: emoji)
 			}
 		}
 		.onChange(of: emoji, {
 			//url = "" TODO wait a few seconds before changing
 			Task {
-				url = try await gitHubEmojis.getUrl(emoji: emoji)
+				url = try await homeData.getUrl(emoji: emoji)
 			}
 		})
 	}
@@ -65,16 +65,14 @@ struct EmojiPicker: View {
 	@State var search = ""
 	@State var initalEmoji: String = "smiley"
 	var onDismiss: (_ selected: String) -> Void
-	@ObservedObject var gitHubEmojis: GitHubEmoji
 	@State var geometry: GeometryProxy
 	let columns = [GridItem(.adaptive(minimum: 80))]
 	@EnvironmentObject var homeData: HomeData
 
 	
-	init (for metrics: GeometryProxy, onDismiss: @escaping (_ selected: String) -> Void, gitHubEmojis: GitHubEmoji) {
+	init (for metrics: GeometryProxy, onDismiss: @escaping (_ selected: String) -> Void) {
 		self.geometry = metrics
 		self.onDismiss = onDismiss
-		self.gitHubEmojis = gitHubEmojis
 	}
 	
 	var body: some View {
@@ -99,7 +97,7 @@ struct EmojiPicker: View {
 			HStack {
 				if (geometry.size.width >= 600) {
 					VStack {
-						EmojiView(emoji: $homeData.selectedEmoji, gitHubEmojis: gitHubEmojis)
+						EmojiView(emoji: $homeData.selectedEmoji)
 						Text(homeData.selectedEmoji)
 							.font(Font.custom("Nunito-Regular", size: 20))
 							.lineLimit(1)
@@ -158,7 +156,7 @@ struct EmojiPicker: View {
 							onDismiss(initalEmoji)
 						}) {
 							HStack {
-								EmojiView(emoji: $initalEmoji, gitHubEmojis: gitHubEmojis)
+								EmojiView(emoji: $initalEmoji)
 								Text("Go Back")
 									.foregroundStyle(.black)
 							}
@@ -177,7 +175,7 @@ struct EmojiPicker: View {
 								onDismiss(homeData.selectedEmoji)
 							}) {
 								HStack {
-									EmojiView(emoji: $homeData.selectedEmoji, gitHubEmojis: gitHubEmojis)
+									EmojiView(emoji: $homeData.selectedEmoji)
 									Text("Select")
 										.foregroundStyle(.black)
 								}
@@ -209,7 +207,7 @@ struct EmojiPicker: View {
 			initalEmoji = homeData.selectedEmoji
 			Task {
 				do {
-					emojis = try await gitHubEmojis.getEmojis()
+					emojis = try await homeData.getEmojis()
 					filtered = emojis
 				} catch {
 					

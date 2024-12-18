@@ -107,51 +107,24 @@ func getUserData(token: String) async -> UserData? {
 	}
 }
 
-class GitHubEmoji: ObservableObject {
-	@Published var emojis: [String:String] = [:]
-	
-	init() {
-		Task {
-			do {
-				try await _loadUrls()
-			} catch {
-				//TODO
-			}
+func getUserStatus(token: String) async -> StatusInformation? {
+	let json = ["query": "{\nviewer {\nstatus {\nid\nmessage\nemoji\n}\n}\n}"]
+	do {
+		let result = try await callApi(json: json, token: token)
+		guard let data = result["data"] as? [String: Any] else {return nil}
+		guard let viewer = data["viewer"] as? [String: Any] else {return nil}
+		
+		guard let status = viewer["status"] as? [String: String] else {
+			return nil
 		}
-	}
-	
-	func _loadUrls() async throws -> Void {
-		do {
-			guard let url = URL(string: "https://api.github.com/emojis") else {
-				throw ApiError.regular
-			}
-			let request = URLRequest(url: url)
-			let (responseData, _) = try await URLSession.shared.data(
-				for: request
-			)
-			
-			guard let decodedResponse = try? JSONDecoder().decode([String:String].self, from: responseData) else { throw ApiError.regular }
-			emojis = decodedResponse
-		} catch {
-			throw ApiError.regular
-		}
-	}
+		guard var status_emoji = status["emoji"] else {return nil}
+		status_emoji = status_emoji.filter { ":".contains($0) == false }
+		guard let status_id = status["id"] else {return nil}
+		guard let status_message = status["message"] else {return nil}
 
-	func getUrl(emoji: String) async throws -> String {
-		if (emojis.count == 0) {
-			try await _loadUrls()
-		}
-		guard let result = emojis[emoji] else {
-			throw ApiError.regular
-		}
-		return result
-	}
-	
-	func getEmojis() async throws -> [String:String] {
-		if (emojis.count == 0) {
-			try await _loadUrls()
-		}
-		return emojis
+		return StatusInformation(id: status_id, name: status_message, emoji: status_emoji)
+	} catch {
+		return nil
 	}
 }
 

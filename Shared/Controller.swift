@@ -13,29 +13,27 @@ enum authState {
 }
 
 struct Controller: View {
-	@StateObject var gitHubEmojis = GitHubEmoji()
 	@State var handle: AuthStateDidChangeListenerHandle? = nil
 	@State var currentAuthState: authState = authState.loading
-	@State var token: String = ""
+	@StateObject var homeData: HomeData = HomeData()
 	
 	var body: some View {
 		VStack {
 			if (currentAuthState == authState.signedIn) {
-				HomeView(token: $token, gitHubEmojis: gitHubEmojis)
+				HomeView()
 			} else if (currentAuthState == authState.noAuth) {
 				LoginView(onToken: { result in
-					token = result
+					homeData.token = result
 					guard let tokenRes = KeychainService().retriveSecret(id: "gitauth") else {
 						currentAuthState = authState.signedIn
-						KeychainService().save(token, for: "gitauth")
+						KeychainService().save(homeData.token, for: "gitauth")
 						return
 					}
-					print(tokenRes)
 					if (tokenRes == "no-persistence") {
 						currentAuthState = authState.signedIn
 					} else {
 						currentAuthState = authState.signedIn
-						KeychainService().save(token, for: "gitauth")
+						KeychainService().save(homeData.token, for: "gitauth")
 					}
 				})
 			} else if (currentAuthState == authState.password) {
@@ -56,6 +54,7 @@ struct Controller: View {
 				
 			}
 		}
+		.environmentObject(homeData)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.onAppear() {
 			var isPassProtect = false
@@ -67,17 +66,14 @@ struct Controller: View {
 				isPassProtect = false
 			}
 			handle = Auth.auth().addStateDidChangeListener { auth, user in
-				print("HERE", user)
 				if (user !== nil) {
 					guard let tokenRes = KeychainService().retriveSecret(id: "gitauth") else {
-						print("No save")
 						return
 					}
-					print(tokenRes)
 					if (tokenRes == "no-persistence") {
 						currentAuthState = authState.noAuth
 					} else {
-						token = tokenRes
+						homeData.token = tokenRes
 						if (isPassProtect) {
 							currentAuthState = authState.password
 						} else {

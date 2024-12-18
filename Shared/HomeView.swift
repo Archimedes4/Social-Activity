@@ -16,13 +16,63 @@ class HomeData: ObservableObject {
 	@Published var selectedEmoji: String = "smiley" // The emoji for picker
 	@Published var selectedIndex: Int = -1 // If -1 not selecting a emoji
 	@Published var profile: UserData? = nil
+	@Published var token: String = ""
+	@Published var emojis: [String:String] = [:]
+		
+	func checkStatus() -> Void {
+		guard let currentProfile = profile else {
+			return
+		}
+		Task { @MainActor in
+			print(currentProfile.status)
+			profile = UserData(fullName: currentProfile.fullName, advatar: currentProfile.advatar, pronouns: currentProfile.advatar, username: currentProfile.username, status: await getUserStatus(token: token))
+			print(profile?.status)
+		}
+	}
 	
-	private var webSocketTask: URLSessionWebSocketTask?
+	init() {
+		Task { @MainActor in
+			do {
+				emojis = try await _loadUrls()
+			} catch {
+				//TODO
+			}
+		}
+	}
+	
+	func _loadUrls() async throws -> [String:String] {
+		do {
+			guard let url = URL(string: "https://api.github.com/emojis") else {
+				throw ApiError.regular
+			}
+			let request = URLRequest(url: url)
+			let (responseData, _) = try await URLSession.shared.data(
+				for: request
+			)
+			
+			guard let decodedResponse = try? JSONDecoder().decode([String:String].self, from: responseData) else { throw ApiError.regular }
+			return decodedResponse
+		} catch {
+			throw ApiError.regular
+		}
+	}
 
+	func getUrl(emoji: String) async throws -> String {
+		if (emojis.count == 0) {
+			try await _loadUrls()
+		}
+		guard let result = emojis[emoji] else {
+			throw ApiError.regular
+		}
+		return result
+	}
 	
-	
-//https://docs.github.com/en/graphql/reference/objects#userstatusconnection
-	
+	func getEmojis() async throws -> [String:String] {
+		if (emojis.count == 0) {
+			try await _loadUrls()
+		}
+		return emojis
+	}
 }
 
 protocol StatusItemInformation {}
@@ -38,8 +88,6 @@ struct StatusButtonStyle: ButtonStyle {
 
 struct StatusComponent: View {
 	@EnvironmentObject var homeData: HomeData
-	@ObservedObject var gitHubEmojis: GitHubEmoji
-	@Binding var token: String
 	
 	var emojiBinding: Binding<String> {
 		 Binding<String>(
@@ -69,7 +117,7 @@ struct StatusComponent: View {
 					.padding(.leading)
 			}
 			if (homeData.profile?.status != nil) {
-				EmojiView(emoji: emojiBinding, gitHubEmojis: gitHubEmojis)
+				EmojiView(emoji: emojiBinding)
 					.padding(.leading)
 				Text((homeData.profile?.status!.name) ?? "")
 					.font(Font.custom("Nunito-Regular", size: 20))
@@ -83,7 +131,8 @@ struct StatusComponent: View {
 			if (homeData.profile?.status != nil) {
 				Button(action: {
 					Task {
-						await clearStatus(token: token)
+						await clearStatus(token: homeData.token)
+						homeData.checkStatus()
 					}
 				}) {
 					Image(systemName: "xmark")
@@ -106,9 +155,7 @@ struct StatusComponent: View {
 }
 
 struct HomeView: View {
-	@Binding var token: String
-	@ObservedObject var gitHubEmojis: GitHubEmoji
-	@StateObject var homeData: HomeData = HomeData()
+	@EnvironmentObject var homeData: HomeData
 	@State var isShowingSettings: Bool = false
 
 	var body: some View {
@@ -132,7 +179,7 @@ struct HomeView: View {
 										isShowingSettings = !isShowingSettings
 									}
 								}) {
-									Image(systemName: "gearshape")
+									Image(systemName: "gearshape.fill")
 										.resizable()
 										.frame(width: 30, height: 30)
 										.padding()
@@ -148,12 +195,12 @@ struct HomeView: View {
 									if (homeData.selectedIndex != -1 && geometry.size.width >= 600) {
 										EmojiPicker(for: geometry, onDismiss: {selected in
 											homeData.selectedIndex = -1
-										}, gitHubEmojis: gitHubEmojis)
+										})
 									} else if (geometry.size.height >= 700 || !isShowingSettings) {
 										ProfileView(for: geometry)
 									}
 									if (geometry.size.height >= 700 || isShowingSettings) {
-										SettingsView(for: geometry, token: $token)
+										SettingsView(for: geometry)
 											.transition(.opacity)
 									}
 									Spacer()
@@ -161,8 +208,8 @@ struct HomeView: View {
 							}
 							if (geometry.size.width >= 600 || !isShowingSettings) {
 								VStack {
-									StatusComponent(gitHubEmojis: gitHubEmojis, token: $token)
-									HomeList(token: $token, gitHubEmojis: gitHubEmojis, for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70))
+									StatusComponent()
+									HomeList(for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70))
 								}
 							}
 						}
@@ -171,7 +218,7 @@ struct HomeView: View {
 						VStack {
 							EmojiPicker(for: geometry, onDismiss: { hello in
 								homeData.selectedIndex = -1
-							}, gitHubEmojis: gitHubEmojis)
+							})
 							.position(x: geometry.size.width, y: geometry.size.height)
 							.frame(width: geometry.size.width, height: geometry.size.height)
 						}
@@ -199,10 +246,9 @@ struct HomeView: View {
 					homeData.statusItemsState = LoadingState.success
 				}
 				Task {
-					guard let result = await getUserData(token: token) else {
+					guard let result = await getUserData(token: homeData.token) else {
 						return
 					}
-					print(result)
 					homeData.profile = result
 				}
 			}
@@ -215,70 +261,5 @@ struct HomeView: View {
 			}
 			.environmentObject(homeData)
 		}.ignoresSafeArea(.keyboard, edges: .all)
-	}
-}
-
-
-struct HomeList: View {
-	@Binding var token: String
-	@ObservedObject var gitHubEmojis: GitHubEmoji
-	@EnvironmentObject var homeData: HomeData
-	@State var minHeight: CGFloat
-	
-	init (token: Binding<String>, gitHubEmojis: GitHubEmoji, for minHeight: CGFloat) {
-		self._token = token
-		self.gitHubEmojis = gitHubEmojis
-		self.minHeight = minHeight
-	}
-	
-	var body: some View {
-		ScrollView {
-			LazyVStack( spacing: 0) {
-				if (homeData.statusItemsState == LoadingState.loading) {
-					VStack {
-						Spacer()
-						ProgressView()
-							.scaleEffect(max(minHeight/600, 1))
-						Spacer()
-					}
-					.frame(height: minHeight - 75)
-				} else if (homeData.statusItemsState == LoadingState.failed) {
-					VStack {
-						Spacer()
-						Image(systemName: "exclamationmark.icloud.fill")
-							.resizable()
-							.aspectRatio(contentMode: .fit)
-							.frame(width: 30, height: 30)
-						Spacer()
-					}
-					.frame(height: minHeight - 100)
-				}
-				ForEach(Array(homeData.statusItems.enumerated()), id: (\.element?.id)) { index, item in
-					if (item != nil) {
-						StatusItem(information: item, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
-							homeData.selectedIndex = index
-							homeData.selectedEmoji = item!.emoji
-						}, onDelete: {
-							var newArr = homeData.statusItems
-							newArr.remove(at: index)
-							homeData.statusItems = newArr
-							homeData.selectedIndex = -1
-						}, onCreate: {id, name, emoji in}, token: $token)
-					} else {
-						StatusItem(information: nil, gitHubEmojis: gitHubEmojis, onSelectEmoji: {
-							homeData.selectedIndex = homeData.statusItems.count
-							homeData.selectedEmoji = homeData.createSelectedEmoji
-						}, onDelete: {}, onCreate: { id, name, emoji in
-							var newArr = homeData.statusItems
-							newArr[newArr.count - 1] = StatusInformation(id: id, name: name, emoji: emoji)
-							newArr.append(nil)
-							homeData.statusItems = newArr
-							homeData.selectedIndex = -1
-						}, token: $token)
-						.padding(.bottom)
-					}
-				}
-			}.frame(minHeight: (homeData.statusItemsState != LoadingState.success) ? minHeight:0)
-		}.padding(.horizontal, 10)
 	}
 }
