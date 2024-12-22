@@ -68,12 +68,12 @@ struct StatusItem: View {
 			}
 		}
 		.onAppear() {
-			Task {
+			Task { @MainActor in
 				url = try await homeData.getUrl(emoji: emoji)
 			}
 		}
 		.onChange(of: emoji) {
-			Task {
+			Task { @MainActor in
 				url = try await homeData.getUrl(emoji: emoji)
 			}
 		}

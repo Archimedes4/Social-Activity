@@ -12,6 +12,7 @@ struct StatusButton: View {
 	let emoji: String
 	var active: Bool
 	@Binding var token: String
+	@Binding var emojis: [String:String]
 	@State var hovered: Bool = false
 	@State var url: String = ""
 	
@@ -47,7 +48,7 @@ struct StatusButton: View {
 			.focusEffectDisabled()
 			.onAppear(perform: {
 				Task {
-					url = try await GitHubEmoji().getUrl(emoji: emoji)
+					url = emojis[emoji] ?? ""
 				}
 			})
     }

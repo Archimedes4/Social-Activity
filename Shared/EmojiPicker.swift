@@ -45,15 +45,19 @@ struct EmojiView: View {
 				}
 				.frame(width: 25, height: 25)
 			}
-		}.onAppear() {
-			Task {
-				url = try await homeData.getUrl(emoji: emoji)
-			}
 		}
 		.onChange(of: emoji, {
-			//url = "" TODO wait a few seconds before changing
-			Task {
-				url = try await homeData.getUrl(emoji: emoji)
+			do {
+				url = try homeData.getUrl(emoji: emoji)
+			} catch {
+				
+			}
+		})
+		.onChange(of: homeData.emojis, {
+			do {
+				url = try homeData.getUrl(emoji: emoji)
+			} catch {
+				
 			}
 		})
 	}
@@ -84,7 +88,9 @@ struct EmojiPicker: View {
 					.lineLimit(1)
 					.scrollContentBackground(.hidden)
 					.onSubmit {
-						UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+						#if os(iOS)
+							UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+						#endif
 					}
 					.foregroundStyle(.black)
 			}

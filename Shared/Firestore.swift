@@ -25,7 +25,8 @@ func getStatusInformation() async -> [StatusInformation]? {
 			loadingItems.append(StatusInformation(id: document.documentID, name: name, emoji: emoji))
 		}
 		return	 loadingItems
-	} catch {
+	} catch let error {
+		print(error)
 		return nil
 	}
 }

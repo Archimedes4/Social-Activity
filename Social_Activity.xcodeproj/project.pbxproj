@@ -694,7 +694,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "Social_Activity/Preview\\ Content Social_Activity/Fonts/Nunito-Regular.ttf";
+				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity/Preview Content\" /Users/andrewmainella/Documents/ArchGithHubStatus/Shared/Nunito-Regular.ttf";
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -733,7 +733,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "Social_Activity/Preview\\ Content Social_Activity/Fonts/Nunito-Regular.ttf";
+				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity/Preview Content\" /Users/andrewmainella/Documents/ArchGithHubStatus/Shared/Nunito-Regular.ttf";
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;

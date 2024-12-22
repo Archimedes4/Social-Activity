@@ -40,9 +40,9 @@ func callApi(json: [String : Any], token: String) async throws -> [String: Any]{
 		} else {
 			throw ApiError.regular
 		}
-	} catch {
+	} catch let error {
 		//something went wrong
-		throw ApiError.regular
+		throw error
 	}
 }
 
@@ -82,7 +82,7 @@ func validateToken(token: String) async throws -> String {
 /**
  Returns nul if something has gone wrong
  */
-func getUserData(token: String) async -> UserData? {
+func getUserData(token: String) async throws -> UserData? {
 	let json = ["query": "{\nviewer {\nname\navatarUrl\npronouns\nlogin\nstatus {\nid\nmessage\nemoji\n}\n}\n}"]
 	do {
 		let result = try await callApi(json: json, token: token)
@@ -102,8 +102,8 @@ func getUserData(token: String) async -> UserData? {
 		guard let status_message = status["message"] else {return nil}
 
 		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji))
-	} catch {
-		return nil
+	} catch let error {
+		throw error
 	}
 }
 
@@ -140,4 +140,21 @@ func getAuthToken(code: String) async throws -> String {
 	guard let decodedResponse = try? JSONDecoder().decode([String:String].self, from: responseData) else { throw ApiError.regular }
 	guard let accessToken = decodedResponse["access_token"] else {throw ApiError.regular}
 	return accessToken
+}
+
+func loadGitHubUrls() async throws -> [String:String] {
+	do {
+		guard let url = URL(string: "https://api.github.com/emojis") else {
+			throw ApiError.regular
+		}
+		let request = URLRequest(url: url)
+		let (responseData, _) = try await URLSession.shared.data(
+			for: request
+		)
+		
+		guard let decodedResponse = try? JSONDecoder().decode([String:String].self, from: responseData) else { throw ApiError.regular }
+		return decodedResponse
+	} catch {
+		throw ApiError.regular
+	}
 }

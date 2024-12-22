@@ -7,6 +7,62 @@
 
 import SwiftUI
 
+struct StatusPill: View {
+	@State var isHover: Bool = false
+	@State var url: String = ""
+	@EnvironmentObject var homeData: HomeData
+	var body: some View {
+		HStack {
+			if (homeData.profile?.status != nil) {
+				AsyncImage(url: URL(string: url)) { image in
+					image.resizable()
+				} placeholder: {
+					ProgressView()
+						.scaleEffect(0.6)
+				}
+				.frame(width: 20, height: 20)
+				.padding(.leading, isHover ? 15:0)
+				if (isHover) {
+					Text(homeData.profile?.status?.name ?? "")
+						.padding(.trailing)
+				}
+			} else {
+				Image(.smiley)
+					.resizable()
+					.frame(width: 20, height: 20)
+				if (isHover) {
+					Text("No Status Set")
+				}
+			}
+		}.frame(width: isHover ? nil:38, height: 38)
+		.background(.white)
+		.clipShape(.rect(cornerRadius: 19))
+		.overlay(RoundedRectangle(cornerRadius: 19)
+		.stroke(Color.black, lineWidth: 1))
+		.position(x: 283, y: 270)
+		.zIndex(2)
+		.onHover() { hovering in
+			isHover = hovering
+		}
+		.onAppear() {
+			do {
+				url = try homeData.getUrl(emoji: homeData.profile?.status?.emoji ?? "")
+				print(homeData.profile?.status?.emoji)
+			} catch {
+				
+			}
+		}
+		.onChange(of: homeData.profile?.status?.emoji) {
+			do {
+				url = try homeData.getUrl(emoji: homeData.profile?.status?.emoji ?? "")
+				print(homeData.profile?.status?.emoji)
+			} catch {
+				
+			}
+		}
+	}
+}
+
 struct ProfileView: View {
 	@State var geometry: GeometryProxy
 	@EnvironmentObject var homeData: HomeData
@@ -19,6 +75,7 @@ struct ProfileView: View {
 		ZStack {
 			VStack {
 				if (homeData.profile != nil) {
+					StatusPill()
 					AsyncImage(url: URL(string: homeData.profile!.advatar)) { image in
 						image.resizable()
 					} placeholder: {

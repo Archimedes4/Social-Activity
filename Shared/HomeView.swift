@@ -33,44 +33,22 @@ class HomeData: ObservableObject {
 	init() {
 		Task { @MainActor in
 			do {
-				emojis = try await _loadUrls()
+				emojis = try await loadGitHubUrls()
 			} catch {
 				//TODO
 			}
 		}
 	}
 	
-	func _loadUrls() async throws -> [String:String] {
-		do {
-			guard let url = URL(string: "https://api.github.com/emojis") else {
-				throw ApiError.regular
-			}
-			let request = URLRequest(url: url)
-			let (responseData, _) = try await URLSession.shared.data(
-				for: request
-			)
-			
-			guard let decodedResponse = try? JSONDecoder().decode([String:String].self, from: responseData) else { throw ApiError.regular }
-			return decodedResponse
-		} catch {
-			throw ApiError.regular
-		}
-	}
 
-	func getUrl(emoji: String) async throws -> String {
-		if (emojis.count == 0) {
-			try await _loadUrls()
-		}
+	func getUrl(emoji: String) throws -> String {
 		guard let result = emojis[emoji] else {
 			throw ApiError.regular
 		}
 		return result
 	}
 	
-	func getEmojis() async throws -> [String:String] {
-		if (emojis.count == 0) {
-			try await _loadUrls()
-		}
+	func getEmojis() throws -> [String:String] {
 		return emojis
 	}
 }
@@ -140,7 +118,7 @@ struct StatusComponent: View {
 						.frame(width: 25, height: 25)
 						.padding(.trailing, 20)
 						.foregroundStyle(.black)
-				}
+				}.buttonStyle(.plain)
 			}
 		}.frame(maxWidth: .infinity, minHeight:75, maxHeight: 75)
 		.overlay(alignment: .center) {
@@ -208,7 +186,9 @@ struct HomeView: View {
 							}
 							if (geometry.size.width >= 600 || !isShowingSettings) {
 								VStack {
-									StatusComponent()
+									if (geometry.size.width < 600) {
+										StatusComponent()
+									}
 									HomeList(for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70))
 								}
 							}
@@ -246,10 +226,18 @@ struct HomeView: View {
 					homeData.statusItemsState = LoadingState.success
 				}
 				Task {
-					guard let result = await getUserData(token: homeData.token) else {
-						return
+					do {
+						let result = try await getUserData(token: homeData.token)
+						homeData.profile = result
+					} catch let error {
+						guard let apiError = error as? ApiError else {
+							return
+						}
+						if (apiError == ApiError.auth) {
+							try Auth.auth().signOut()
+							KeychainService().save("", for: "gitauth")
+						}
 					}
-					homeData.profile = result
 				}
 			}
 			.onChange(of: homeData.selectedEmoji) { oldVal, newVal in

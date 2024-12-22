@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 
 struct MenuExtensionMain: View {
@@ -13,6 +14,7 @@ struct MenuExtensionMain: View {
 	@Binding var profile: UserData?
 	@Binding var statusItems: [StatusInformation]
 	@Environment(\.openURL) var openURL
+	@Binding var emojis: [String:String]
 	
 	var body: some View {
 		VStack(spacing: 0) {
@@ -60,7 +62,7 @@ struct MenuExtensionMain: View {
 				.padding(.horizontal)
 			List() {
 				ForEach(statusItems) {item in
-					StatusButton(text: item.name, emoji: item.emoji, active: false, token: $token)
+					StatusButton(text: item.name, emoji: item.emoji, active: false, token: $token, emojis: $emojis)
 						.listRowSeparator(.hidden)
 						.listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
 				}
@@ -81,13 +83,27 @@ struct AppMenu: View {
 	@State var appPasswordProtected: Bool = true
 	@State var profile: UserData? = nil
 	@State var statusItems: [StatusInformation] = []
+	@State var emojis: [String:String] = [:]
 	
 	func loadUser() async {
 		guard let tokenRes = KeychainService().retriveSecret(id: "gitauth") else {
 			return
 		}
 		token = tokenRes
-		profile = await getUserData(token: token)
+		do {
+			profile = try await getUserData(token: token)
+		} catch let error {
+			guard let apiError = error as? ApiError else {
+				validToken = false
+				isLoading = false
+				return
+			}
+			if (apiError == ApiError.auth) {
+				// The user does not have auth
+				validToken = false
+				isLoading = false
+			}
+		}
 		validToken = true
 		isLoading = false
 	}
@@ -115,6 +131,7 @@ struct AppMenu: View {
 				 .onAppear {
 					 Task {
 						 await loadUser()
+						 emojis = try await loadGitHubUrls()
 					 }
 					 Task {
 						 guard let result = await getStatusInformation() else {
@@ -124,7 +141,7 @@ struct AppMenu: View {
 					 }
 				 }
 		 } else if (validToken) {
-			 MenuExtensionMain(token: $token, profile: $profile, statusItems: $statusItems)
+			 MenuExtensionMain(token: $token, profile: $profile, statusItems: $statusItems, emojis: $emojis)
 		 } else {
 			 Text("Someting went wrong.")
 		 }
