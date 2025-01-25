@@ -127,19 +127,27 @@ struct AppMenu: View {
 				}
 			}
 		} else if (isLoading) {
-			ProgressView()
-				 .onAppear {
-					 Task {
-						 await loadUser()
-						 emojis = try await loadGitHubUrls()
-					 }
-					 Task {
-						 guard let result = await getStatusInformation() else {
-							 return
-						 }
-						 statusItems = result
-					 }
-				 }
+			HStack {
+				ProgressView()
+					.scaleEffect(0.5)
+					.frame(width: 5, height: 5)
+					.padding(.leading, 5)
+				Text("Loading")
+					.padding(.leading, 5)
+			}
+			.padding()
+			.onAppear {
+				Task {
+					await loadUser()
+					emojis = try await loadGitHubUrls()
+				}
+				Task {
+					guard let result = await getStatusInformation() else {
+						return
+					}
+					statusItems = result
+				}
+			}
 		 } else if (validToken) {
 			 MenuExtensionMain(token: $token, profile: $profile, statusItems: $statusItems, emojis: $emojis)
 		 } else {

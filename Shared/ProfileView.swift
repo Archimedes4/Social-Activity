@@ -30,8 +30,10 @@ struct StatusPill: View {
 				Image(.smiley)
 					.resizable()
 					.frame(width: 20, height: 20)
+					.padding(.leading, isHover ? 15:0)
 				if (isHover) {
 					Text("No Status Set")
+						.padding(.trailing)
 				}
 			}
 		}.frame(width: isHover ? nil:38, height: 38)
@@ -47,7 +49,6 @@ struct StatusPill: View {
 		.onAppear() {
 			do {
 				url = try homeData.getUrl(emoji: homeData.profile?.status?.emoji ?? "")
-				print(homeData.profile?.status?.emoji)
 			} catch {
 				
 			}
@@ -55,7 +56,6 @@ struct StatusPill: View {
 		.onChange(of: homeData.profile?.status?.emoji) {
 			do {
 				url = try homeData.getUrl(emoji: homeData.profile?.status?.emoji ?? "")
-				print(homeData.profile?.status?.emoji)
 			} catch {
 				
 			}

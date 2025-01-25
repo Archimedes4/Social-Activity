@@ -9,6 +9,8 @@ struct StatusInformation: Identifiable {
 	let id: String
 	let name: String
 	let emoji: String
+	let selectedTime: String
+	let times: [String]
 }
 
 struct UserData {

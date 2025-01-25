@@ -47,10 +47,11 @@ struct StatusButton: View {
 			})
 			.focusEffectDisabled()
 			.onAppear(perform: {
-				Task {
-					url = emojis[emoji] ?? ""
-				}
+				url = emojis[emoji] ?? ""
 			})
+			.onChange(of: emojis) {
+				url = emojis[emoji] ?? ""
+			}
     }
 }
 

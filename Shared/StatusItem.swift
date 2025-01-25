@@ -13,6 +13,130 @@ enum StatusItemState {
 	case create, editing, viewing, creating, deleting, updating, failed
 }
 
+extension String {
+	// new functionality to add to SomeType goes here
+	func toLongTime() -> String {
+		guard let last = self.last else {
+			return "";
+		}
+		if (last == "m") {
+			return self[..<self.endIndex] +  " minutes"
+		}
+		if (last == "h") {
+			return self[..<self.endIndex] + " hour"
+		}
+		if (last == "d") {
+			return self[..<self.endIndex] + " day"
+		}
+		if (last == "y") {
+			return self[..<self.endIndex] + " year"
+		}
+		return self
+	}
+}
+
+struct TimeSelector: View {
+	var information: StatusInformation?
+	@State private var date = Date()
+	@Binding var state: StatusItemState
+	
+	func loadUpdateSelectedItem() {
+		
+	}
+	
+	func loadAddItem(time: String) {
+		Task {
+			await addItem(time: time, infoID: information?.id ?? "")
+		}
+	}
+	
+	func loadRemoveItem(time: String) {
+		Task {
+			await removeItem(time: time, infoID: information?.id ?? "")
+		}
+	}
+	
+	var body: some View {
+		HStack {
+			HStack(spacing: 3) {
+				Button(action: {
+					return
+				}) {
+					HStack {
+						Image(systemName: "infinity")
+							.resizable()
+							.aspectRatio(contentMode: .fit)
+							.frame(width: 10, height: 10)
+						Text("Never end")
+							.font(.system(size: 10))
+					}
+					.padding(5)
+					.background((information?.selectedTime == "never") ? Color("BlueOne"):.white)
+					.clipShape(RoundedRectangle(cornerRadius: 35))
+				}
+				.buttonStyle(.plain)
+				if let information = information {
+					ForEach(information.times, id: \.hashValue) { time in
+						Button(action: {
+							print("ran")
+						}) {
+							HStack {
+								Image(systemName: "clock")
+									.resizable()
+									.frame(width: 10, height: 10)
+								Text(time.description.toLongTime())
+									.font(.system(size: 10))
+								if (state != StatusItemState.viewing) {
+									Button(action: {
+										loadRemoveItem(time: time)
+									}) {
+										Image(systemName: "xmark")
+											.resizable()
+											.frame(width: 10, height: 10)
+									}.buttonStyle(.plain)
+								}
+							}
+							.padding(5)
+							.background((information.selectedTime == "1h") ? Color("BlueOne"):.white)
+							.clipShape(RoundedRectangle(cornerRadius: 35))
+						}
+						.buttonStyle(.plain)
+					}
+				}
+				Image(systemName: "calendar.badge.plus")
+					.resizable()
+					.frame(width: 10, height: 10)
+					.overlay {
+						VStack {
+							DatePicker(selection: $date, displayedComponents: .date) {}
+								.labelsHidden()
+								.contentShape(Rectangle())
+								.opacity(0.011)             // <<< here
+							Button(action: {
+								loadAddItem(time: "2h")
+							}) {
+								Text("Add Time")
+							}
+						}
+					}
+					.padding(5)
+					.background(.white)
+					.clipShape(RoundedRectangle(cornerRadius: 35))
+			}
+			.padding(5)
+			.background(.ultraThinMaterial)
+			.clipShape(RoundedRectangle(cornerRadius: 35))
+			.overlay() {
+				RoundedRectangle(cornerRadius: 35)
+					.strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1, dash: [.greatestFiniteMagnitude]))
+			}
+			.padding(.leading, 10)
+			Spacer()
+		}
+		.padding(.bottom, 10)
+	}
+}
+
 struct StatusItem: View {
 	@State var name: String
 	@State var emoji: String
@@ -23,10 +147,10 @@ struct StatusItem: View {
 	var information: StatusInformation?
 	var onSelectEmoji: () -> Void
 	var onDelete: () -> Void
-	var onCreate: (_ id: String, _ name: String, _ emoji: String) -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: String, _ times: [String]) -> Void
 	@EnvironmentObject var homeData: HomeData
 	
-	init(information: StatusInformation?, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String) -> Void) {
+	init(information: StatusInformation?, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String, _ selectedTime: String, _ times: [String]) -> Void) {
 		self.onSelectEmoji = onSelectEmoji
 		self.onDelete = onDelete
 		self.onCreate = onCreate
@@ -68,13 +192,24 @@ struct StatusItem: View {
 			}
 		}
 		.onAppear() {
-			Task { @MainActor in
-				url = try await homeData.getUrl(emoji: emoji)
+			do {
+				url = try homeData.getUrl(emoji: emoji)
+			} catch {
+				
 			}
 		}
 		.onChange(of: emoji) {
-			Task { @MainActor in
-				url = try await homeData.getUrl(emoji: emoji)
+			do {
+				url = try homeData.getUrl(emoji: emoji)
+			} catch {
+				
+			}
+		}
+		.onChange(of: homeData.emojis) {
+			do {
+				url = try homeData.getUrl(emoji: emoji)
+			} catch {
+				
 			}
 		}
 		.onChange(of: homeData.createSelectedEmoji) {
@@ -113,7 +248,7 @@ struct MainStatusItem: View {
 	var information: StatusInformation?
 	var onDelete: () -> Void
 	var onSelectEmoji: () -> Void
-	var onCreate: (_ id: String, _ name: String, _ emoji: String) -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: String, _ times: [String]) -> Void
 	@Binding var emoji: String
 	@Binding var name: String
 	@Binding var state: StatusItemState
@@ -156,11 +291,13 @@ struct MainStatusItem: View {
 			let res: Void = try await db.collection("users").document(userID).collection("statuses").document(itemId).setData([
 				"name": name,
 				"emoji": emoji,
-				"id":itemId
+				"id":itemId,
+				"selectedTime":"never",
+				"times":["1h"]
 			])
 			withAnimation(.easeIn(duration: 0.3)){
 				state = StatusItemState.create
-				onCreate(itemId, name, emoji)
+				onCreate(itemId, name, emoji, "never", ["1h"])
 				name = ""
 			}
 		} catch {
@@ -209,7 +346,6 @@ struct MainStatusItem: View {
 					.buttonStyle(StatusButtonStyle())
 					.disabled(state == StatusItemState.viewing)
 					.focusEffectDisabled()
-					
 				}
 				if (state == StatusItemState.viewing) {
 					VStack() {
@@ -219,7 +355,7 @@ struct MainStatusItem: View {
 							.padding(.leading, 8)
 							.foregroundStyle(.black)
 						Spacer()
-					}.frame(height: 65)
+					}
 				} else {
 					VStack {
 						VStack {
@@ -300,7 +436,7 @@ struct MainStatusItem: View {
 							.foregroundStyle(.black)
 					}.buttonStyle(.plain)
 				}
-			}.frame(height: 65)
+			}
 			if (state != StatusItemState.viewing) {
 				HStack{
 					Text("\(90 - name.count) characters remaining")
@@ -310,6 +446,7 @@ struct MainStatusItem: View {
 					Spacer()
 				}
 			}
+			TimeSelector(information: information, state: $state)
 		}
 	}
 }

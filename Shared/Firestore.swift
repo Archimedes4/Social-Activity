@@ -22,11 +22,62 @@ func getStatusInformation() async -> [StatusInformation]? {
 			let data = document.data()
 			guard let name = data["name"] as? String else { return nil }
 			guard let emoji = data["emoji"] as? String else { return nil }
-			loadingItems.append(StatusInformation(id: document.documentID, name: name, emoji: emoji))
+			guard let selectedTime = data["selectedTime"] as? String else { return nil }
+			guard let times = data["times"] as? [String] else { return nil }
+			loadingItems.append(StatusInformation(id: document.documentID, name: name, emoji: emoji, selectedTime: selectedTime, times: times))
 		}
 		return	 loadingItems
 	} catch let error {
 		print(error)
 		return nil
+	}
+}
+
+/**
+ This only updates the value in firestore, please update the information locally
+ */
+func updateSelectedItem(time: String, infoID: String) async -> LoadingState {
+	guard let userID = Auth.auth().currentUser?.uid else { return LoadingState.failed }
+	let db = Firestore.firestore()
+	do {
+		try await db.collection("users").document(userID).collection("statuses").document(infoID).updateData([
+			"selectedTime":time,
+		])
+		return LoadingState.success
+	} catch {
+		return LoadingState.failed
+	}
+}
+
+/**
+ This only updates the value in firestore, please update the information locally
+ */
+func addItem(time: String, infoID: String) async -> LoadingState {
+	guard let userID = Auth.auth().currentUser?.uid else { return LoadingState.failed }
+	let db = Firestore.firestore()
+	do {
+		try await db.collection("users").document(userID).collection("statuses").document(infoID).updateData([
+			"times":FieldValue.arrayUnion([time]),
+		])
+		return LoadingState.success
+	} catch {
+		return LoadingState.failed
+	}
+}
+
+
+/**
+ This only updates the value in firestore, please update the information locally
+ */
+func removeItem(time: String, infoID: String) async -> LoadingState {
+	guard let userID = Auth.auth().currentUser?.uid else { return LoadingState.failed }
+	let db = Firestore.firestore()
+	do {
+		try await db.collection("users").document(userID).collection("statuses").document(infoID).updateData([
+			"times":FieldValue.arrayRemove([time]),
+		])
+		return LoadingState.success
+	} catch {
+		return LoadingState.failed
 	}
 }

@@ -101,7 +101,8 @@ func getUserData(token: String) async throws -> UserData? {
 		guard let status_id = status["id"] else {return nil}
 		guard let status_message = status["message"] else {return nil}
 
-		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji))
+		//TODO fixed selectedTime
+		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: "", times: []))
 	} catch let error {
 		throw error
 	}
@@ -121,8 +122,9 @@ func getUserStatus(token: String) async -> StatusInformation? {
 		status_emoji = status_emoji.filter { ":".contains($0) == false }
 		guard let status_id = status["id"] else {return nil}
 		guard let status_message = status["message"] else {return nil}
+		guard let status_selectedTime = status["emoji"] else {return nil} // TODO fix key
 
-		return StatusInformation(id: status_id, name: status_message, emoji: status_emoji)
+		return StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: status_selectedTime, times: [])
 	} catch {
 		return nil
 	}

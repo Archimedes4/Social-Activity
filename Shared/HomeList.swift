@@ -18,7 +18,7 @@ struct HomeList: View {
 							.scaleEffect(max(minHeight/600, 1))
 						Spacer()
 					}
-					.frame(height: minHeight - 75)
+					.frame(height: minHeight)
 				} else if (homeData.statusItemsState == LoadingState.failed) {
 					VStack {
 						Spacer()
@@ -28,35 +28,40 @@ struct HomeList: View {
 							.frame(width: 30, height: 30)
 						Spacer()
 					}
-					.frame(height: minHeight - 100)
+					.frame(height: minHeight)
 				}
-				ForEach(Array(homeData.statusItems.enumerated()), id: (\.element?.id)) { index, item in
-					if (item != nil) {
-						StatusItem(information: item, onSelectEmoji: {
-							homeData.selectedIndex = index
-							homeData.selectedEmoji = item!.emoji
-						}, onDelete: {
-							var newArr = homeData.statusItems
-							newArr.remove(at: index)
-							homeData.statusItems = newArr
-							homeData.selectedIndex = -1
-						}, onCreate: {id, name, emoji in})
-					} else {
-						StatusItem(information: nil, onSelectEmoji: {
-							homeData.selectedIndex = homeData.statusItems.count
-							homeData.selectedEmoji = homeData.createSelectedEmoji
-						}, onDelete: {}, onCreate: { id, name, emoji in
-							var newArr = homeData.statusItems
-							newArr[newArr.count - 1] = StatusInformation(id: id, name: name, emoji: emoji)
-							newArr.append(nil)
-							homeData.statusItems = newArr
-							homeData.selectedIndex = -1
-						})
-						.padding(.bottom)
+				if (homeData.statusItemsState == LoadingState.success) {
+					ForEach(Array(homeData.statusItems.enumerated()), id: \.offset) { index, item in
+						Group {
+							if let item = item {
+								StatusItem(information: item, onSelectEmoji: {
+									homeData.selectedIndex = index
+									homeData.selectedEmoji = item.emoji
+								}, onDelete: {
+									var newArr = homeData.statusItems
+									newArr.remove(at: index)
+									homeData.statusItems = newArr
+									homeData.selectedIndex = -1
+								}, onCreate: {id, name, emoji, selectedTime, times in})
+							} else {
+								StatusItem(information: nil, onSelectEmoji: {
+									homeData.selectedIndex = homeData.statusItems.count
+									homeData.selectedEmoji = homeData.createSelectedEmoji
+								}, onDelete: {}, onCreate: { id, name, emoji, selectedTime, times in
+									var newArr = homeData.statusItems
+									newArr[newArr.count - 1] = StatusInformation(id: id, name: name, emoji: emoji, selectedTime: selectedTime, times: times)
+									newArr.append(nil)
+									homeData.statusItems = newArr
+									homeData.selectedIndex = -1
+								})
+								.padding(.bottom)
+							}
+						}.id(item?.id ?? "nil-\(index)")
 					}
 				}
 			}.frame(minHeight: (homeData.statusItemsState != LoadingState.success) ? minHeight:0)
 		}.padding(.horizontal, 10)
+		.scrollDisabled(homeData.statusItemsState != LoadingState.success)
 	}
 }
 

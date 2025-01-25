@@ -219,6 +219,7 @@ struct HomeView: View {
 			.onAppear() {
 				Task {
 					guard var result: [StatusInformation?] = await getStatusInformation() else {
+						homeData.statusItemsState = LoadingState.failed
 						return
 					}
 					result.append(nil)
@@ -242,7 +243,7 @@ struct HomeView: View {
 			}
 			.onChange(of: homeData.selectedEmoji) { oldVal, newVal in
 				if homeData.selectedIndex < homeData.statusItems.count && homeData.selectedIndex >= 0 {
-					homeData.statusItems[homeData.selectedIndex] = StatusInformation(id: homeData.statusItems[homeData.selectedIndex]!.id, name: homeData.statusItems[homeData.selectedIndex]!.name, emoji: homeData.selectedEmoji)
+					homeData.statusItems[homeData.selectedIndex] = StatusInformation(id: homeData.statusItems[homeData.selectedIndex]!.id, name: homeData.statusItems[homeData.selectedIndex]!.name, emoji: homeData.selectedEmoji, selectedTime: homeData.statusItems[homeData.selectedIndex]!.selectedTime, times: homeData.statusItems[homeData.selectedIndex]!.times)
 				} else if homeData.selectedIndex == homeData.statusItems.count {
 					homeData.createSelectedEmoji = newVal
 				}
