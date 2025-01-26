@@ -10,7 +10,29 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
 
+#if os(iOS)
+class AppDelegate: NSObject, UIApplicationDelegate {
+	func application(_ application: UIApplication,
+									didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+		FirebaseApp.configure()
+		do {
+			try Auth.auth().useUserAccessGroup("SYV2CK2N9N.com.Archimedes4.SocialActivity")
+		} catch {}
+		return true
+	}
+}
 
+@main
+struct ArchGithHubStatusApp: App {
+	@UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+	
+	var body: some Scene {
+		WindowGroup {
+			Controller()
+		}
+	}
+}
+#elseif os(macOS)
 @main
 struct ArchGithHubStatusApp: App {
 	init() {
@@ -29,3 +51,5 @@ struct ArchGithHubStatusApp: App {
 		}.menuBarExtraStyle(.window)
 	}
 }
+
+#endif

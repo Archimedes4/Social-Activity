@@ -189,7 +189,7 @@ struct HomeView: View {
 									if (geometry.size.width < 600) {
 										StatusComponent()
 									}
-									HomeList(for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70))
+									HomeList(for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70), for: geometry)
 								}
 							}
 						}
@@ -220,6 +220,7 @@ struct HomeView: View {
 				Task {
 					guard var result: [StatusInformation?] = await getStatusInformation() else {
 						homeData.statusItemsState = LoadingState.failed
+						print("Something when wrong when getting status information!")
 						return
 					}
 					result.append(nil)
@@ -231,6 +232,7 @@ struct HomeView: View {
 						let result = try await getUserData(token: homeData.token)
 						homeData.profile = result
 					} catch let error {
+						print(error)
 						guard let apiError = error as? ApiError else {
 							return
 						}

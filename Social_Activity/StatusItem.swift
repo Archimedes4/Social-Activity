@@ -13,30 +13,39 @@ enum StatusItemState {
 	case create, editing, viewing, creating, deleting, updating, failed
 }
 
-extension String {
+extension Int {
 	// new functionality to add to SomeType goes here
 	func toLongTime() -> String {
-		guard let last = self.last else {
-			return "";
+		var hours = 0
+		var minutes = 0
+		var seconds = 0;
+		hours = Int(floor(Double(self)/3600.0))
+		var left = 0
+		left = self%3600
+		minutes = left/60
+		seconds = left%60
+		var result = ""
+		if (hours != 0) {
+			result = "\(hours) hour\(hours != 1 ? "s":"")"
 		}
-		if (last == "m") {
-			return self[..<self.index(before: self.endIndex)] +  " minutes"
+		if (minutes != 0) {
+			if (hours != 0) {
+				result += " "
+			}
+			result += "\(minutes) minute\(minutes != 1 ? "s":"")"
 		}
-		if (last == "h") {
-			return self[..<self.index(before: self.endIndex)] + " hour"
+		if (seconds != 0) {
+			if (hours != 0 || minutes != 0) {
+				result += " "
+			}
+			result += "\(seconds) seconds"
 		}
-		if (last == "d") {
-			return self[..<self.index(before: self.endIndex)] + " day"
-		}
-		if (last == "y") {
-			return self[..<self.index(before: self.endIndex)] + " year"
-		}
-		return self
+		return result
 	}
 }
 
 struct DateTimePicker: View {
-	let addItem: (_ time: String) -> Void
+	let addItem: (_ time: Int) -> Void
 	@State var hours: Int = 0
 	@State var minutes: Int = 0
 	@State private var date = Date()
@@ -60,7 +69,7 @@ struct DateTimePicker: View {
 				.contentShape(Rectangle())
 				.opacity(0.011)             // <<< here
 			Button(action: {
-				addItem("\(hours)h")
+				addItem((hours * 3600) + (minutes * 60))
 			}) {
 				Text("Add Time")
 			}
@@ -69,24 +78,29 @@ struct DateTimePicker: View {
 }
 
 struct TimeSelector: View {
-	var information: StatusInformation?
+	@Binding var information: StatusInformation?
 	@Binding var state: StatusItemState
 	@State var isPickingTime: Bool = false;
 	
-	func loadUpdateSelectedItem(time: String) {
+	func loadUpdateSelectedItem(time: Int) {
 		Task {
+			information?.selectedTime = time
 			await updateSelectedItem(time: time, infoID: information?.id ?? "")
 		}
 	}
 	
-	func loadAddItem(time: String) {
+	func loadAddItem(time: Int) {
 		Task {
+			if (information?.times.contains(where: {$0 == time}) == false) {
+				self.information?.times.append(time)
+			}
 			await addItem(time: time, infoID: information?.id ?? "")
 		}
 	}
 	
-	func loadRemoveItem(time: String) {
+	func loadRemoveItem(time: Int) {
 		Task {
+			self.information?.times = self.information?.times.filter({$0 != time}) ?? []
 			await removeItem(time: time, infoID: information?.id ?? "")
 		}
 	}
@@ -95,7 +109,7 @@ struct TimeSelector: View {
 		HStack {
 			HStack(spacing: 3) {
 				Button(action: {
-					loadUpdateSelectedItem(time: "never")
+					loadUpdateSelectedItem(time: -1)
 				}) {
 					HStack {
 						Image(systemName: "infinity")
@@ -106,7 +120,7 @@ struct TimeSelector: View {
 							.font(.system(size: 10))
 					}
 					.padding(5)
-					.background((information?.selectedTime == "never") ? Color("BlueOne"):.white)
+					.background((information?.selectedTime ?? 0 < 0) ? Color("BlueOne"):.white)
 					.clipShape(RoundedRectangle(cornerRadius: 35))
 				}
 				.buttonStyle(.plain)
@@ -119,7 +133,7 @@ struct TimeSelector: View {
 								Image(systemName: "clock")
 									.resizable()
 									.frame(width: 10, height: 10)
-								Text(time.description.toLongTime())
+								Text(time.toLongTime())
 									.font(.system(size: 10))
 								if (state != StatusItemState.viewing) {
 									Button(action: {
@@ -175,13 +189,13 @@ struct StatusItem: View {
 	@State private var path = NavigationPath()
 	@State var state: StatusItemState
 	@State var initalName: String = ""
-	var information: StatusInformation?
+	@State var information: StatusInformation?
 	var onSelectEmoji: () -> Void
 	var onDelete: () -> Void
-	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: String, _ times: [String]) -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: Int, _ times: [Int]) -> Void
 	@EnvironmentObject var homeData: HomeData
 	
-	init(information: StatusInformation?, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String, _ selectedTime: String, _ times: [String]) -> Void) {
+	init(information: StatusInformation?, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String, _ selectedTime: Int, _ times: [Int]) -> Void) {
 		self.onSelectEmoji = onSelectEmoji
 		self.onDelete = onDelete
 		self.onCreate = onCreate
@@ -208,16 +222,16 @@ struct StatusItem: View {
 			if (state == StatusItemState.viewing) {
 				Button(action: {
 					Task {
-						await setStatus(emoji: ":" + emoji + ":", message: name, token: homeData.token)
+						await setStatus(emoji: ":" + emoji + ":", message: name, expiresAt: getExpiresAt(time: information?.selectedTime ?? -1), token: homeData.token)
 						homeData.checkStatus()
 					}
 				}) {
-					MainStatusItem(information: information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
+					MainStatusItem(information: $information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
 				}.buttonStyle(.plain)
 			} else if (state != StatusItemState.create && state != StatusItemState.viewing && state != StatusItemState.editing) {
 				LoadingItem(state: $state)
 			} else if (state != StatusItemState.failed) {
-				MainStatusItem(information: information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
+				MainStatusItem(information: $information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
 			} else {
 				
 			}
@@ -276,10 +290,10 @@ struct LoadingItem: View {
 }
 
 struct MainStatusItem: View {
-	var information: StatusInformation?
+	@Binding var information: StatusInformation?
 	var onDelete: () -> Void
 	var onSelectEmoji: () -> Void
-	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: String, _ times: [String]) -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: Int, _ times: [Int]) -> Void
 	@Binding var emoji: String
 	@Binding var name: String
 	@Binding var state: StatusItemState
@@ -323,12 +337,12 @@ struct MainStatusItem: View {
 				"name": name,
 				"emoji": emoji,
 				"id":itemId,
-				"selectedTime":"never",
-				"times":["1h"]
+				"selectedTime":-1,
+				"times":[60]
 			])
 			withAnimation(.easeIn(duration: 0.3)){
 				state = StatusItemState.create
-				onCreate(itemId, name, emoji, "never", ["1h"])
+				onCreate(itemId, name, emoji, -1, [3600])
 				name = ""
 			}
 		} catch {
@@ -477,7 +491,9 @@ struct MainStatusItem: View {
 					Spacer()
 				}
 			}
-			TimeSelector(information: information, state: $state)
+			if (state == StatusItemState.viewing) {
+				TimeSelector(information: $information, state: $state)
+			}
 		}
 	}
 }

@@ -3,14 +3,19 @@ import SwiftUI
 struct HomeList: View {
 	@EnvironmentObject var homeData: HomeData
 	@State var minHeight: CGFloat
+	@State var geometry: GeometryProxy
 	
-	init (for minHeight: CGFloat) {
+	init (for minHeight: CGFloat, for metrics: GeometryProxy) {
 		self.minHeight = minHeight
+		self.geometry = metrics
 	}
 	
 	var body: some View {
 		ScrollView {
 			LazyVStack( spacing: 0) {
+				if (geometry.size.width >= 600) {
+					
+				}
 				if (homeData.statusItemsState == LoadingState.loading) {
 					VStack {
 						Spacer()

@@ -19,7 +19,7 @@ struct StatusButton: View {
 	var body: some View {
 			Button(action: {
 				Task {
-					await setStatus(emoji: ":" + emoji + ":", message: text, token: token)
+					await setStatus(emoji: ":" + emoji + ":", message: text, expiresAt: getExpiresAt(time: -1), token: token)
 				}
 			}) {
 				HStack {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+		<dict>
+			<!-- General App Info -->
+			<key>CFBundleDisplayName</key>
+			<string>$(PRODUCT_NAME)</string> <!-- Using environment variable PRODUCT_NAME (App Name) -->
+			
+			<key>CFBundleIdentifier</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string> <!-- Bundle Identifier -->
+			
+			<key>CFBundleVersion</key>
+			<string>$(CURRENT_PROJECT_VERSION)</string> <!-- Build number, can be passed via Xcode build environment -->
+			
+			<key>CFBundleShortVersionString</key>
+			<string>$(MARKETING_VERSION)</string> <!-- App version, can be passed via Xcode build environment -->
+			
+			<key>UILaunchStoryboardName</key>
+			<string>LaunchScreen</string> <!-- Launch screen storyboard name -->
+			
+			<key>UIRequiredDeviceCapabilities</key>
+			<array>
+				<string>armv7</string> <!-- Device capabilities -->
+			</array>
+			
+			<key>CFBundleExecutable</key>
+			<string>${EXECUTABLE_NAME}</string>
+
+			<key>LSApplicationCategoryType</key>
+			<string>public.app-category.utilities</string>
+			
+			<!-- iOS version compatibility -->
+			<key>MinimumOSVersion</key>
+			<string>$(IPHONEOS_DEPLOYMENT_TARGET)</string> <!-- The minimum iOS version required for your app -->
+		</dict>
+</plist>
+

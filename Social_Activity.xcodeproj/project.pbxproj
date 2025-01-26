@@ -14,6 +14,24 @@
 		C67919992D055B2E003140BD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C67919982D055B2E003140BD /* FirebaseAuth */; };
 		C679199B2D055B2E003140BD /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C679199A2D055B2E003140BD /* FirebaseCore */; };
 		C679199D2D055B2E003140BD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C679199C2D055B2E003140BD /* FirebaseFirestore */; };
+		C68D452A2D4309870036D29A /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451B2D4309870036D29A /* Authentication.swift */; };
+		C68D452B2D4309870036D29A /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451C2D4309870036D29A /* Controller.swift */; };
+		C68D452C2D4309870036D29A /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451D2D4309870036D29A /* EmojiPicker.swift */; };
+		C68D452D2D4309870036D29A /* Firestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451E2D4309870036D29A /* Firestore.swift */; };
+		C68D452E2D4309870036D29A /* GitHubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451F2D4309870036D29A /* GitHubConnection.swift */; };
+		C68D452F2D4309870036D29A /* HomeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45202D4309870036D29A /* HomeList.swift */; };
+		C68D45302D4309870036D29A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45212D4309870036D29A /* HomeView.swift */; };
+		C68D45312D4309870036D29A /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45222D4309870036D29A /* Keychain.swift */; };
+		C68D45322D4309870036D29A /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45232D4309870036D29A /* LoginView.swift */; };
+		C68D45332D4309870036D29A /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45252D4309870036D29A /* PasswordView.swift */; };
+		C68D45342D4309870036D29A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45262D4309870036D29A /* ProfileView.swift */; };
+		C68D45352D4309870036D29A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45272D4309870036D29A /* SettingsView.swift */; };
+		C68D45362D4309870036D29A /* StatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45282D4309870036D29A /* StatusItem.swift */; };
+		C68D45372D4309870036D29A /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45292D4309870036D29A /* Types.swift */; };
+		C68D45382D4309870036D29A /* Nunito-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C68D45242D4309870036D29A /* Nunito-Regular.ttf */; };
+		C68D45482D4309870036D29A /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D45292D4309870036D29A /* Types.swift */; };
+		C68D454B2D46D9B90036D29A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C68D454A2D46D9B90036D29A /* SwiftUI.framework */; };
+		C68D45512D46FF680036D29A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C68D44F52D4309870036D29A /* LaunchScreen.storyboard */; platformFilter = ios; };
 		C6CB4DB92B4860400040C9F9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6CB4DB82B4860400040C9F9 /* Preview Assets.xcassets */; };
 		C6DEE5C42B4A1C07004B1552 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6DEE5C32B4A1C07004B1552 /* Security.framework */; };
 		C6F9AF472CFD1DFA001E8608 /* ArchGithHubStatusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F9AF402CFD1DFA001E8608 /* ArchGithHubStatusApp.swift */; };
@@ -21,59 +39,33 @@
 		C6F9AFA82CFE1CE8001E8608 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C6F9AFA72CFE1CE8001E8608 /* FirebaseCore */; };
 		C6F9AFAD2CFE1DCB001E8608 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C6F9AFAC2CFE1DCB001E8608 /* FirebaseAuth */; };
 		C6F9AFAF2CFE1DCB001E8608 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C6F9AFAE2CFE1DCB001E8608 /* FirebaseFirestore */; };
-		C6F9AFB12CFE1DDB001E8608 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C6F9AFB02CFE1DDB001E8608 /* FirebaseAuth */; };
-		C6F9AFB32CFE1DDB001E8608 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C6F9AFB22CFE1DDB001E8608 /* FirebaseCore */; };
-		C6F9AFB52CFE1DDB001E8608 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C6F9AFB42CFE1DDB001E8608 /* FirebaseFirestore */; };
 		C6F9B1E42D02B77D001E8608 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C6F9B1C02D02B77D001E8608 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		C67919AD2D066A4A003140BD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C6CB4DA62B48603E0040C9F9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C67919732D055A63003140BD;
-			remoteInfo = WidgetsExtension;
-		};
-		C6F9AE722CFBE255001E8608 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C6CB4DA62B48603E0040C9F9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C6F9AE612CFBE254001E8608;
-			remoteInfo = Social_Activity.iOS;
-		};
-		C6F9AE7C2CFBE255001E8608 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C6CB4DA62B48603E0040C9F9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C6F9AE612CFBE254001E8608;
-			remoteInfo = Social_Activity.iOS;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		C6F9AECA2CFC370F001E8608 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		C67919742D055A63003140BD /* WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C68D44F52D4309870036D29A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C68D451B2D4309870036D29A /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		C68D451C2D4309870036D29A /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		C68D451D2D4309870036D29A /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
+		C68D451E2D4309870036D29A /* Firestore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firestore.swift; sourceTree = "<group>"; };
+		C68D451F2D4309870036D29A /* GitHubConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubConnection.swift; sourceTree = "<group>"; };
+		C68D45202D4309870036D29A /* HomeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeList.swift; sourceTree = "<group>"; };
+		C68D45212D4309870036D29A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C68D45222D4309870036D29A /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		C68D45232D4309870036D29A /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		C68D45242D4309870036D29A /* Nunito-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Regular.ttf"; sourceTree = "<group>"; };
+		C68D45252D4309870036D29A /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
+		C68D45262D4309870036D29A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		C68D45272D4309870036D29A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C68D45282D4309870036D29A /* StatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItem.swift; sourceTree = "<group>"; };
+		C68D45292D4309870036D29A /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		C68D454A2D46D9B90036D29A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
+		C68D454E2D46E5EB0036D29A /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
+		C68D454F2D46E5F30036D29A /* Info-macOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-macOS.plist"; sourceTree = "<group>"; };
 		C6CB4DAE2B48603E0040C9F9 /* Social_Activity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Social_Activity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6CB4DB82B4860400040C9F9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		C6CB4DBA2B4860400040C9F9 /* Social_Activity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Social_Activity.entitlements; sourceTree = "<group>"; };
 		C6DEE5C32B4A1C07004B1552 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		C6DEE5C52B4A2518004B1552 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		C6F9AE622CFBE254001E8608 /* Social_Activity.iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Social_Activity.iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C6F9AE712CFBE255001E8608 /* Social_Activity.iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Social_Activity.iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C6F9AE7B2CFBE255001E8608 /* Social_Activity.iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Social_Activity.iOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6F9AEB52CFC370E001E8608 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		C6F9AEB72CFC370E001E8608 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		C6F9AF402CFD1DFA001E8608 /* ArchGithHubStatusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchGithHubStatusApp.swift; sourceTree = "<group>"; };
@@ -89,28 +81,10 @@
 			);
 			target = C67919732D055A63003140BD /* WidgetsExtension */;
 		};
-		C679199F2D055B45003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Types.swift,
-			);
-			target = C67919732D055A63003140BD /* WidgetsExtension */;
-		};
-		C67919AB2D0649AA003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = C6F9AE612CFBE254001E8608 /* Social_Activity.iOS */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C66633F92CF59825008143CB /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C679199F2D055B45003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
 		C67919772D055A63003140BD /* Widgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C67919822D055A64003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widgets; sourceTree = "<group>"; };
-		C6F9AE632CFBE254001E8608 /* Social_Activity_iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (C67919AB2D0649AA003140BD /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Social_Activity_iOS; sourceTree = "<group>"; };
-		C6F9AE742CFBE255001E8608 /* Social_Activity.iOSTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOSTests; sourceTree = "<group>"; };
-		C6F9AE7E2CFBE255001E8608 /* Social_Activity.iOSUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Social_Activity.iOSUITests; sourceTree = "<group>"; };
 		C6F9B12A2D016AD8001E8608 /* MenuBar */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MenuBar; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -134,33 +108,10 @@
 				C6DEE5C42B4A1C07004B1552 /* Security.framework in Frameworks */,
 				C6F9AFAD2CFE1DCB001E8608 /* FirebaseAuth in Frameworks */,
 				C61CF8D92CF026F9001A93C5 /* FirebaseAuth in Frameworks */,
+				C68D454B2D46D9B90036D29A /* SwiftUI.framework in Frameworks */,
 				C6F9AFA82CFE1CE8001E8608 /* FirebaseCore in Frameworks */,
 				C61CF8DB2CF026F9001A93C5 /* FirebaseFirestore in Frameworks */,
 				C6F9AFAF2CFE1DCB001E8608 /* FirebaseFirestore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C6F9AE5F2CFBE254001E8608 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C6F9AFB32CFE1DDB001E8608 /* FirebaseCore in Frameworks */,
-				C6F9AFB12CFE1DDB001E8608 /* FirebaseAuth in Frameworks */,
-				C6F9AFB52CFE1DDB001E8608 /* FirebaseFirestore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C6F9AE6E2CFBE255001E8608 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C6F9AE782CFBE255001E8608 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,13 +122,9 @@
 			isa = PBXGroup;
 			children = (
 				C6CB4DB02B48603E0040C9F9 /* Social_Activity */,
-				C6F9AE632CFBE254001E8608 /* Social_Activity_iOS */,
-				C6F9AE742CFBE255001E8608 /* Social_Activity.iOSTests */,
-				C6F9AE7E2CFBE255001E8608 /* Social_Activity.iOSUITests */,
 				C67919772D055A63003140BD /* Widgets */,
 				C6CB4DAF2B48603E0040C9F9 /* Products */,
 				C6DEE5C22B4A1C07004B1552 /* Frameworks */,
-				C66633F92CF59825008143CB /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -185,9 +132,6 @@
 			isa = PBXGroup;
 			children = (
 				C6CB4DAE2B48603E0040C9F9 /* Social_Activity.app */,
-				C6F9AE622CFBE254001E8608 /* Social_Activity.iOS.app */,
-				C6F9AE712CFBE255001E8608 /* Social_Activity.iOSTests.xctest */,
-				C6F9AE7B2CFBE255001E8608 /* Social_Activity.iOSUITests.xctest */,
 				C67919742D055A63003140BD /* WidgetsExtension.appex */,
 			);
 			name = Products;
@@ -196,9 +140,25 @@
 		C6CB4DB02B48603E0040C9F9 /* Social_Activity */ = {
 			isa = PBXGroup;
 			children = (
-				C6DEE5C52B4A2518004B1552 /* Info.plist */,
+				C68D454E2D46E5EB0036D29A /* Info-iOS.plist */,
+				C68D454F2D46E5F30036D29A /* Info-macOS.plist */,
+				C68D44F52D4309870036D29A /* LaunchScreen.storyboard */,
 				C6F9B1C02D02B77D001E8608 /* GoogleService-Info.plist */,
-				C6CB4DBA2B4860400040C9F9 /* Social_Activity.entitlements */,
+				C68D451B2D4309870036D29A /* Authentication.swift */,
+				C68D451C2D4309870036D29A /* Controller.swift */,
+				C68D451D2D4309870036D29A /* EmojiPicker.swift */,
+				C68D451E2D4309870036D29A /* Firestore.swift */,
+				C68D451F2D4309870036D29A /* GitHubConnection.swift */,
+				C68D45202D4309870036D29A /* HomeList.swift */,
+				C68D45212D4309870036D29A /* HomeView.swift */,
+				C68D45222D4309870036D29A /* Keychain.swift */,
+				C68D45232D4309870036D29A /* LoginView.swift */,
+				C68D45242D4309870036D29A /* Nunito-Regular.ttf */,
+				C68D45252D4309870036D29A /* PasswordView.swift */,
+				C68D45262D4309870036D29A /* ProfileView.swift */,
+				C68D45272D4309870036D29A /* SettingsView.swift */,
+				C68D45282D4309870036D29A /* StatusItem.swift */,
+				C68D45292D4309870036D29A /* Types.swift */,
 				C6CB4DB72B4860400040C9F9 /* Preview Content */,
 				C6F9AF402CFD1DFA001E8608 /* ArchGithHubStatusApp.swift */,
 				C6F9AF5B2CFD1DFA001E8608 /* Assets.xcassets */,
@@ -218,6 +178,7 @@
 		C6DEE5C22B4A1C07004B1552 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C68D454A2D46D9B90036D29A /* SwiftUI.framework */,
 				C6DEE5C32B4A1C07004B1552 /* Security.framework */,
 				C6F9AEB52CFC370E001E8608 /* WidgetKit.framework */,
 				C6F9AEB72CFC370E001E8608 /* SwiftUI.framework */,
@@ -257,6 +218,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C6CB4DBD2B4860400040C9F9 /* Build configuration list for PBXNativeTarget "Social_Activity" */;
 			buildPhases = (
+				C68D45502D46EB710036D29A /* ShellScript */,
 				C6CB4DAA2B48603E0040C9F9 /* Sources */,
 				C6CB4DAB2B48603E0040C9F9 /* Frameworks */,
 				C6CB4DAC2B48603E0040C9F9 /* Resources */,
@@ -266,87 +228,12 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C66633F92CF59825008143CB /* Shared */,
 				C6F9B12A2D016AD8001E8608 /* MenuBar */,
 			);
 			name = Social_Activity;
 			productName = ArchGithHubStatus;
 			productReference = C6CB4DAE2B48603E0040C9F9 /* Social_Activity.app */;
 			productType = "com.apple.product-type.application";
-		};
-		C6F9AE612CFBE254001E8608 /* Social_Activity.iOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C6F9AE832CFBE255001E8608 /* Build configuration list for PBXNativeTarget "Social_Activity.iOS" */;
-			buildPhases = (
-				C6F9AE5E2CFBE254001E8608 /* Sources */,
-				C6F9AE5F2CFBE254001E8608 /* Frameworks */,
-				C6F9AE602CFBE254001E8608 /* Resources */,
-				C6F9AECA2CFC370F001E8608 /* Embed Foundation Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C67919AE2D066A4A003140BD /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				C66633F92CF59825008143CB /* Shared */,
-				C6F9AE632CFBE254001E8608 /* Social_Activity_iOS */,
-			);
-			name = Social_Activity.iOS;
-			packageProductDependencies = (
-				C6F9AFB02CFE1DDB001E8608 /* FirebaseAuth */,
-				C6F9AFB22CFE1DDB001E8608 /* FirebaseCore */,
-				C6F9AFB42CFE1DDB001E8608 /* FirebaseFirestore */,
-			);
-			productName = Social_Activity.iOS;
-			productReference = C6F9AE622CFBE254001E8608 /* Social_Activity.iOS.app */;
-			productType = "com.apple.product-type.application";
-		};
-		C6F9AE702CFBE255001E8608 /* Social_Activity.iOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C6F9AE862CFBE255001E8608 /* Build configuration list for PBXNativeTarget "Social_Activity.iOSTests" */;
-			buildPhases = (
-				C6F9AE6D2CFBE255001E8608 /* Sources */,
-				C6F9AE6E2CFBE255001E8608 /* Frameworks */,
-				C6F9AE6F2CFBE255001E8608 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C6F9AE732CFBE255001E8608 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				C6F9AE742CFBE255001E8608 /* Social_Activity.iOSTests */,
-			);
-			name = Social_Activity.iOSTests;
-			packageProductDependencies = (
-			);
-			productName = Social_Activity.iOSTests;
-			productReference = C6F9AE712CFBE255001E8608 /* Social_Activity.iOSTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		C6F9AE7A2CFBE255001E8608 /* Social_Activity.iOSUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C6F9AE892CFBE255001E8608 /* Build configuration list for PBXNativeTarget "Social_Activity.iOSUITests" */;
-			buildPhases = (
-				C6F9AE772CFBE255001E8608 /* Sources */,
-				C6F9AE782CFBE255001E8608 /* Frameworks */,
-				C6F9AE792CFBE255001E8608 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C6F9AE7D2CFBE255001E8608 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				C6F9AE7E2CFBE255001E8608 /* Social_Activity.iOSUITests */,
-			);
-			name = Social_Activity.iOSUITests;
-			packageProductDependencies = (
-			);
-			productName = Social_Activity.iOSUITests;
-			productReference = C6F9AE7B2CFBE255001E8608 /* Social_Activity.iOSUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -363,17 +250,6 @@
 					};
 					C6CB4DAD2B48603E0040C9F9 = {
 						CreatedOnToolsVersion = 15.1;
-					};
-					C6F9AE612CFBE254001E8608 = {
-						CreatedOnToolsVersion = 16.1;
-					};
-					C6F9AE702CFBE255001E8608 = {
-						CreatedOnToolsVersion = 16.1;
-						TestTargetID = C6F9AE612CFBE254001E8608;
-					};
-					C6F9AE7A2CFBE255001E8608 = {
-						CreatedOnToolsVersion = 16.1;
-						TestTargetID = C6F9AE612CFBE254001E8608;
 					};
 				};
 			};
@@ -394,9 +270,6 @@
 			projectRoot = "";
 			targets = (
 				C6CB4DAD2B48603E0040C9F9 /* Social_Activity */,
-				C6F9AE612CFBE254001E8608 /* Social_Activity.iOS */,
-				C6F9AE702CFBE255001E8608 /* Social_Activity.iOSTests */,
-				C6F9AE7A2CFBE255001E8608 /* Social_Activity.iOSUITests */,
 				C67919732D055A63003140BD /* WidgetsExtension */,
 			);
 		};
@@ -414,40 +287,45 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C68D45512D46FF680036D29A /* LaunchScreen.storyboard in Resources */,
 				C6CB4DB92B4860400040C9F9 /* Preview Assets.xcassets in Resources */,
 				C6F9B1E42D02B77D001E8608 /* GoogleService-Info.plist in Resources */,
+				C68D45382D4309870036D29A /* Nunito-Regular.ttf in Resources */,
 				C6F9AF6C2CFD1DFA001E8608 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C6F9AE602CFBE254001E8608 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C6F9AE6F2CFBE255001E8608 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C6F9AE792CFBE255001E8608 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C68D45502D46EB710036D29A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Social_Activity/Info-iOS.plist",
+				"$(SRCROOT)/Social_Activity/Info-macOS.plist",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nset -e\n\necho \"Building for platform: ${PLATFORM_NAME}\"\n\nif [ \"$SCRIPT_INPUT_FILE_COUNT\" -gt 2 ]; then\n    echo \"You have too many input files, the first should be the iOS info.plist and the second should be the macOS info.plist\"\n    exit 1\nelif [ \"$SCRIPT_INPUT_FILE_COUNT\" -lt 2 ]; then\n    echo \"You don't have enough input files, the first should be the iOS info.plist and the second should be the macOS info.plist\"\n    exit 1\nelif [ \"$SCRIPT_OUTPUT_FILE_COUNT\" -ne 1 ]; then\n    echo \"You don't have the right number of output files\"\n    exit 1\nelif [ \"$SCRIPT_OUTPUT_FILE_COUNT\" -ne 1 ] || [ \"$SCRIPT_INPUT_FILE_COUNT\" -ne 2 ]; then\n    echo \"Something went wrong with the input and output files.\"\n    exit 1\nfi\n\n# Select the correct Info.plist file based on the platform\nif [ \"$PLATFORM_NAME\" == \"iphoneos\" ] || [ \"$PLATFORM_NAME\" == \"iphonesimulator\" ]; then\n    echo \"Using iOS Info.plist\"\n    cp \"${SCRIPT_INPUT_FILE_0}\" \"${SCRIPT_OUTPUT_FILE_0}\"\nelif [ \"$PLATFORM_NAME\" == \"macosx\" ]; then\n    echo \"Using macOS Info.plist\"\n    cp \"${SCRIPT_INPUT_FILE_1}\" \"${SCRIPT_OUTPUT_FILE_0}\"\nelse\n    echo \"Error: Unsupported platform '${PLATFORM_NAME}'\"\n    exit 1\nfi\n\n# Print success message\necho \"Info.plist copied to ${SCRIPT_OUTPUT_FILE_0}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C67919702D055A63003140BD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C68D45482D4309870036D29A /* Types.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,50 +333,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C68D452A2D4309870036D29A /* Authentication.swift in Sources */,
+				C68D452B2D4309870036D29A /* Controller.swift in Sources */,
+				C68D452C2D4309870036D29A /* EmojiPicker.swift in Sources */,
+				C68D452D2D4309870036D29A /* Firestore.swift in Sources */,
+				C68D452E2D4309870036D29A /* GitHubConnection.swift in Sources */,
+				C68D452F2D4309870036D29A /* HomeList.swift in Sources */,
+				C68D45302D4309870036D29A /* HomeView.swift in Sources */,
+				C68D45312D4309870036D29A /* Keychain.swift in Sources */,
+				C68D45322D4309870036D29A /* LoginView.swift in Sources */,
+				C68D45332D4309870036D29A /* PasswordView.swift in Sources */,
+				C68D45342D4309870036D29A /* ProfileView.swift in Sources */,
+				C68D45352D4309870036D29A /* SettingsView.swift in Sources */,
+				C68D45362D4309870036D29A /* StatusItem.swift in Sources */,
+				C68D45372D4309870036D29A /* Types.swift in Sources */,
 				C6F9AF472CFD1DFA001E8608 /* ArchGithHubStatusApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C6F9AE5E2CFBE254001E8608 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C6F9AE6D2CFBE255001E8608 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C6F9AE772CFBE255001E8608 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		C67919AE2D066A4A003140BD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C67919732D055A63003140BD /* WidgetsExtension */;
-			targetProxy = C67919AD2D066A4A003140BD /* PBXContainerItemProxy */;
-		};
-		C6F9AE732CFBE255001E8608 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C6F9AE612CFBE254001E8608 /* Social_Activity.iOS */;
-			targetProxy = C6F9AE722CFBE255001E8608 /* PBXContainerItemProxy */;
-		};
-		C6F9AE7D2CFBE255001E8608 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C6F9AE612CFBE254001E8608 /* Social_Activity.iOS */;
-			targetProxy = C6F9AE7C2CFBE255001E8608 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C67919842D055A64003140BD /* Debug */ = {
@@ -687,23 +540,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Social_Activity/Social_Activity.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity/Preview Content\" /Users/andrewmainella/Documents/ArchGithHubStatus/Shared/Nunito-Regular.ttf";
+				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity/Preview Content\" /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity/Nunito-Regular.ttf";
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Social_Activity/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "${BUILT_PRODUCTS_DIR}/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Social Activity";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -714,10 +568,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Archimedes4.SocialActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -726,23 +581,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Social_Activity/Social_Activity.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity/Preview Content\" /Users/andrewmainella/Documents/ArchGithHubStatus/Shared/Nunito-Regular.ttf";
+				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity/Preview Content\" /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity/Nunito-Regular.ttf";
 				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Social_Activity/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "${BUILT_PRODUCTS_DIR}/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Social Activity";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -753,169 +609,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Archimedes4.SocialActivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;
-				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		C6F9AE842CFBE255001E8608 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Social_Activity.iOS.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity_iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				ENABLE_PREVIEWS = YES;
-				GCC_WARN_PEDANTIC = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				GENERATE_PKGINFO_FILE = YES;
-				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
-				INFOPLIST_FILE = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Social Activity";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = /iOS/LaunchScreen.storyboard;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Archimedes4.SocialActivity.iOS;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C6F9AE852CFBE255001E8608 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Social_Activity.iOS.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Social_Activity_iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				ENABLE_PREVIEWS = YES;
-				GCC_WARN_PEDANTIC = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				GENERATE_PKGINFO_FILE = YES;
-				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
-				INFOPLIST_FILE = /Users/andrewmainella/Documents/ArchGithHubStatus/Social_Activity_iOS/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Social Activity";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = /iOS/LaunchScreen.storyboard;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Archimedes4.SocialActivity.iOS;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		C6F9AE872CFBE255001E8608 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Archimedes4.Social-Activity-iOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Social_Activity.iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Social_Activity.iOS";
-			};
-			name = Debug;
-		};
-		C6F9AE882CFBE255001E8608 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Archimedes4.Social-Activity-iOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Social_Activity.iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Social_Activity.iOS";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		C6F9AE8A2CFBE255001E8608 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Archimedes4.Social-Activity-iOSUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Social_Activity.iOS;
-			};
-			name = Debug;
-		};
-		C6F9AE8B2CFBE255001E8608 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SYV2CK2N9N;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Archimedes4.Social-Activity-iOSUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Social_Activity.iOS;
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -945,33 +643,6 @@
 			buildConfigurations = (
 				C6CB4DBE2B4860400040C9F9 /* Debug */,
 				C6CB4DBF2B4860400040C9F9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C6F9AE832CFBE255001E8608 /* Build configuration list for PBXNativeTarget "Social_Activity.iOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C6F9AE842CFBE255001E8608 /* Debug */,
-				C6F9AE852CFBE255001E8608 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C6F9AE862CFBE255001E8608 /* Build configuration list for PBXNativeTarget "Social_Activity.iOSTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C6F9AE872CFBE255001E8608 /* Debug */,
-				C6F9AE882CFBE255001E8608 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C6F9AE892CFBE255001E8608 /* Build configuration list for PBXNativeTarget "Social_Activity.iOSUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C6F9AE8A2CFBE255001E8608 /* Debug */,
-				C6F9AE8B2CFBE255001E8608 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1034,21 +705,6 @@
 			productName = FirebaseAuth;
 		};
 		C6F9AFAE2CFE1DCB001E8608 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C6F9AFAB2CFE1DCB001E8608 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
-		C6F9AFB02CFE1DDB001E8608 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C6F9AFAB2CFE1DCB001E8608 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		C6F9AFB22CFE1DDB001E8608 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C6F9AFAB2CFE1DCB001E8608 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-		C6F9AFB42CFE1DDB001E8608 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C6F9AFAB2CFE1DCB001E8608 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;

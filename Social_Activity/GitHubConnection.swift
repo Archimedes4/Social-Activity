@@ -56,9 +56,15 @@ func clearStatus(token: String) async {
 	}
 }
 
-func setStatus(emoji: String, message: String, token: String) async {
+func setStatus(emoji: String, message: String, expiresAt: String?, token: String) async {
 	let dataQuery = "mutation ($status: ChangeUserStatusInput!) {\nchangeUserStatus(input: $status) {\nstatus {\nemoji\nexpiresAt\nlimitedAvailability: indicatesLimitedAvailability\nmessage\n}\n}\n}"
-	let json = ["query": dataQuery, "variables": ["status":["emoji":emoji,"message":message]]] as [String : Any]
+	
+	var status: [String:String] = ["emoji":emoji,"message":message]
+	if let expiresAt = expiresAt {
+		status["expiresAt"] = expiresAt
+	}
+	
+	let json = ["query": dataQuery, "variables": ["status":status]] as [String : Any]
 	do {
 		let _ = try await callApi(json: json, token: token)
 	} catch {
@@ -83,7 +89,7 @@ func validateToken(token: String) async throws -> String {
  Returns nul if something has gone wrong
  */
 func getUserData(token: String) async throws -> UserData? {
-	let json = ["query": "{\nviewer {\nname\navatarUrl\npronouns\nlogin\nstatus {\nid\nmessage\nemoji\n}\n}\n}"]
+	let json = ["query": "{\nviewer {\nname\navatarUrl\npronouns\nlogin\nstatus {\nid\nmessage\nemoji\nexpiresAt\n}\n}\n}"]
 	do {
 		let result = try await callApi(json: json, token: token)
 		guard let data = result["data"] as? [String: Any] else {return nil}
@@ -93,38 +99,37 @@ func getUserData(token: String) async throws -> UserData? {
 		guard let pronouns = viewer["pronouns"] as? String else {return nil}
 		guard let login = viewer["login"] as? String else {return nil}
 		
-		guard let status = viewer["status"] as? [String: String] else {
+		guard let status = viewer["status"] as? [String: Any] else {
 			return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: nil)
 		}
-		guard var status_emoji = status["emoji"] else {return nil}
+		guard var status_emoji = status["emoji"] as? String else {return nil}
 		status_emoji = status_emoji.filter { ":".contains($0) == false }
-		guard let status_id = status["id"] else {return nil}
-		guard let status_message = status["message"] else {return nil}
-
-		//TODO fixed selectedTime
-		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: "", times: []))
+		guard let status_id = status["id"] as? String else {return nil}
+		guard let status_message = status["message"] as? String	else {return nil}
+		var status_selectedTime = status["expiresAt"]  as? String
+		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: getTime(time: status_selectedTime), times: []))
 	} catch let error {
 		throw error
 	}
 }
 
 func getUserStatus(token: String) async -> StatusInformation? {
-	let json = ["query": "{\nviewer {\nstatus {\nid\nmessage\nemoji\n}\n}\n}"]
+	let json = ["query": "{\nviewer {\nstatus {\nid\nmessage\nemoji\nexpiresAt\n}\n}\n}"]
 	do {
 		let result = try await callApi(json: json, token: token)
 		guard let data = result["data"] as? [String: Any] else {return nil}
 		guard let viewer = data["viewer"] as? [String: Any] else {return nil}
 		
-		guard let status = viewer["status"] as? [String: String] else {
+		guard let status = viewer["status"] as? [String: Any] else {
 			return nil
 		}
-		guard var status_emoji = status["emoji"] else {return nil}
+		guard var status_emoji = status["emoji"] as? String else {return nil}
 		status_emoji = status_emoji.filter { ":".contains($0) == false }
-		guard let status_id = status["id"] else {return nil}
-		guard let status_message = status["message"] else {return nil}
-		guard let status_selectedTime = status["emoji"] else {return nil} // TODO fix key
+		guard let status_id = status["id"] as? String else {return nil}
+		guard let status_message = status["message"] as? String else {return nil}
+		guard let status_selectedTime = status["expiresAt"] as? String? else {return nil}
 
-		return StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: status_selectedTime, times: [])
+		return StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: getTime(time: status_selectedTime), times: [])
 	} catch {
 		return nil
 	}
@@ -159,4 +164,33 @@ func loadGitHubUrls() async throws -> [String:String] {
 	} catch {
 		throw ApiError.regular
 	}
+}
+
+func getExpiresAt(time:Int) -> String? {
+	print(time)
+	if (time < 0) {
+		return nil
+	}
+	let now = Date()
+	let calendar = Calendar.current
+	let date = calendar.date(byAdding: .second, value: time, to: now)
+	return date!.ISO8601Format()
+}
+
+/**
+ Converts a ISO date to time in seconds
+ expiresAt -> Seconds
+ */
+func getTime(time: String?) -> Int {
+	if (time == nil) {
+		return -1
+	}
+	let now = Date().timeIntervalSince1970
+	let dateFormatter = DateFormatter()
+
+	dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+
+	let updatedAtStr = "2016-06-05T16:56:57.019+01:00"
+	let future = dateFormatter.date(from: time!)?.timeIntervalSince1970 ?? (now + 1)
+	return Int(future - now)
 }
