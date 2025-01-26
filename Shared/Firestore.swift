@@ -60,7 +60,8 @@ func addItem(time: String, infoID: String) async -> LoadingState {
 			"times":FieldValue.arrayUnion([time]),
 		])
 		return LoadingState.success
-	} catch {
+	} catch let error {
+		print(error)
 		return LoadingState.failed
 	}
 }

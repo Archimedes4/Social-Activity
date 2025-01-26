@@ -41,7 +41,7 @@ struct StatusPill: View {
 		.clipShape(.rect(cornerRadius: 19))
 		.overlay(RoundedRectangle(cornerRadius: 19)
 		.stroke(Color.black, lineWidth: 1))
-		.position(x: 283, y: 270)
+		.position(x: 260, y: 245)
 		.zIndex(2)
 		.onHover() { hovering in
 			isHover = hovering
@@ -75,7 +75,6 @@ struct ProfileView: View {
 		ZStack {
 			VStack {
 				if (homeData.profile != nil) {
-					StatusPill()
 					AsyncImage(url: URL(string: homeData.profile!.advatar)) { image in
 						image.resizable()
 					} placeholder: {
@@ -85,6 +84,7 @@ struct ProfileView: View {
 					.clipShape(.rect(cornerRadius: 296))
 					.overlay(RoundedRectangle(cornerRadius: 148)
 					.stroke(Color.black, lineWidth: 1))
+					.overlay(StatusPill())
 					.padding()
 					HStack {
 						Text(homeData.profile!.fullName)

@@ -20,28 +20,63 @@ extension String {
 			return "";
 		}
 		if (last == "m") {
-			return self[..<self.endIndex] +  " minutes"
+			return self[..<self.index(before: self.endIndex)] +  " minutes"
 		}
 		if (last == "h") {
-			return self[..<self.endIndex] + " hour"
+			return self[..<self.index(before: self.endIndex)] + " hour"
 		}
 		if (last == "d") {
-			return self[..<self.endIndex] + " day"
+			return self[..<self.index(before: self.endIndex)] + " day"
 		}
 		if (last == "y") {
-			return self[..<self.endIndex] + " year"
+			return self[..<self.index(before: self.endIndex)] + " year"
 		}
 		return self
 	}
 }
 
+struct DateTimePicker: View {
+	let addItem: (_ time: String) -> Void
+	@State var hours: Int = 0
+	@State var minutes: Int = 0
+	@State private var date = Date()
+	
+	var body: some View {
+		VStack {
+			HStack {
+				Picker("", selection: $hours){
+						ForEach(0..<4, id: \.self) { i in
+								Text("\(i) hours").tag(i)
+						}
+				}
+				Picker("", selection: $minutes){
+						ForEach(0..<60, id: \.self) { i in
+								Text("\(i) min").tag(i)
+						}
+				}
+			}
+			DatePicker(selection: $date, displayedComponents: .date) {}
+				.labelsHidden()
+				.contentShape(Rectangle())
+				.opacity(0.011)             // <<< here
+			Button(action: {
+				addItem("\(hours)h")
+			}) {
+				Text("Add Time")
+			}
+		}
+	}
+}
+
 struct TimeSelector: View {
 	var information: StatusInformation?
-	@State private var date = Date()
 	@Binding var state: StatusItemState
+	@State var isPickingTime: Bool = false;
 	
-	func loadUpdateSelectedItem() {
-		
+	func loadUpdateSelectedItem(time: String) {
+		Task {
+			await updateSelectedItem(time: time, infoID: information?.id ?? "")
+		}
 	}
 	
 	func loadAddItem(time: String) {
@@ -60,7 +95,7 @@ struct TimeSelector: View {
 		HStack {
 			HStack(spacing: 3) {
 				Button(action: {
-					return
+					loadUpdateSelectedItem(time: "never")
 				}) {
 					HStack {
 						Image(systemName: "infinity")
@@ -78,7 +113,7 @@ struct TimeSelector: View {
 				if let information = information {
 					ForEach(information.times, id: \.hashValue) { time in
 						Button(action: {
-							print("ran")
+							loadUpdateSelectedItem(time: time)
 						}) {
 							HStack {
 								Image(systemName: "clock")
@@ -97,31 +132,27 @@ struct TimeSelector: View {
 								}
 							}
 							.padding(5)
-							.background((information.selectedTime == "1h") ? Color("BlueOne"):.white)
+							.background((information.selectedTime == time) ? Color("BlueOne"):.white)
 							.clipShape(RoundedRectangle(cornerRadius: 35))
 						}
 						.buttonStyle(.plain)
 					}
 				}
-				Image(systemName: "calendar.badge.plus")
-					.resizable()
-					.frame(width: 10, height: 10)
-					.overlay {
-						VStack {
-							DatePicker(selection: $date, displayedComponents: .date) {}
-								.labelsHidden()
-								.contentShape(Rectangle())
-								.opacity(0.011)             // <<< here
-							Button(action: {
-								loadAddItem(time: "2h")
-							}) {
-								Text("Add Time")
-							}
+				Button(action: {
+					isPickingTime = true;
+				}) {
+					Image(systemName: "calendar.badge.plus")
+						.resizable()
+						.frame(width: 10, height: 10)
+						.padding(5)
+						.background(.white)
+						.clipShape(RoundedRectangle(cornerRadius: 35))
+						.popover(isPresented: $isPickingTime) {
+							DateTimePicker(addItem: { time in
+								loadAddItem(time: time)
+							})
 						}
-					}
-					.padding(5)
-					.background(.white)
-					.clipShape(RoundedRectangle(cornerRadius: 35))
+				}.buttonStyle(.plain)
 			}
 			.padding(5)
 			.background(.ultraThinMaterial)
