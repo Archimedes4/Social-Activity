@@ -24,3 +24,18 @@ struct UserData {
 enum LoadingState {
 	case loading, success, failed
 }
+
+enum DeviceTypes: String {
+	case macOSDesktop = "macOSDesktop"
+	case macOSLaptop = "macOSLaptop"
+	case iPad = "iPad"
+	case iPhone = "iPhone"
+	case unknown = "unknown"
+}
+
+struct Device {
+	let name: String
+	let type: DeviceTypes
+	let fcmToken: String
+	let lastUpdated: Int // This is the epoch time of when the device was last updated.
+}

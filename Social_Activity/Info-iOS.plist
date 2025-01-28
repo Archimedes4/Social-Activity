@@ -4,7 +4,7 @@
 		<dict>
 			<!-- General App Info -->
 			<key>CFBundleDisplayName</key>
-			<string>$(PRODUCT_NAME)</string> <!-- Using environment variable PRODUCT_NAME (App Name) -->
+			<string>Social Activity</string> <!-- Using environment variable PRODUCT_NAME (App Name) -->
 			
 			<key>CFBundleIdentifier</key>
 			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string> <!-- Bundle Identifier -->
@@ -32,6 +32,17 @@
 			<!-- iOS version compatibility -->
 			<key>MinimumOSVersion</key>
 			<string>$(IPHONEOS_DEPLOYMENT_TARGET)</string> <!-- The minimum iOS version required for your app -->
+			
+			<key>CFBundlePackageType</key>
+			<string>APPL</string>
+			
+			<key>UISupportedInterfaceOrientations</key>
+			<array>
+					<string>UIInterfaceOrientationPortrait</string>         <!-- Portrait -->
+					<string>UIInterfaceOrientationPortraitUpsideDown</string>
+					<string>UIInterfaceOrientationLandscapeLeft</string>    <!-- Landscape Left -->
+					<string>UIInterfaceOrientationLandscapeRight</string>   <!-- Landscape Right -->
+			</array>
 		</dict>
 </plist>
 

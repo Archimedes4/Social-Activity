@@ -35,7 +35,6 @@ struct LoginButton: View {
 							// Handle error.
 							print("error", error)
 						}
-						print("All good", token)
 						onToken(token)
 						// User is signed in.
 						// IdP data available in authResult.additionalUserInfo.profile.

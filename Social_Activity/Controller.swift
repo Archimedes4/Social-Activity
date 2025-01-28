@@ -16,6 +16,7 @@ struct Controller: View {
 	@State var handle: AuthStateDidChangeListenerHandle? = nil
 	@State var currentAuthState: authState = authState.loading
 	@StateObject var homeData: HomeData = HomeData()
+	@StateObject var notificationManager = NotificationManager()
 	
 	var body: some View {
 		VStack {
@@ -55,6 +56,7 @@ struct Controller: View {
 			}
 		}
 		.environmentObject(homeData)
+		.environmentObject(notificationManager)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.onAppear() {
 			var isPassProtect = false

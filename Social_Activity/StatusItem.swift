@@ -116,8 +116,10 @@ struct TimeSelector: View {
 							.resizable()
 							.aspectRatio(contentMode: .fit)
 							.frame(width: 10, height: 10)
+							.foregroundStyle(.black)
 						Text("Never end")
 							.font(.system(size: 10))
+							.foregroundStyle(.black)
 					}
 					.padding(5)
 					.background((information?.selectedTime ?? 0 < 0) ? Color("BlueOne"):.white)
@@ -133,15 +135,18 @@ struct TimeSelector: View {
 								Image(systemName: "clock")
 									.resizable()
 									.frame(width: 10, height: 10)
+									.foregroundStyle(.black)
 								Text(time.toLongTime())
 									.font(.system(size: 10))
-								if (state != StatusItemState.viewing) {
+									.foregroundStyle(.black)
+								if (state != StatusItemState.viewing && time != information.selectedTime) {
 									Button(action: {
 										loadRemoveItem(time: time)
 									}) {
 										Image(systemName: "xmark")
 											.resizable()
 											.frame(width: 10, height: 10)
+											.foregroundStyle(.black)
 									}.buttonStyle(.plain)
 								}
 							}
@@ -158,6 +163,7 @@ struct TimeSelector: View {
 					Image(systemName: "calendar.badge.plus")
 						.resizable()
 						.frame(width: 10, height: 10)
+						.foregroundStyle(.black)
 						.padding(5)
 						.background(.white)
 						.clipShape(RoundedRectangle(cornerRadius: 35))
@@ -491,7 +497,7 @@ struct MainStatusItem: View {
 					Spacer()
 				}
 			}
-			if (state == StatusItemState.viewing) {
+			if (state == StatusItemState.viewing || state == StatusItemState.editing) {
 				TimeSelector(information: $information, state: $state)
 			}
 		}

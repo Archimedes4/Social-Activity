@@ -169,7 +169,7 @@ struct HomeView: View {
 						.fixedSize()
 						HStack {
 							if (geometry.size.width >= 600 || isShowingSettings) {
-								VStack {
+								ScrollView {
 									if (homeData.selectedIndex != -1 && geometry.size.width >= 600) {
 										EmojiPicker(for: geometry, onDismiss: {selected in
 											homeData.selectedIndex = -1
