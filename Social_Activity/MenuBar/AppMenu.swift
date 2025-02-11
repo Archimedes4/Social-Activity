@@ -8,7 +8,6 @@
 import SwiftUI
 import FirebaseAuth
 
-
 struct MenuExtensionMain: View {
 	@Binding var token: String
 	@Binding var profile: UserData?
