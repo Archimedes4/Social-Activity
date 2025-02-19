@@ -410,9 +410,8 @@ struct MainStatusItem: View {
 				} else {
 					VStack {
 						VStack {
-							TextEditor(text: $name)
-								.lineLimit(1)
-								.padding(3)
+							TextField("", text: $name)
+								.padding(8)
 								.overlay(
 									RoundedRectangle(cornerRadius: 12)
 										.stroke(.black, lineWidth: 2)
@@ -422,6 +421,7 @@ struct MainStatusItem: View {
 								.scrollContentBackground(.hidden)
 								.font(Font.custom("Nunito-Regular", size: 20))
 								.padding(.vertical)
+								.textFieldStyle(.plain)
 						}.frame(height: 65)
 					}
 				}

@@ -12,6 +12,8 @@ import FirebaseFirestore
 import FirebaseMessaging
 #if os(iOS)
 import UIKit
+#elseif os(macOS)
+import IOKit.ps
 #endif
 
 // Notificaitons
@@ -86,22 +88,47 @@ func getDevices() async throws-> [Device] {
 	}
 }
 
+func isMacBook() -> Bool {
+		let process = Process()
+		let pipe = Pipe()
+		
+		process.launchPath = "/bin/bash"
+		process.arguments = ["-c", "pmset -g batt"]
+		process.standardOutput = pipe
+		
+		do {
+				try process.run()
+				let data = pipe.fileHandleForReading.readDataToEndOfFile()
+				let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+				
+				return output?.contains("Battery Power") ?? false || output?.contains("AC Power") ?? false
+		} catch {
+				print("Error checking battery status: \(error.localizedDescription)")
+				return false
+		}
+}
+
+
 func getDeviceType() -> DeviceTypes {
 	#if os(macOS)
-		print(Host.current().localizedName)
+	if (isMacBook()) {
+		return DeviceTypes.macOSLaptop
+	}
+	return DeviceTypes.macOSDesktop
 	#elseif os(iOS)
 	if (UIDevice.current.localizedModel == "iPhone") {
 		return DeviceTypes.iPhone
 	}
-	#endif
+	// TODO iPad
 	return DeviceTypes.unknown
+	#endif
 }
 
 func getDeviceName() -> String {
 	#if os(iOS)
 		return UIDevice.current.name
 	#elseif os(macOS)
-		return ""
+		return Host.current().localizedName ?? ""
 	#endif
 }
 

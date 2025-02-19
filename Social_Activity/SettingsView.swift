@@ -52,7 +52,7 @@ struct DeviceBlock: View {
 							.aspectRatio(contentMode: .fit)
 							.frame(width: 25, height: 25)
 							.foregroundStyle(.black)
-					}
+					}.buttonStyle(.plain)
 				}
 			}
 			HStack {

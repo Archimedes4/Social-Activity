@@ -22,7 +22,7 @@ struct LoginButton: View {
 					// Perform the authentication and await the result.
 					let urlWithToken = try await webAuthenticationSession.authenticate(
 						using: URL(string: gitHubAuthLink)!,
-							callbackURLScheme: "com.Archimedes4.SocialActivity.iOS"
+							callbackURLScheme: "com.Archimedes4.SocialActivity"
 					)
 					let queryItems = URLComponents(string: urlWithToken.absoluteString)?.queryItems
 					guard let code = queryItems?.first(where: { $0.name == "code" })?.value else {

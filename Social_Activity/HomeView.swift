@@ -176,8 +176,7 @@ struct HomeView: View {
 										})
 									} else if (geometry.size.height >= 700 || !isShowingSettings) {
 										ProfileView(for: geometry)
-									}
-									if (geometry.size.height >= 700 || isShowingSettings) {
+									} else if (geometry.size.height >= 700 || isShowingSettings) {
 										SettingsView(for: geometry)
 											.transition(.opacity)
 									}
