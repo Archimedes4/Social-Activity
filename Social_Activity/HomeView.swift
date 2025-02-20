@@ -169,19 +169,20 @@ struct HomeView: View {
 						.fixedSize()
 						HStack {
 							if (geometry.size.width >= 600 || isShowingSettings) {
-								ScrollView {
-									if (homeData.selectedIndex != -1 && geometry.size.width >= 600) {
-										EmojiPicker(for: geometry, onDismiss: {selected in
-											homeData.selectedIndex = -1
-										})
-									} else if (geometry.size.height >= 700 || !isShowingSettings) {
-										ProfileView(for: geometry)
-									} else if (geometry.size.height >= 700 || isShowingSettings) {
+								if (homeData.selectedIndex != -1 && geometry.size.width >= 600) {
+									EmojiPicker(for: geometry, onDismiss: {selected in
+										homeData.selectedIndex = -1
+									})
+								} else if (geometry.size.height >= 700 || !isShowingSettings) {
+									ProfileView(for: geometry)
+										.overlay(StatusPill(for: geometry))
+								} else if (geometry.size.height >= 700 || isShowingSettings) {
+									ScrollView {
 										SettingsView(for: geometry)
 											.transition(.opacity)
 									}
-									Spacer()
 								}
+								Spacer()
 							}
 							if (geometry.size.width >= 600 || !isShowingSettings) {
 								VStack {

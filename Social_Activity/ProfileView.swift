@@ -11,41 +11,68 @@ struct StatusPill: View {
 	@State var isHover: Bool = false
 	@State var url: String = ""
 	@EnvironmentObject var homeData: HomeData
+	@State var geometry: GeometryProxy
+	
+	init (for metrics: GeometryProxy) {
+		self.geometry = metrics
+	}
+	
 	var body: some View {
-		HStack {
-			if (homeData.profile?.status != nil) {
-				AsyncImage(url: URL(string: url)) { image in
-					image.resizable()
-				} placeholder: {
-					ProgressView()
-						.scaleEffect(0.6)
-				}
-				.frame(width: 20, height: 20)
-				.padding(.leading, isHover ? 15:0)
-				if (isHover) {
-					Text(homeData.profile?.status?.name ?? "")
-						.padding(.trailing)
-				}
-			} else {
-				Image(.smiley)
-					.resizable()
+		VStack {
+			HStack {
+				if (homeData.profile?.status != nil) {
+					AsyncImage(url: URL(string: url)) { image in
+						image.resizable()
+					} placeholder: {
+						ProgressView()
+							.scaleEffect(0.6)
+					}
 					.frame(width: 20, height: 20)
 					.padding(.leading, isHover ? 15:0)
-				if (isHover) {
-					Text("No Status Set")
-						.padding(.trailing)
+					if (isHover) {
+						Text(homeData.profile?.status?.name ?? "")
+							.padding(.trailing)
+					}
+				} else {
+					Image(.smiley)
+						.resizable()
+						.frame(width: 20, height: 20)
+						.padding(.leading, isHover ? 15:0)
+					if (isHover) {
+						Text("No Status Set")
+							.padding(.trailing)
+					}
 				}
 			}
-		}.frame(width: isHover ? nil:38, height: 38)
+			if (isHover && homeData.profile?.status != nil) {
+				HStack {
+					Text("Expires in 45")
+						.padding(.leading)
+					Spacer()
+					Button(action: {
+						Task {
+							await clearStatus(token: homeData.token)
+							homeData.checkStatus()
+						}
+					}) {
+						Image(systemName: "xmark")
+							.resizable()
+							.frame(width: 15, height: 15)
+							.foregroundStyle(.black)
+							.padding(.trailing)
+					}.buttonStyle(.plain)
+				}
+			}
+		}.frame(width: isHover ? 150:38, height: (isHover && homeData.profile?.status != nil) ? 68:38)
+		.onHover() { hovering in
+			isHover = hovering
+		}
 		.background(.white)
 		.clipShape(.rect(cornerRadius: 19))
 		.overlay(RoundedRectangle(cornerRadius: 19)
 		.stroke(Color.black, lineWidth: 1))
-		.position(x: 260, y: 245)
+		.position(x: 115 + geometry.size.width * 0.2, y: 275)
 		.zIndex(2)
-		.onHover() { hovering in
-			isHover = hovering
-		}
 		.onAppear() {
 			do {
 				url = try homeData.getUrl(emoji: homeData.profile?.status?.emoji ?? "")
@@ -84,7 +111,6 @@ struct ProfileView: View {
 					.clipShape(.rect(cornerRadius: 296))
 					.overlay(RoundedRectangle(cornerRadius: 148)
 					.stroke(Color.black, lineWidth: 1))
-					.overlay(StatusPill())
 					.padding()
 					HStack {
 						Text(homeData.profile!.fullName)
