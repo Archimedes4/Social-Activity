@@ -188,3 +188,16 @@ func getDeviceTimeText(time: Int) -> String {
 	// TODO pad the minte so it is like 8:01 and 8:11
 	return "Last updated \(date) at \(time)"
 }
+
+func updateLastLoggedIn() async -> LoadingState {
+	guard let userID = Auth.auth().currentUser?.uid else { return LoadingState.failed }
+	let db = Firestore.firestore()
+	do {
+		try await db.collection("users").document(userID).setData([
+			"lastLoggedIn": Int(Date.now.timeIntervalSince1970)
+		])
+		return LoadingState.success
+	} catch _ {
+		return LoadingState.failed
+	}
+}
