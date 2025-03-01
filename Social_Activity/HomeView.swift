@@ -231,7 +231,7 @@ struct HomeView: View {
 					do {
 						let result = try await getUserData(token: homeData.token)
 						homeData.profile = result
-						await updateLastLoggedIn()
+						await updateLastLoggedIn();
 					} catch let error {
 						print(error)
 						guard let apiError = error as? ApiError else {

@@ -25,6 +25,7 @@ func callApi(json: [String : Any], token: String) async throws -> [String: Any]{
 		request.httpMethod = "POST"
 		request.setValue("bearer "+token, forHTTPHeaderField: "Authorization")
 		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+		request.setValue("1", forHTTPHeaderField: "X-Github-Next-Global-ID")
 		request.httpBody = jsonData
 		let (responseData, _) = try await URLSession.shared.data(
 			for: request
@@ -89,7 +90,7 @@ func validateToken(token: String) async throws -> String {
  Returns nul if something has gone wrong
  */
 func getUserData(token: String) async throws -> UserData? {
-	let json = ["query": "{\nviewer {\nname\navatarUrl\npronouns\nlogin\nstatus {\nid\nmessage\nemoji\nexpiresAt\n}\n}\n}"]
+	let json = ["query": "{\nviewer {\nname\navatarUrl\npronouns\nlogin\nstatus {\nid\nmessage\nemoji\nexpiresAt\n}\nid\n}\n}"]
 	do {
 		let result = try await callApi(json: json, token: token)
 		guard let data = result["data"] as? [String: Any] else {return nil}
@@ -98,6 +99,11 @@ func getUserData(token: String) async throws -> UserData? {
 		guard let avatarUrl = viewer["avatarUrl"] as? String else {return nil}
 		guard let pronouns = viewer["pronouns"] as? String else {return nil}
 		guard let login = viewer["login"] as? String else {return nil}
+		guard let id = viewer["id"] as? String else {return nil}
+		
+		Task {
+			await updateGithubId(uid: id)
+		}
 		
 		guard let status = viewer["status"] as? [String: Any] else {
 			return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: nil)
@@ -109,6 +115,7 @@ func getUserData(token: String) async throws -> UserData? {
 		var status_selectedTime = status["expiresAt"]  as? String
 		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: getTime(time: status_selectedTime), times: []))
 	} catch let error {
+		print(error)
 		throw error
 	}
 }

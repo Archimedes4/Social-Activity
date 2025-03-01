@@ -195,9 +195,24 @@ func updateLastLoggedIn() async -> LoadingState {
 	do {
 		try await db.collection("users").document(userID).setData([
 			"lastLoggedIn": Int(Date.now.timeIntervalSince1970)
-		])
+		], merge: true)
 		return LoadingState.success
 	} catch _ {
+		return LoadingState.failed
+	}
+}
+
+func updateGithubId(uid: String) async -> LoadingState {
+	guard let userID = Auth.auth().currentUser?.uid else { return LoadingState.failed }
+	let db = Firestore.firestore()
+	do {
+		try await db.collection("users").document(userID).setData([
+			"git_uid": uid	
+		], merge: true)
+		print(uid)
+		return LoadingState.success
+	} catch _ {
+		print("Error")
 		return LoadingState.failed
 	}
 }
