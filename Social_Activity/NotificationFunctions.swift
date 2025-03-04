@@ -88,6 +88,7 @@ func getDevices() async throws-> [Device] {
 	}
 }
 
+#if os(macOS)
 func isMacBook() -> Bool {
 		let process = Process()
 		let pipe = Pipe()
@@ -107,6 +108,7 @@ func isMacBook() -> Bool {
 				return false
 		}
 }
+#endif
 
 
 func getDeviceType() -> DeviceTypes {

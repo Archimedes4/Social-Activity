@@ -173,10 +173,10 @@ struct HomeView: View {
 									EmojiPicker(for: geometry, onDismiss: {selected in
 										homeData.selectedIndex = -1
 									})
-								} else if (geometry.size.height >= 700 || !isShowingSettings) {
+								} else if (geometry.size.height >= 700 && geometry.size.width >= 600) {
 									ProfileView(for: geometry)
 										.overlay(StatusPill(for: geometry))
-								} else if (geometry.size.height >= 700 || isShowingSettings) {
+								} else if (geometry.size.height >= 700 && isShowingSettings) {
 									ScrollView {
 										SettingsView(for: geometry)
 											.transition(.opacity)
