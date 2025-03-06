@@ -180,8 +180,9 @@ func getDeviceTimeText(time: Int) -> String {
 	if (Calendar.current.isDateInToday(lastUpdated)) {
 		date = "today"
 	} else {
-		let dateComponents = Calendar.current.dateComponents([.month, .day, .year], from: lastUpdated)
-		date = "\(dateComponents.month!) \(dateComponents.day!) \(dateComponents.year!)"
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMMM d, yyyy"
+		date = dateFormatter.string(from: lastUpdated)
 	}
 	
 	let dateFormatter = DateFormatter()
