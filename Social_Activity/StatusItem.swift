@@ -46,33 +46,89 @@ extension Int {
 
 struct DateTimePicker: View {
 	let addItem: (_ time: Int) -> Void
-	@State var hours: Int = 0
-	@State var minutes: Int = 0
-	@State private var date = Date()
+	@State private var selectedHours = 0
+	@State private var selectedMinutes = 0
+	@State private var selectedDate = Date()
+	@State private var selectedTime = false
 	
 	var body: some View {
 		VStack {
-			HStack {
-				Picker("", selection: $hours){
-						ForEach(0..<4, id: \.self) { i in
-								Text("\(i) hours").tag(i)
-						}
-				}
-				Picker("", selection: $minutes){
-						ForEach(0..<60, id: \.self) { i in
-								Text("\(i) min").tag(i)
-						}
-				}
-			}
-			DatePicker(selection: $date, displayedComponents: .date) {}
+			VStack {
+				Text("Add Time to End the Status")
+					.font(.headline)
+				Picker("Mode", selection: $selectedTime) {
+					Text("Date & Time").tag(false)
+					Text("Duration").tag(true)
+				}.pickerStyle(.segmented)
 				.labelsHidden()
-				.contentShape(Rectangle())
-				.opacity(0.011)             // <<< here
+				if (selectedTime) {
+					HStack {
+							// Hours Picker
+							Picker("Hours", selection: $selectedHours) {
+									ForEach(0..<25, id: \.self) { hour in
+											Text("\(hour) hrs").tag(hour)
+									}
+							}
+							#if os(iOS)
+								.pickerStyle(WheelPickerStyle())
+							#elseif os(macOS)
+								.pickerStyle(.menu)
+							#endif
+							.frame(width: 150)
+							.clipped()
+							
+							Text(":")
+									.font(.largeTitle)
+									.padding(.horizontal, 5)
+							
+							// Minutes Picker
+							Picker("Minutes", selection: $selectedMinutes) {
+									ForEach(0..<60, id: \.self) { minute in
+											Text("\(minute) min").tag(minute)
+									}
+							}
+							#if os(iOS)
+								.pickerStyle(WheelPickerStyle())
+							#elseif os(macOS)
+								.pickerStyle(.menu)
+							#endif
+							.frame(width: 150)
+							.clipped()
+					}
+					
+					// Display selected duration
+					Text("Selected Duration: \(selectedHours) hr \(selectedMinutes) min")
+							.padding()
+				} else {
+					Spacer()
+					DatePicker("Select Date & Time", selection: $selectedDate, displayedComponents: [.date, .hourAndMinute])
+							.datePickerStyle(CompactDatePickerStyle()) // Compact style
+					Spacer()
+				}
+		}
+		.padding()
 			Button(action: {
-				addItem((hours * 3600) + (minutes * 60))
+				addItem((selectedHours * 3600) + (selectedMinutes * 60))
 			}) {
-				Text("Add Time")
-			}
+				HStack {
+					Spacer()
+					Image(systemName: "calendar.badge.plus")
+						.resizable()
+						.aspectRatio(contentMode: .fit)
+						.foregroundStyle(.black)
+						.frame(width: 25, height: 25)
+					Text("Add Time")
+						.foregroundStyle(.black)
+						.font(.headline)
+					Spacer()
+				}
+				.padding()
+				.background(RoundedRectangle(cornerRadius: 20).fill(Color.greenOne))
+				.padding(.horizontal)
+			}.buttonStyle(.plain)
+			#if os(macOS)
+				.padding(.bottom)
+			#endif
 		}
 	}
 }
@@ -171,6 +227,7 @@ struct TimeSelector: View {
 							DateTimePicker(addItem: { time in
 								loadAddItem(time: time)
 							})
+							.presentationDetents([.height(300)])
 						}
 				}.buttonStyle(.plain)
 			}

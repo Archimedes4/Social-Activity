@@ -214,7 +214,13 @@ struct SettingsView: View {
 						.foregroundStyle(.black)
 					Spacer()
 				}.padding(.top, 5)
-				DevicesView()
+				if (geometry.size.width >= 600) {
+					ScrollView {
+						DevicesView()
+					}
+				} else {
+					DevicesView()
+				}
 			}
 			.padding(10)
 			.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))

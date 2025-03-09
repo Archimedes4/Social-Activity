@@ -24,9 +24,7 @@ class HomeData: ObservableObject {
 			return
 		}
 		Task { @MainActor in
-			print(currentProfile.status)
 			profile = UserData(fullName: currentProfile.fullName, advatar: currentProfile.advatar, pronouns: currentProfile.advatar, username: currentProfile.username, status: await getUserStatus(token: token))
-			print(profile?.status)
 		}
 	}
 	
@@ -64,8 +62,11 @@ struct StatusButtonStyle: ButtonStyle {
 	}
 }
 
+// For small screen sizes
 struct StatusComponent: View {
 	@EnvironmentObject var homeData: HomeData
+	@State private var timeRemaining = -1
+	let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 	
 	var emojiBinding: Binding<String> {
 		 Binding<String>(
@@ -97,9 +98,24 @@ struct StatusComponent: View {
 			if (homeData.profile?.status != nil) {
 				EmojiView(emoji: emojiBinding)
 					.padding(.leading)
-				Text((homeData.profile?.status!.name) ?? "")
-					.font(Font.custom("Nunito-Regular", size: 20))
-					.foregroundStyle(.black)
+				VStack {
+					HStack {
+						Text((homeData.profile?.status!.name) ?? "")
+							.font(Font.custom("Nunito-Regular", size: 20))
+							.foregroundStyle(.black)
+						Spacer()
+					}
+					if (homeData.profile?.status?.expiresAt != nil && timeRemaining >= 0) {
+						HStack{
+							Text(timeString(time: timeRemaining))
+								.font(Font.custom("Nunito-Regular", size: 20))
+								.foregroundStyle(.black)
+								.frame(alignment: .leading)
+							Spacer()
+						}
+					}
+				}
+
 			} else {
 				Text("No Status Set!")
 					.font(Font.custom("Nunito-Regular", size: 20))
@@ -129,12 +145,29 @@ struct StatusComponent: View {
 		.background(.white)
 		.clipShape(.rect(cornerRadius: 10))
 		.padding(.horizontal, 10)
+		.onReceive(timer) { _ in
+			if (homeData.profile != nil && homeData.profile?.status?.expiresAt != nil) {
+				timeRemaining = Int(homeData.profile?.status?.expiresAt!.timeIntervalSinceNow ?? 0)
+				if (Int(homeData.profile?.status?.expiresAt!.timeIntervalSinceNow ?? 0) == 0) {
+					homeData.checkStatus()
+				}
+			} else {
+				timeRemaining = -1
+			}
+		}
+	}
+	
+	func timeString(time: Int) -> String {
+		let minutes = time / 60
+		let seconds = time % 60
+		return String(format: "%02d:%02d", minutes, seconds)
 	}
 }
 
 struct HomeView: View {
 	@EnvironmentObject var homeData: HomeData
 	@State var isShowingSettings: Bool = false
+	@State var currentDimensionMode: dimensionMode = dimensionMode.small
 
 	var body: some View {
 		GeometryReader { geometry in
@@ -168,25 +201,36 @@ struct HomeView: View {
 						.frame(width: geometry.size.width, height: (geometry.size.height * 0.1))
 						.fixedSize()
 						HStack {
-							if (geometry.size.width >= 600 || isShowingSettings) {
-								if (homeData.selectedIndex != -1 && geometry.size.width >= 600) {
+							if (currentDimensionMode != dimensionMode.small || isShowingSettings) {
+								if (homeData.selectedIndex != -1 && currentDimensionMode != dimensionMode.small) {
 									EmojiPicker(for: geometry, onDismiss: {selected in
 										homeData.selectedIndex = -1
 									})
-								} else if (geometry.size.height >= 700 && geometry.size.width >= 600) {
-									ProfileView(for: geometry)
-										.overlay(StatusPill(for: geometry))
-								} else if (geometry.size.height >= 700 && isShowingSettings) {
+								} else if (currentDimensionMode == dimensionMode.large || (currentDimensionMode == dimensionMode.medium && !isShowingSettings)) {
+									VStack {
+										ProfileView(for: geometry)
+											.overlay(StatusPill(for: geometry))
+											.padding(.bottom, (currentDimensionMode == dimensionMode.large) ? 0:15)
+										if (currentDimensionMode == dimensionMode.large) {
+											SettingsView(for: geometry)
+												.transition(.opacity)
+										}
+										Spacer()
+									}.frame(maxHeight: .infinity)
+								} else if (currentDimensionMode == dimensionMode.small && isShowingSettings) {
 									ScrollView {
 										SettingsView(for: geometry)
 											.transition(.opacity)
 									}
+								} else if (currentDimensionMode == dimensionMode.medium && isShowingSettings) {
+									SettingsView(for: geometry)
+										.transition(.opacity)
 								}
 								Spacer()
 							}
-							if (geometry.size.width >= 600 || !isShowingSettings) {
+							if (currentDimensionMode != dimensionMode.small || !isShowingSettings) {
 								VStack {
-									if (geometry.size.width < 600) {
+									if (currentDimensionMode == dimensionMode.small) {
 										StatusComponent()
 									}
 									HomeList(for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70), for: geometry)
@@ -194,7 +238,7 @@ struct HomeView: View {
 							}
 						}
 					}
-					if (homeData.selectedIndex != -1 && geometry.size.width < 600) {
+					if (homeData.selectedIndex != -1 && currentDimensionMode == dimensionMode.small) {
 						VStack {
 							EmojiPicker(for: geometry, onDismiss: { hello in
 								homeData.selectedIndex = -1
@@ -242,6 +286,15 @@ struct HomeView: View {
 							KeychainService().save("", for: "gitauth")
 						}
 					}
+				}
+			}
+			.onChange(of: geometry.size, initial: true) { oldVal, newSize in
+				if (newSize.width >= 600 && newSize.height >= 700) {
+					currentDimensionMode = dimensionMode.large
+				} else if (newSize.width >= 600) {
+					currentDimensionMode = dimensionMode.medium
+				} else {
+					currentDimensionMode = dimensionMode.small
 				}
 			}
 			.onChange(of: homeData.selectedEmoji) { oldVal, newVal in

@@ -12,6 +12,8 @@ struct StatusPill: View {
 	@State var url: String = ""
 	@EnvironmentObject var homeData: HomeData
 	@State var geometry: GeometryProxy
+	@State private var timeRemaining = -1
+	let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 	
 	init (for metrics: GeometryProxy) {
 		self.geometry = metrics
@@ -32,6 +34,20 @@ struct StatusPill: View {
 					if (isHover) {
 						Text(homeData.profile?.status?.name ?? "")
 							.padding(.trailing)
+						if (homeData.profile?.status != nil && timeRemaining < 0) {
+							Button(action: {
+								Task {
+									await clearStatus(token: homeData.token)
+									homeData.checkStatus()
+								}
+							}) {
+								Image(systemName: "xmark")
+									.resizable()
+									.frame(width: 15, height: 15)
+									.foregroundStyle(.black)
+									.padding(.trailing)
+							}.buttonStyle(.plain)
+						}
 					}
 				} else {
 					Image(.smiley)
@@ -44,9 +60,9 @@ struct StatusPill: View {
 					}
 				}
 			}
-			if (isHover && homeData.profile?.status != nil) {
+			if (isHover && homeData.profile?.status != nil && timeRemaining >= 0) {
 				HStack {
-					Text("Expires in 45")
+					Text(timeString(time: timeRemaining, expiresAt: homeData.profile?.status?.expiresAt))
 						.padding(.leading)
 					Spacer()
 					Button(action: {
@@ -63,7 +79,7 @@ struct StatusPill: View {
 					}.buttonStyle(.plain)
 				}
 			}
-		}.frame(width: isHover ? 150:38, height: (isHover && homeData.profile?.status != nil) ? 68:38)
+		}.frame(width: isHover ? 200:38, height: (isHover && homeData.profile?.status != nil) ? 68:38)
 		.onHover() { hovering in
 			isHover = hovering
 		}
@@ -87,6 +103,36 @@ struct StatusPill: View {
 				
 			}
 		}
+		.onReceive(timer) { _ in
+			if (homeData.profile != nil && homeData.profile?.status?.expiresAt != nil) {
+				timeRemaining = Int(homeData.profile?.status?.expiresAt!.timeIntervalSinceNow ?? 0)
+				if (Int(homeData.profile?.status?.expiresAt!.timeIntervalSinceNow ?? 0) == 0) {
+					homeData.checkStatus()
+				}
+			} else {
+				timeRemaining = -1
+			}
+		}
+	}
+	
+	func timeString(time: Int, expiresAt: Date?) -> String {
+		let hours = time / 3600
+		let minutes = (time % 3600) / 60
+		let seconds = time % 60
+		
+		print(time)
+		if (time >= 86400) {
+			guard let expiresAt = expiresAt else {
+				return ""
+			}
+			let formatter = DateFormatter()
+			formatter.dateFormat = "'Ends on' yyyy-MM-dd 'at' HH:mm" // 24-hour format
+			return formatter.string(from: expiresAt)
+		}
+		if (hours == 0) {
+			return "Time left: " + String(format: "%02d:%02d", minutes, seconds)
+		}
+		return "Time left: " + String(format: "%02d:%02d:%02d", hours, minutes, seconds)
 	}
 }
 

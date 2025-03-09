@@ -113,7 +113,7 @@ func getUserData(token: String) async throws -> UserData? {
 		guard let status_id = status["id"] as? String else {return nil}
 		guard let status_message = status["message"] as? String	else {return nil}
 		var status_selectedTime = status["expiresAt"]  as? String
-		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: getTime(time: status_selectedTime), times: []))
+		return UserData(fullName: name, advatar: avatarUrl, pronouns: pronouns, username: login, status: StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: getTime(time: status_selectedTime), times: [], expiresAt: getDate(time: status_selectedTime)))
 	} catch let error {
 		print(error)
 		throw error
@@ -136,7 +136,7 @@ func getUserStatus(token: String) async -> StatusInformation? {
 		guard let status_message = status["message"] as? String else {return nil}
 		guard let status_selectedTime = status["expiresAt"] as? String? else {return nil}
 
-		return StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: getTime(time: status_selectedTime), times: [])
+		return StatusInformation(id: status_id, name: status_message, emoji: status_emoji, selectedTime: getTime(time: status_selectedTime), times: [], expiresAt: getDate(time: status_selectedTime))
 	} catch {
 		return nil
 	}
@@ -197,7 +197,19 @@ func getTime(time: String?) -> Int {
 
 	dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
 
-	let updatedAtStr = "2016-06-05T16:56:57.019+01:00"
 	let future = dateFormatter.date(from: time!)?.timeIntervalSince1970 ?? (now + 1)
 	return Int(future - now)
+}
+
+func getDate(time: String?) -> Date? {
+	if (time == nil) {
+		return nil
+	}
+	let dateFormatter = DateFormatter()
+
+	dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+	dateFormatter.timeZone = TimeZone.gmt
+	
+	let future = dateFormatter.date(from: time!)
+	return future
 }
