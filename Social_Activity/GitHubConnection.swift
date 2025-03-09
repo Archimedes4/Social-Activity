@@ -173,24 +173,29 @@ func loadGitHubUrls() async throws -> [String:String] {
 	}
 }
 
-func getExpiresAt(time:Int) -> String? {
-	print(time)
-	if (time < 0) {
-		return nil
+func getExpiresAt(time: TimeOption) -> String? {
+	if case let .duration(duation) = time {
+		if (duation < 0) {
+			return nil
+		}
+		let now = Date()
+		let calendar = Calendar.current
+		let date = calendar.date(byAdding: .second, value: duation, to: now)
+		return date!.ISO8601Format()
 	}
-	let now = Date()
-	let calendar = Calendar.current
-	let date = calendar.date(byAdding: .second, value: time, to: now)
-	return date!.ISO8601Format()
+	if case let .date(date) = time {
+		return date.ISO8601Format()
+	}
+	return nil
 }
 
 /**
  Converts a ISO date to time in seconds
  expiresAt -> Seconds
  */
-func getTime(time: String?) -> Int {
+func getTime(time: String?) -> TimeOption {
 	if (time == nil) {
-		return -1
+		return .never
 	}
 	let now = Date().timeIntervalSince1970
 	let dateFormatter = DateFormatter()
@@ -198,7 +203,7 @@ func getTime(time: String?) -> Int {
 	dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
 
 	let future = dateFormatter.date(from: time!)?.timeIntervalSince1970 ?? (now + 1)
-	return Int(future - now)
+	return .duration(Int(future - now))
 }
 
 func getDate(time: String?) -> Date? {

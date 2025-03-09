@@ -45,7 +45,7 @@ extension Int {
 }
 
 struct DateTimePicker: View {
-	let addItem: (_ time: Int) -> Void
+	let addItem: (_ time: TimeOption) -> Void
 	@State private var selectedHours = 0
 	@State private var selectedMinutes = 0
 	@State private var selectedDate = Date()
@@ -108,7 +108,11 @@ struct DateTimePicker: View {
 		}
 		.padding()
 			Button(action: {
-				addItem((selectedHours * 3600) + (selectedMinutes * 60))
+				if (selectedTime) {
+					addItem(.duration((selectedHours * 3600) + (selectedMinutes * 60)))
+				} else {
+					addItem(.date(selectedDate))
+				}
 			}) {
 				HStack {
 					Spacer()
@@ -133,118 +137,6 @@ struct DateTimePicker: View {
 	}
 }
 
-struct TimeSelector: View {
-	@Binding var information: StatusInformation?
-	@Binding var state: StatusItemState
-	@State var isPickingTime: Bool = false;
-	
-	func loadUpdateSelectedItem(time: Int) {
-		Task {
-			information?.selectedTime = time
-			await updateSelectedItem(time: time, infoID: information?.id ?? "")
-		}
-	}
-	
-	func loadAddItem(time: Int) {
-		Task {
-			if (information?.times.contains(where: {$0 == time}) == false) {
-				self.information?.times.append(time)
-			}
-			await addItem(time: time, infoID: information?.id ?? "")
-		}
-	}
-	
-	func loadRemoveItem(time: Int) {
-		Task {
-			self.information?.times = self.information?.times.filter({$0 != time}) ?? []
-			await removeItem(time: time, infoID: information?.id ?? "")
-		}
-	}
-	
-	var body: some View {
-		HStack {
-			HStack(spacing: 3) {
-				Button(action: {
-					loadUpdateSelectedItem(time: -1)
-				}) {
-					HStack {
-						Image(systemName: "infinity")
-							.resizable()
-							.aspectRatio(contentMode: .fit)
-							.frame(width: 10, height: 10)
-							.foregroundStyle(.black)
-						Text("Never end")
-							.font(.system(size: 10))
-							.foregroundStyle(.black)
-					}
-					.padding(5)
-					.background((information?.selectedTime ?? 0 < 0) ? Color("BlueOne"):.white)
-					.clipShape(RoundedRectangle(cornerRadius: 35))
-				}
-				.buttonStyle(.plain)
-				if let information = information {
-					ForEach(information.times, id: \.hashValue) { time in
-						Button(action: {
-							loadUpdateSelectedItem(time: time)
-						}) {
-							HStack {
-								Image(systemName: "clock")
-									.resizable()
-									.frame(width: 10, height: 10)
-									.foregroundStyle(.black)
-								Text(time.toLongTime())
-									.font(.system(size: 10))
-									.foregroundStyle(.black)
-								if (state != StatusItemState.viewing && time != information.selectedTime) {
-									Button(action: {
-										loadRemoveItem(time: time)
-									}) {
-										Image(systemName: "xmark")
-											.resizable()
-											.frame(width: 10, height: 10)
-											.foregroundStyle(.black)
-									}.buttonStyle(.plain)
-								}
-							}
-							.padding(5)
-							.background((information.selectedTime == time) ? Color("BlueOne"):.white)
-							.clipShape(RoundedRectangle(cornerRadius: 35))
-						}
-						.buttonStyle(.plain)
-					}
-				}
-				Button(action: {
-					isPickingTime = true;
-				}) {
-					Image(systemName: "calendar.badge.plus")
-						.resizable()
-						.frame(width: 10, height: 10)
-						.foregroundStyle(.black)
-						.padding(5)
-						.background(.white)
-						.clipShape(RoundedRectangle(cornerRadius: 35))
-						.popover(isPresented: $isPickingTime) {
-							DateTimePicker(addItem: { time in
-								loadAddItem(time: time)
-							})
-							.presentationDetents([.height(300)])
-						}
-				}.buttonStyle(.plain)
-			}
-			.padding(5)
-			.background(.ultraThinMaterial)
-			.clipShape(RoundedRectangle(cornerRadius: 35))
-			.overlay() {
-				RoundedRectangle(cornerRadius: 35)
-					.strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1, dash: [.greatestFiniteMagnitude]))
-			}
-			.padding(.leading, 10)
-			Spacer()
-		}
-		.padding(.bottom, 10)
-	}
-}
-
 struct StatusItem: View {
 	@State var name: String
 	@State var emoji: String
@@ -255,10 +147,10 @@ struct StatusItem: View {
 	@State var information: StatusInformation?
 	var onSelectEmoji: () -> Void
 	var onDelete: () -> Void
-	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: Int, _ times: [Int]) -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: TimeOption, _ times: [TimeOption]) -> Void
 	@EnvironmentObject var homeData: HomeData
 	
-	init(information: StatusInformation?, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String, _ selectedTime: Int, _ times: [Int]) -> Void) {
+	init(information: StatusInformation?, onSelectEmoji: @escaping () -> Void, onDelete: @escaping () -> Void, onCreate: @escaping (_ id: String, _ name: String, _ emoji: String, _ selectedTime: TimeOption, _ times: [TimeOption]) -> Void) {
 		self.onSelectEmoji = onSelectEmoji
 		self.onDelete = onDelete
 		self.onCreate = onCreate
@@ -285,7 +177,7 @@ struct StatusItem: View {
 			if (state == StatusItemState.viewing) {
 				Button(action: {
 					Task {
-						await setStatus(emoji: ":" + emoji + ":", message: name, expiresAt: getExpiresAt(time: information?.selectedTime ?? -1), token: homeData.token)
+						await setStatus(emoji: ":" + emoji + ":", message: name, expiresAt: getExpiresAt(time: information?.selectedTime ?? .never), token: homeData.token)
 						homeData.checkStatus()
 					}
 				}) {
@@ -356,7 +248,7 @@ struct MainStatusItem: View {
 	@Binding var information: StatusInformation?
 	var onDelete: () -> Void
 	var onSelectEmoji: () -> Void
-	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: Int, _ times: [Int]) -> Void
+	var onCreate: (_ id: String, _ name: String, _ emoji: String, _ selectedTime: TimeOption, _ times: [TimeOption]) -> Void
 	@Binding var emoji: String
 	@Binding var name: String
 	@Binding var state: StatusItemState
@@ -405,7 +297,7 @@ struct MainStatusItem: View {
 			])
 			withAnimation(.easeIn(duration: 0.3)){
 				state = StatusItemState.create
-				onCreate(itemId, name, emoji, -1, [3600])
+				onCreate(itemId, name, emoji, TimeOption.never, [TimeOption.duration(3600)])
 				name = ""
 			}
 		} catch {

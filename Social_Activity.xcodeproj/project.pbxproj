@@ -14,6 +14,7 @@
 		C67919992D055B2E003140BD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C67919982D055B2E003140BD /* FirebaseAuth */; };
 		C679199B2D055B2E003140BD /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C679199A2D055B2E003140BD /* FirebaseCore */; };
 		C679199D2D055B2E003140BD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C679199C2D055B2E003140BD /* FirebaseFirestore */; };
+		C67D8A3D2D7D6C6A003F9938 /* TimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = C67D8A3C2D7D6C6A003F9938 /* TimeSelector.swift */; };
 		C68D452A2D4309870036D29A /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451B2D4309870036D29A /* Authentication.swift */; };
 		C68D452B2D4309870036D29A /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451C2D4309870036D29A /* Controller.swift */; };
 		C68D452C2D4309870036D29A /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68D451D2D4309870036D29A /* EmojiPicker.swift */; };
@@ -57,6 +58,7 @@
 /* Begin PBXFileReference section */
 		C67919742D055A63003140BD /* WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C67D89DC2D7963F3003F9938 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C67D8A3C2D7D6C6A003F9938 /* TimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelector.swift; sourceTree = "<group>"; };
 		C68D44F52D4309870036D29A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C68D451B2D4309870036D29A /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		C68D451C2D4309870036D29A /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				C68D45262D4309870036D29A /* ProfileView.swift */,
 				C68D45272D4309870036D29A /* SettingsView.swift */,
 				C68D45282D4309870036D29A /* StatusItem.swift */,
+				C67D8A3C2D7D6C6A003F9938 /* TimeSelector.swift */,
 				C68D45292D4309870036D29A /* Types.swift */,
 				C68D45522D473A7A0036D29A /* NotificationFunctions.swift */,
 				C6CB4DB72B4860400040C9F9 /* Preview Content */,
@@ -407,6 +410,7 @@
 				C68D452D2D4309870036D29A /* Firestore.swift in Sources */,
 				C68D452E2D4309870036D29A /* GitHubConnection.swift in Sources */,
 				C68D452F2D4309870036D29A /* HomeList.swift in Sources */,
+				C67D8A3D2D7D6C6A003F9938 /* TimeSelector.swift in Sources */,
 				C68D45302D4309870036D29A /* HomeView.swift in Sources */,
 				C68D45312D4309870036D29A /* Keychain.swift in Sources */,
 				C68D45322D4309870036D29A /* LoginView.swift in Sources */,

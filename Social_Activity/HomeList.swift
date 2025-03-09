@@ -13,9 +13,6 @@ struct HomeList: View {
 	var body: some View {
 		ScrollView {
 			LazyVStack( spacing: 0) {
-				if (geometry.size.width >= 600) {
-					
-				}
 				if (homeData.statusItemsState == LoadingState.loading) {
 					VStack {
 						Spacer()
