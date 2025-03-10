@@ -22,8 +22,9 @@ func getStatusInformation() async -> [StatusInformation]? {
 			let data = document.data()
 			guard let name = data["name"] as? String else { return nil }
 			guard let emoji = data["emoji"] as? String else { return nil }
-			guard let selectedTime = data["selectedTime"] as? TimeOption else { return nil }
-			guard let times = data["times"] as? [TimeOption] else { return nil }
+			let selectedTime = getTimeOption(data: data["selectedTime"] as Any)
+			guard let rawtimes = data["times"] as? [Any] else { return nil }
+			let times = rawtimes.map({ getTimeOption(data: $0) })
 			loadingItems.append(StatusInformation(id: document.documentID, name: name, emoji: emoji, selectedTime: selectedTime, times: times))
 		}
 		return	 loadingItems
@@ -31,6 +32,29 @@ func getStatusInformation() async -> [StatusInformation]? {
 		print(error)
 		return nil
 	}
+}
+
+func getTimeOption(data: Any) -> TimeOption {
+	if let time = data as? Timestamp {
+		return .date(time.dateValue())
+	}
+	if let int = data as? Int {
+		if (int == -1) {
+			return .never
+		}
+		return .duration(int)
+	}
+	return .never
+}
+
+func getRawVal(option: TimeOption) -> Any {
+	if case .date(let date) = option {
+		return Timestamp(date: date)
+	}
+	if case .duration(let int) = option {
+		return int
+	}
+	return -1
 }
 
 /**
@@ -41,7 +65,7 @@ func updateSelectedItem(time: TimeOption, infoID: String) async -> LoadingState 
 	let db = Firestore.firestore()
 	do {
 		try await db.collection("users").document(userID).collection("statuses").document(infoID).updateData([
-			"selectedTime":time,
+			"selectedTime":getRawVal(option: time),
 		])
 		return LoadingState.success
 	} catch {
@@ -57,7 +81,7 @@ func addItem(time: TimeOption, infoID: String) async -> LoadingState {
 	let db = Firestore.firestore()
 	do {
 		try await db.collection("users").document(userID).collection("statuses").document(infoID).updateData([
-			"times":FieldValue.arrayUnion([time]),
+			"times":FieldValue.arrayUnion([getRawVal(option: time)]),
 		])
 		return LoadingState.success
 	} catch let error {
@@ -75,7 +99,7 @@ func removeItem(time: TimeOption, infoID: String) async -> LoadingState {
 	let db = Firestore.firestore()
 	do {
 		try await db.collection("users").document(userID).collection("statuses").document(infoID).updateData([
-			"times":FieldValue.arrayRemove([time]),
+			"times":FieldValue.arrayRemove([getRawVal(option: time)]),
 		])
 		return LoadingState.success
 	} catch {

@@ -44,9 +44,10 @@ struct TimeSelector: View {
 		HStack {
 			HStack(spacing: 3) {
 				if let information = information {
+					neverEnd
 					ForEach(information.times, id: \.id) { time in
 						Button(action: {
-						//	loadUpdateSelectedItem(time: time)
+							loadUpdateSelectedItem(time: time)
 						}) {
 							HStack {
 								Image(systemName: "clock")
@@ -58,7 +59,7 @@ struct TimeSelector: View {
 									.foregroundStyle(.black)
 								if (state != StatusItemState.viewing && time != information.selectedTime) {
 									Button(action: {
-							//			loadRemoveItem(time: time)
+										loadRemoveItem(time: time)
 									}) {
 										Image(systemName: "xmark")
 											.resizable()
@@ -68,11 +69,12 @@ struct TimeSelector: View {
 								}
 							}
 							.padding(5)
-							//.background((information.selectedTime == time) ? Color("BlueOne"):.white)
+							.background((information.selectedTime == time) ? Color("BlueOne"):.white)
 							.clipShape(RoundedRectangle(cornerRadius: 35))
 						}
 						.buttonStyle(.plain)
 					}
+					addTimeButton
 				}
 			}
 			.padding(5)
