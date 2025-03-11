@@ -171,7 +171,6 @@ struct StatusItem: View {
 		ZStack {
 			RoundedRectangle(cornerRadius: 10)
 				.strokeBorder(Color.black, style: StrokeStyle(lineWidth: 3, dash: [(state == StatusItemState.create || state == StatusItemState.creating) ? 10:.greatestFiniteMagnitude]))
-
 				.background(.white)
 				.cornerRadius(10)
 			if (state == StatusItemState.viewing) {
@@ -187,8 +186,6 @@ struct StatusItem: View {
 				LoadingItem(state: $state)
 			} else if (state != StatusItemState.failed) {
 				MainStatusItem(information: $information, onDelete: onDelete, onSelectEmoji: onSelectEmoji, onCreate: onCreate, emoji: $emoji, name: $name, state: $state, url: $url, initalName: $initalName)
-			} else {
-				
 			}
 		}
 		.onAppear() {
@@ -254,6 +251,7 @@ struct MainStatusItem: View {
 	@Binding var state: StatusItemState
 	@Binding var url: String
 	@Binding var initalName: String
+	@EnvironmentObject var geometryData: GeometryData
 	
 	func updateItem() async {
 		state = StatusItemState.updating
@@ -449,7 +447,7 @@ struct MainStatusItem: View {
 			if (state == StatusItemState.viewing || state == StatusItemState.editing) {
 				TimeSelector(information: $information, state: $state)
 			}
-		}
+		}.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 15:0))
 	}
 }
 

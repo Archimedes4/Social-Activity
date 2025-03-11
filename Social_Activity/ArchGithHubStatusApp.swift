@@ -190,7 +190,7 @@ struct ArchGithHubStatusApp: App {
 		let _ = NSApplication.shared.setActivationPolicy(.regular)
 		WindowGroup("Social Activity") {
 			Controller()
-				.frame(minWidth: 850, maxWidth: .infinity, minHeight: 480, maxHeight: .infinity)
+				.frame(minWidth: 850, maxWidth: .infinity, minHeight: 490, maxHeight: .infinity)
 		}
 		.windowStyle(HiddenTitleBarWindowStyle())
 		MenuBarExtra("Social Activity", systemImage: "waveform.path.ecg") {

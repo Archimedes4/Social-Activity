@@ -11,7 +11,9 @@ import SwiftUI
 struct TimeSelector: View {
 	@Binding var information: StatusInformation?
 	@Binding var state: StatusItemState
+	@State var internalWidth: CGFloat = 0;
 	@State var isPickingTime: Bool = false;
+	@EnvironmentObject var geometryData: GeometryData;
 	
 	func loadUpdateSelectedItem(time: TimeOption) {
 		Task {
@@ -41,41 +43,19 @@ struct TimeSelector: View {
 	}
 	
 	var body: some View {
+		let maxWidth = (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 50:0)
 		HStack {
-			HStack(spacing: 3) {
-				if let information = information {
-					neverEnd
-					ForEach(information.times, id: \.id) { time in
-						Button(action: {
-							loadUpdateSelectedItem(time: time)
-						}) {
-							HStack {
-								Image(systemName: "clock")
-									.resizable()
-									.frame(width: 10, height: 10)
-									.foregroundStyle(.black)
-								Text(getTimeText(time: time))
-									.font(.system(size: 10))
-									.foregroundStyle(.black)
-								if (state != StatusItemState.viewing && time != information.selectedTime) {
-									Button(action: {
-										loadRemoveItem(time: time)
-									}) {
-										Image(systemName: "xmark")
-											.resizable()
-											.frame(width: 10, height: 10)
-											.foregroundStyle(.black)
-									}.buttonStyle(.plain)
-								}
-							}
-							.padding(5)
-							.background((information.selectedTime == time) ? Color("BlueOne"):.white)
-							.clipShape(RoundedRectangle(cornerRadius: 35))
-						}
-						.buttonStyle(.plain)
+			HStack {
+				ScrollView(.horizontal, showsIndicators: false) {
+					internalView
+					.onGeometryChange(for: CGSize.self) { proxy in
+						proxy.size
+					} action: {
+						internalWidth = $0.width
 					}
-					addTimeButton
 				}
+				.scrollDisabled(internalWidth > maxWidth)
+				.frame(width: (internalWidth != 0) ? min(maxWidth, internalWidth):.greatestFiniteMagnitude)
 			}
 			.padding(5)
 			.background(.ultraThinMaterial)
@@ -84,10 +64,50 @@ struct TimeSelector: View {
 				RoundedRectangle(cornerRadius: 35)
 					.strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1, dash: [.greatestFiniteMagnitude]))
 			}
-			.padding(.leading, 10)
-			Spacer()
+			.padding(.horizontal, 10)
+			Spacer(minLength: 0)
 		}
+		.frame(width: maxWidth + 30)
+		.clipped()
 		.padding(.bottom, 10)
+	}
+	
+	var internalView: some View {
+		HStack(spacing: 3) {
+			if let information = information {
+				neverEnd
+				ForEach(information.times, id: \.id) { time in
+					Button(action: {
+						loadUpdateSelectedItem(time: time)
+					}) {
+						HStack {
+							Image(systemName: "clock")
+								.resizable()
+								.frame(width: 10, height: 10)
+								.foregroundStyle(.black)
+							Text(getTimeText(time: time))
+								.font(.system(size: 10))
+								.foregroundStyle(.black)
+							if (state != StatusItemState.viewing && time != information.selectedTime) {
+								Button(action: {
+									loadRemoveItem(time: time)
+								}) {
+									Image(systemName: "xmark")
+										.resizable()
+										.frame(width: 10, height: 10)
+										.foregroundStyle(.black)
+								}.buttonStyle(.plain)
+							}
+						}
+						.padding(5)
+						.background((information.selectedTime == time) ? Color("BlueOne"):.white)
+						.clipShape(RoundedRectangle(cornerRadius: 35))
+					}
+					.buttonStyle(.plain)
+				}
+				addTimeButton
+			}
+		}
 	}
 	
 	var neverEnd: some View {

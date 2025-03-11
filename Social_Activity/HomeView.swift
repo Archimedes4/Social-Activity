@@ -167,144 +167,141 @@ struct StatusComponent: View {
 struct HomeView: View {
 	@EnvironmentObject var homeData: HomeData
 	@State var isShowingSettings: Bool = false
-	@State var currentDimensionMode: dimensionMode = dimensionMode.small
+	@StateObject var geometryData: GeometryData = GeometryData()
 
 	var body: some View {
 		GeometryReader { geometry in
 			VStack {
 				ZStack {
-					VStack {
-						HStack {
-							Image("Logo")
+			VStack {
+				HStack {
+					Image("Logo")
+						.resizable()
+						.frame(width: max(50, geometryData.size.height * 0.08), height: max(50, geometryData.size.height * 0.08))
+						.cornerRadius(12)
+						.padding(.leading)
+					Text("Social Activity")
+						.font(Font.custom("Nunito-Regular", size: 32))
+						.foregroundStyle(.white)
+					Spacer()
+					if (geometryData.state != .large) {
+						Button(action: {
+							withAnimation(.spring(duration: 0.3)) {
+								isShowingSettings = !isShowingSettings
+							}
+						}) {
+							Image(systemName: "gearshape.fill")
 								.resizable()
-								.frame(width: max(50, geometry.size.height * 0.08), height: max(50, geometry.size.height * 0.08))
-								.cornerRadius(12)
-								.padding(.leading)
-							Text("Social Activity")
-								.font(Font.custom("Nunito-Regular", size: 32))
-								.foregroundStyle(.white)
-							Spacer()
-							if (geometry.size.width < 600 || geometry.size.height < 700) {
-								Button(action: {
-									withAnimation(.spring(duration: 0.3)) {
-										isShowingSettings = !isShowingSettings
-									}
-								}) {
-									Image(systemName: "gearshape.fill")
-										.resizable()
-										.frame(width: 30, height: 30)
-										.padding()
-										.foregroundStyle(.black)
-								}.buttonStyle(.plain)
-							}
-						}
-						.frame(width: geometry.size.width, height: (geometry.size.height * 0.1))
-						.fixedSize()
-						HStack {
-							if (currentDimensionMode != dimensionMode.small || isShowingSettings) {
-								if (homeData.selectedIndex != -1 && currentDimensionMode != dimensionMode.small) {
-									EmojiPicker(for: geometry, onDismiss: {selected in
-										homeData.selectedIndex = -1
-									})
-								} else if (currentDimensionMode == dimensionMode.large || (currentDimensionMode == dimensionMode.medium && !isShowingSettings)) {
-									VStack {
-										ProfileView(for: geometry)
-											.overlay(StatusPill(for: geometry))
-											.padding(.bottom, (currentDimensionMode == dimensionMode.large) ? 0:15)
-										if (currentDimensionMode == dimensionMode.large) {
-											SettingsView(for: geometry)
-												.transition(.opacity)
-										}
-										Spacer()
-									}.frame(maxHeight: .infinity)
-								} else if (currentDimensionMode == dimensionMode.small && isShowingSettings) {
-									ScrollView {
-										SettingsView(for: geometry)
-											.transition(.opacity)
-									}
-								} else if (currentDimensionMode == dimensionMode.medium && isShowingSettings) {
-									SettingsView(for: geometry)
-										.transition(.opacity)
-								}
-								Spacer()
-							}
-							if (currentDimensionMode != dimensionMode.small || !isShowingSettings) {
-								VStack {
-									if (currentDimensionMode == dimensionMode.small) {
-										StatusComponent()
-									}
-									HomeList(for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70), for: geometry)
-								}
-							}
-						}
-					}
-					if (homeData.selectedIndex != -1 && currentDimensionMode == dimensionMode.small) {
-						VStack {
-							EmojiPicker(for: geometry, onDismiss: { hello in
-								homeData.selectedIndex = -1
-							})
-							.position(x: geometry.size.width, y: geometry.size.height)
-							.frame(width: geometry.size.width, height: geometry.size.height)
-						}
-						.position(x: 0, y: 0)
-						.frame(width: geometry.size.width, height: geometry.size.height)
-						.background(.gray.opacity(0.8))
+								.frame(width: 30, height: 30)
+								.padding()
+								.foregroundStyle(.black)
+						}.buttonStyle(.plain)
 					}
 				}
+					.frame(width: geometryData.size.width, height: (geometryData.size.height * 0.1))
+					.fixedSize()
+				HStack(spacing: 0) {
+					if (geometryData.state != dimensionMode.small || isShowingSettings) {
+						if (homeData.selectedIndex != -1 && geometryData.state != dimensionMode.small) {
+							VStack {
+								EmojiPicker(onDismiss: {selected in
+									homeData.selectedIndex = -1
+								})
+								.padding(.bottom, 15)
+							}.frame(maxHeight: .infinity)
+						} else if (geometryData.state == dimensionMode.large || (geometryData.state == dimensionMode.medium && !isShowingSettings)) {
+							VStack {
+								ProfileView()
+									.overlay(StatusPill())
+								if (geometryData.state == dimensionMode.large) {
+									SettingsView()
+										.transition(.opacity)
+								} else {
+									Spacer(minLength: 0)
+								}
+							}.frame(maxHeight: .infinity)
+						} else if ((geometryData.state == dimensionMode.small || geometryData.state == dimensionMode.medium) && isShowingSettings) {
+							SettingsView()
+								.transition(.opacity)
+						}
+					}
+					if (geometryData.state != dimensionMode.small || !isShowingSettings) {
+						VStack {
+							if (geometryData.state == dimensionMode.small) {
+								StatusComponent()
+							}
+							HomeList(for: (geometry.size.height * 0.9) - (geometry.safeAreaInsets.bottom + 70))
+						}
+					}
+				}
+				.frame(width: geometryData.size.width, height: (geometryData.size.height * 0.9))
+				.clipped()
 			}
-			.frame(width: geometry.size.width, height: geometry.size.height)
-			.background(
-				LinearGradient(stops: [
-					Gradient.Stop(color: Color("BlueOne"), location: 0.14),
-					Gradient.Stop(color: Color("BlueTwo"), location: 0.53),
-					Gradient.Stop(color: Color("GreenOne"), location: 0.87),
-				], startPoint: .topTrailing, endPoint: .bottomLeading)
-			)
-			.onAppear() {
-				Task {
-					guard var result: [StatusInformation?] = await getStatusInformation() else {
-						homeData.statusItemsState = LoadingState.failed
-						print("Something when wrong when getting status information!")
+			if (homeData.selectedIndex != -1 && geometryData.state == dimensionMode.small) {
+				VStack {
+					EmojiPicker(onDismiss: { hello in
+						homeData.selectedIndex = -1
+					})
+					.position(x: geometryData.size.width, y: geometryData.size.height)
+					.frame(width: geometryData.size.width, height: geometryData.size.height)
+				}
+				.position(x: 0, y: 0)
+				.frame(width: geometryData.size.width, height: geometryData.size.height)
+				.background(.gray.opacity(0.8))
+			}
+		}
+			}
+		.frame(width: geometry.size.width, height: geometry.size.height)
+		.background(
+			LinearGradient(stops: [
+				Gradient.Stop(color: Color("BlueOne"), location: 0.14),
+				Gradient.Stop(color: Color("BlueTwo"), location: 0.53),
+				Gradient.Stop(color: Color("GreenOne"), location: 0.87),
+			], startPoint: .topTrailing, endPoint: .bottomLeading)
+		)
+		.onAppear() {
+			Task {
+				guard var result: [StatusInformation?] = await getStatusInformation() else {
+					homeData.statusItemsState = LoadingState.failed
+					print("Something when wrong when getting status information!")
+					return
+				}
+				result.append(nil)
+				homeData.statusItems = result
+				homeData.statusItemsState = LoadingState.success
+			}
+			Task {
+				do {
+					let result = try await getUserData(token: homeData.token)
+					homeData.profile = result
+					await updateLastLoggedIn();
+				} catch let error {
+					print(error)
+					guard let apiError = error as? ApiError else {
 						return
 					}
-					result.append(nil)
-					homeData.statusItems = result
-					homeData.statusItemsState = LoadingState.success
-				}
-				Task {
-					do {
-						let result = try await getUserData(token: homeData.token)
-						homeData.profile = result
-						await updateLastLoggedIn();
-					} catch let error {
-						print(error)
-						guard let apiError = error as? ApiError else {
-							return
-						}
-						if (apiError == ApiError.auth) {
-							try Auth.auth().signOut()
-							KeychainService().save("", for: "gitauth")
-						}
+					if (apiError == ApiError.auth) {
+						try Auth.auth().signOut()
+						KeychainService().save("", for: "gitauth")
 					}
 				}
 			}
-			.onChange(of: geometry.size, initial: true) { oldVal, newSize in
-				if (newSize.width >= 600 && newSize.height >= 700) {
-					currentDimensionMode = dimensionMode.large
-				} else if (newSize.width >= 600) {
-					currentDimensionMode = dimensionMode.medium
-				} else {
-					currentDimensionMode = dimensionMode.small
-				}
+		}
+		.onGeometryChange(for: CGSize.self, of: { proxy in
+			proxy.size
+		}, action: {
+			geometryData.updateSize(newSize: $0)
+		})
+		.onChange(of: homeData.selectedEmoji) { oldVal, newVal in
+			if homeData.selectedIndex < homeData.statusItems.count && homeData.selectedIndex >= 0 {
+				homeData.statusItems[homeData.selectedIndex] = StatusInformation(id: homeData.statusItems[homeData.selectedIndex]!.id, name: homeData.statusItems[homeData.selectedIndex]!.name, emoji: homeData.selectedEmoji, selectedTime: homeData.statusItems[homeData.selectedIndex]!.selectedTime, times: homeData.statusItems[homeData.selectedIndex]!.times)
+			} else if homeData.selectedIndex == homeData.statusItems.count {
+				homeData.createSelectedEmoji = newVal
 			}
-			.onChange(of: homeData.selectedEmoji) { oldVal, newVal in
-				if homeData.selectedIndex < homeData.statusItems.count && homeData.selectedIndex >= 0 {
-					homeData.statusItems[homeData.selectedIndex] = StatusInformation(id: homeData.statusItems[homeData.selectedIndex]!.id, name: homeData.statusItems[homeData.selectedIndex]!.name, emoji: homeData.selectedEmoji, selectedTime: homeData.statusItems[homeData.selectedIndex]!.selectedTime, times: homeData.statusItems[homeData.selectedIndex]!.times)
-				} else if homeData.selectedIndex == homeData.statusItems.count {
-					homeData.createSelectedEmoji = newVal
-				}
-			}
-			.environmentObject(homeData)
-		}.ignoresSafeArea(.keyboard, edges: .all)
+		}
+		.environmentObject(homeData)
+		.environmentObject(geometryData)
+		.ignoresSafeArea(.keyboard, edges: .all)
+		}
 	}
 }

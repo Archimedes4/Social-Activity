@@ -69,18 +69,17 @@ struct EmojiPicker: View {
 	@State var search = ""
 	@State var initalEmoji: String = "smiley"
 	var onDismiss: (_ selected: String) -> Void
-	@State var geometry: GeometryProxy
 	let columns = [GridItem(.adaptive(minimum: 80))]
 	@EnvironmentObject var homeData: HomeData
+	@EnvironmentObject var geometryData: GeometryData
 
 	
-	init (for metrics: GeometryProxy, onDismiss: @escaping (_ selected: String) -> Void) {
-		self.geometry = metrics
+	init (onDismiss: @escaping (_ selected: String) -> Void) {
 		self.onDismiss = onDismiss
 	}
 	
 	var body: some View {
-		let isAlt = geometry.size.width >= 600
+		let isAlt = geometryData.state != .small
 		VStack {
 			TextField("Search", text: $search)
 				.textFieldStyle(.plain)
@@ -149,14 +148,14 @@ struct EmojiPicker: View {
 
 				}.frame(maxWidth: .infinity)
 		}
-		.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20), height: geometry.size.height * 0.85)
+		.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.4:1)) - (geometryData.state != .small ? 0:20), height: geometryData.size.height * 0.85)
 		.background(.white)
 		.cornerRadius(10)
 		.overlay(alignment: .center) {
 			RoundedRectangle(cornerRadius: 10)
 				.strokeBorder(style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 				.cornerRadius(10)
-				.frame(width: (geometry.size.width * (geometry.size.width >= 600 ? 0.4:1)) - (geometry.size.width >= 600 ? 0:20))
+				.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.4:1)) - (geometryData.state != .small ? 0:20))
 		}
 		.onAppear() {
 			initalEmoji = homeData.selectedEmoji

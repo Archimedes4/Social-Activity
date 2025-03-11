@@ -2,12 +2,11 @@ import SwiftUI
 
 struct HomeList: View {
 	@EnvironmentObject var homeData: HomeData
+	@EnvironmentObject var geometryData: GeometryData
 	@State var minHeight: CGFloat
-	@State var geometry: GeometryProxy
 	
-	init (for minHeight: CGFloat, for metrics: GeometryProxy) {
+	init (for minHeight: CGFloat) {
 		self.minHeight = minHeight
-		self.geometry = metrics
 	}
 	
 	var body: some View {
@@ -62,8 +61,10 @@ struct HomeList: View {
 					}
 				}
 			}.frame(minHeight: (homeData.statusItemsState != LoadingState.success) ? minHeight:0)
-		}.padding(.horizontal, 10)
+		}
 		.scrollDisabled(homeData.statusItemsState != LoadingState.success)
+		.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 15:0))
+		.padding(.trailing, 15)
 	}
 }
 

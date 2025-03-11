@@ -37,6 +37,8 @@
 		C68D45552D4744B90036D29A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = C68D45542D4744B90036D29A /* FirebaseMessaging */; };
 		C68D45572D4806F40036D29A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C68D45562D4806F40036D29A /* GoogleService-Info.plist */; };
 		C6CB4DB92B4860400040C9F9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6CB4DB82B4860400040C9F9 /* Preview Assets.xcassets */; };
+		C6DCA3302D7F975700BFE53A /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DCA32F2D7F975700BFE53A /* ContainerView.swift */; };
+		C6DCA3322D7FAF4A00BFE53A /* GeometryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DCA3312D7FAF4A00BFE53A /* GeometryData.swift */; };
 		C6DEE5C42B4A1C07004B1552 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6DEE5C32B4A1C07004B1552 /* Security.framework */; };
 		C6F9AF472CFD1DFA001E8608 /* ArchGithHubStatusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F9AF402CFD1DFA001E8608 /* ArchGithHubStatusApp.swift */; };
 		C6F9AF6C2CFD1DFA001E8608 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6F9AF5B2CFD1DFA001E8608 /* Assets.xcassets */; };
@@ -82,6 +84,8 @@
 		C68D45562D4806F40036D29A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C6CB4DAE2B48603E0040C9F9 /* Social_Activity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Social_Activity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6CB4DB82B4860400040C9F9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C6DCA32F2D7F975700BFE53A /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
+		C6DCA3312D7FAF4A00BFE53A /* GeometryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryData.swift; sourceTree = "<group>"; };
 		C6DEE5C32B4A1C07004B1552 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C6F9AEB52CFC370E001E8608 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		C6F9AEB72CFC370E001E8608 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -184,6 +188,8 @@
 				C68D45252D4309870036D29A /* PasswordView.swift */,
 				C68D45262D4309870036D29A /* ProfileView.swift */,
 				C68D45272D4309870036D29A /* SettingsView.swift */,
+				C6DCA32F2D7F975700BFE53A /* ContainerView.swift */,
+				C6DCA3312D7FAF4A00BFE53A /* GeometryData.swift */,
 				C68D45282D4309870036D29A /* StatusItem.swift */,
 				C67D8A3C2D7D6C6A003F9938 /* TimeSelector.swift */,
 				C68D45292D4309870036D29A /* Types.swift */,
@@ -404,6 +410,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6DCA3302D7F975700BFE53A /* ContainerView.swift in Sources */,
 				C68D452A2D4309870036D29A /* Authentication.swift in Sources */,
 				C68D452B2D4309870036D29A /* Controller.swift in Sources */,
 				C68D452C2D4309870036D29A /* EmojiPicker.swift in Sources */,
@@ -411,6 +418,7 @@
 				C68D452E2D4309870036D29A /* GitHubConnection.swift in Sources */,
 				C68D452F2D4309870036D29A /* HomeList.swift in Sources */,
 				C67D8A3D2D7D6C6A003F9938 /* TimeSelector.swift in Sources */,
+				C6DCA3322D7FAF4A00BFE53A /* GeometryData.swift in Sources */,
 				C68D45302D4309870036D29A /* HomeView.swift in Sources */,
 				C68D45312D4309870036D29A /* Keychain.swift in Sources */,
 				C68D45322D4309870036D29A /* LoginView.swift in Sources */,
@@ -803,8 +811,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 11.5.0;
+				kind = upToNextMinorVersion;
+				minimumVersion = 11.9.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

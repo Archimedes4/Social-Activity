@@ -135,7 +135,7 @@ func getDeviceName() -> String {
 }
 
 @MainActor
-class NotificationManager: ObservableObject{
+class NotificationManager: ObservableObject {
 	@Published private(set) var hasPermission = false
 	@Published public var fcmToken: String = ""
 		
