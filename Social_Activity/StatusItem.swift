@@ -447,7 +447,7 @@ struct MainStatusItem: View {
 			if (state == StatusItemState.viewing || state == StatusItemState.editing) {
 				TimeSelector(information: $information, state: $state)
 			}
-		}.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 15:0))
+		}.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 15:20))
 	}
 }
 

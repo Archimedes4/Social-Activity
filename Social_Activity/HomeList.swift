@@ -63,8 +63,8 @@ struct HomeList: View {
 			}.frame(minHeight: (homeData.statusItemsState != LoadingState.success) ? minHeight:0)
 		}
 		.scrollDisabled(homeData.statusItemsState != LoadingState.success)
-		.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 15:0))
-		.padding(.trailing, 15)
+		.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 15:20))
+		.padding((geometryData.state != .small) ? .trailing:.horizontal, (geometryData.state != .small) ? 15:10)
 	}
 }
 

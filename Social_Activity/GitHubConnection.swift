@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 let GITHUB_CLIENT_ID = "Ov23liCq5p4ZHp6wfTen"//TODO fix this
 let gitHubAuthLink = "https://github.com/login/oauth/authorize?client_id=\(GITHUB_CLIENT_ID)&scope=user"
@@ -57,6 +58,29 @@ func clearStatus(token: String) async {
 	}
 }
 
+// Tell the server to send a notification when the status is over.
+func envokeNotification() async throws{
+	guard let uid = Auth.auth().currentUser?.uid else { throw ApiError.auth }
+	print( "https://envokestatuschanged-jkywhlgljq-uc.a.run.app?uid=\(uid)")
+	guard let url = URL(string: "https://envokestatuschanged-jkywhlgljq-uc.a.run.app?uid=\(uid)") else {
+		throw ApiError.regular
+	}
+	
+	let request = URLRequest(url: url)
+	let (_, response) = try await URLSession.shared.data(
+		for: request
+	)
+	print("Envoke")
+	if let httpResponse = response as? HTTPURLResponse {
+		print(httpResponse.statusCode)
+		if (httpResponse.statusCode == 200) {
+			return
+		}
+	} else {
+		throw ApiError.regular
+	}
+}
+
 func setStatus(emoji: String, message: String, expiresAt: String?, token: String) async {
 	let dataQuery = "mutation ($status: ChangeUserStatusInput!) {\nchangeUserStatus(input: $status) {\nstatus {\nemoji\nexpiresAt\nlimitedAvailability: indicatesLimitedAvailability\nmessage\n}\n}\n}"
 	
@@ -68,7 +92,10 @@ func setStatus(emoji: String, message: String, expiresAt: String?, token: String
 	let json = ["query": dataQuery, "variables": ["status":status]] as [String : Any]
 	do {
 		let _ = try await callApi(json: json, token: token)
+		// Tell the server to send a notification when the status is over.
+		try await envokeNotification()
 	} catch {
+		print("Something went wrong")
 		//TODO
 	}
 }

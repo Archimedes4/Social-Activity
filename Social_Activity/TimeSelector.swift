@@ -43,7 +43,7 @@ struct TimeSelector: View {
 	}
 	
 	var body: some View {
-		let maxWidth = (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - (geometryData.state != .small ? 50:0)
+		let maxWidth = (geometryData.size.width * (geometryData.state != .small ? 0.6:1)) - 50
 		HStack {
 			HStack {
 				ScrollView(.horizontal, showsIndicators: false) {
@@ -54,7 +54,7 @@ struct TimeSelector: View {
 						internalWidth = $0.width
 					}
 				}
-				.scrollDisabled(internalWidth > maxWidth)
+				.scrollDisabled(internalWidth < maxWidth)
 				.frame(width: (internalWidth != 0) ? min(maxWidth, internalWidth):.greatestFiniteMagnitude)
 			}
 			.padding(5)

@@ -110,26 +110,6 @@ struct StatusPill: View {
 			}
 		}
 	}
-	
-	func timeString(time: Int, expiresAt: Date?) -> String {
-		let hours = time / 3600
-		let minutes = (time % 3600) / 60
-		let seconds = time % 60
-		
-		print(time)
-		if (time >= 86400) {
-			guard let expiresAt = expiresAt else {
-				return ""
-			}
-			let formatter = DateFormatter()
-			formatter.dateFormat = "'Ends on' yyyy-MM-dd 'at' HH:mm" // 24-hour format
-			return formatter.string(from: expiresAt)
-		}
-		if (hours == 0) {
-			return "Time left: " + String(format: "%02d:%02d", minutes, seconds)
-		}
-		return "Time left: " + String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-	}
 }
 
 struct ProfileView: View {

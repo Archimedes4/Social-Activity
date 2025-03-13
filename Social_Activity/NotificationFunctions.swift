@@ -212,10 +212,8 @@ func updateGithubId(uid: String) async -> LoadingState {
 		try await db.collection("users").document(userID).setData([
 			"git_uid": uid	
 		], merge: true)
-		print(uid)
 		return LoadingState.success
 	} catch _ {
-		print("Error")
 		return LoadingState.failed
 	}
 }

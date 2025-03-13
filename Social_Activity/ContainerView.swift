@@ -19,14 +19,14 @@ struct ContainerView<Content: View>: View {
 			content
 		}
 		.padding(10)
-		.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.4:1)) - (geometryData.state != .small ? 30:0))
+		.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.4:1)) - (geometryData.state != .small ? 30:20))
 		.background(.white)
 		.cornerRadius(12)
 		.overlay(alignment: .center) {
 			RoundedRectangle(cornerRadius: 10)
 				.strokeBorder(.black, style: StrokeStyle(lineWidth: 3, dash: [.greatestFiniteMagnitude]))
 				.cornerRadius(10)
-				.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.4:1)) - (geometryData.state != .small ? 30:0))
+				.frame(width: (geometryData.size.width * (geometryData.state != .small ? 0.4:1)) - (geometryData.state != .small ? 30:20))
 		}
 		.padding(.horizontal, 15)
 		.padding(.bottom, 15)

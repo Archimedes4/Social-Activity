@@ -107,8 +107,10 @@ struct StatusComponent: View {
 					}
 					if (homeData.profile?.status?.expiresAt != nil && timeRemaining >= 0) {
 						HStack{
-							Text(timeString(time: timeRemaining))
+							Text(timeString(time: timeRemaining, expiresAt: homeData.profile?.status?.expiresAt))
 								.font(Font.custom("Nunito-Regular", size: 20))
+								.minimumScaleFactor(0.5)
+								.lineLimit(1)
 								.foregroundStyle(.black)
 								.frame(alignment: .leading)
 							Spacer()
@@ -156,12 +158,25 @@ struct StatusComponent: View {
 			}
 		}
 	}
+}
+
+func timeString(time: Int, expiresAt: Date?) -> String {
+	let hours = time / 3600
+	let minutes = (time % 3600) / 60
+	let seconds = time % 60
 	
-	func timeString(time: Int) -> String {
-		let minutes = time / 60
-		let seconds = time % 60
-		return String(format: "%02d:%02d", minutes, seconds)
+	if (time >= 86400) {
+		guard let expiresAt = expiresAt else {
+			return ""
+		}
+		let formatter = DateFormatter()
+		formatter.dateFormat = "'Ends on' yyyy-MM-dd 'at' HH:mm" // 24-hour format
+		return formatter.string(from: expiresAt)
 	}
+	if (hours == 0) {
+		return "Time left: " + String(format: "%02d:%02d", minutes, seconds)
+	}
+	return "Time left: " + String(format: "%02d:%02d:%02d", hours, minutes, seconds)
 }
 
 struct HomeView: View {
@@ -276,7 +291,6 @@ struct HomeView: View {
 					homeData.profile = result
 					await updateLastLoggedIn();
 				} catch let error {
-					print(error)
 					guard let apiError = error as? ApiError else {
 						return
 					}
@@ -285,6 +299,18 @@ struct HomeView: View {
 						KeychainService().save("", for: "gitauth")
 					}
 				}
+			}
+		}
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+			Task {
+				guard var result: [StatusInformation?] = await getStatusInformation() else {
+					homeData.statusItemsState = LoadingState.failed
+					print("Something when wrong when getting status information!")
+					return
+				}
+				result.append(nil)
+				homeData.statusItems = result
+				homeData.statusItemsState = LoadingState.success
 			}
 		}
 		.onGeometryChange(for: CGSize.self, of: { proxy in

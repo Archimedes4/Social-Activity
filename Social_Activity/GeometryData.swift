@@ -10,7 +10,7 @@
 import SwiftUI
 
 class GeometryData: ObservableObject  {
-	@Published public var size: CGSize = .zero
+	@Published public var size: CGSize = CGSize(width: 100, height: 100)
 	@Published public var state: dimensionMode = .small
 	
 	// Function to update state based on width
